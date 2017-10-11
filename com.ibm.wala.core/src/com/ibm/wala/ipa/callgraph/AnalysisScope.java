@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +39,16 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.PlatformUtil;
+import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.functions.Function;
+import com.ibm.wala.util.io.RtJar;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
@@ -213,6 +216,7 @@ public class AnalysisScope {
   /**
    * Add a jar file to the scope for a loader
    */
+  @SuppressWarnings("unused")
   public void addToScope(ClassLoaderReference loader, JarFile file) {
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     if (DEBUG_LEVEL > 0) {
@@ -224,6 +228,7 @@ public class AnalysisScope {
   /**
    * Add a module to the scope for a loader
    */
+  @SuppressWarnings("unused")
   public void addToScope(ClassLoaderReference loader, Module m) {
     if (m == null) {
       throw new IllegalArgumentException("null m");
@@ -252,6 +257,7 @@ public class AnalysisScope {
   /**
    * Add a module file to the scope for a loader. The classes in the added jar file will override classes added to the scope so far.
    */
+  @SuppressWarnings("unused")
   public void addToScopeHead(ClassLoaderReference loader, Module m) {
     if (m == null) {
       throw new IllegalArgumentException("null m");
@@ -371,23 +377,18 @@ public class AnalysisScope {
    * @return the rt.jar (1.4) or core.jar (1.5) file, or null if not found.
    */
   private JarFile getRtJar() {
-    for (Iterator MS = getModules(getPrimordialLoader()).iterator(); MS.hasNext();) {
-      Module M = (Module) MS.next();
-      if (M instanceof JarFileModule) {
-        JarFile JF = ((JarFileModule) M).getJarFile();
-        if (JF.getName().endsWith(File.separator + "rt.jar")) {
-          return JF;
-        }
-        if (JF.getName().endsWith(File.separator + "core.jar")) {
-          return JF;
-        }
-        // hack for Mac
-        if (PlatformUtil.onMacOSX() && JF.getName().endsWith(File.separator + "classes.jar")) {
-          return JF;
-        }
-      }
-    }
-    return null;
+    return RtJar.getRtJar(
+        new MapIterator<Module,JarFile>(
+            new FilterIterator<Module>(getModules(getPrimordialLoader()).iterator(), new Predicate<Module>() {
+              @Override
+              public boolean test(Module M) {
+                return M instanceof JarFileModule;
+              } }), new Function<Module,JarFile>() {
+
+              @Override
+              public JarFile apply(Module M) {
+                return ((JarFileModule) M).getJarFile();
+              } }));
   }
 
   public String getJavaLibraryVersion() throws IllegalStateException {

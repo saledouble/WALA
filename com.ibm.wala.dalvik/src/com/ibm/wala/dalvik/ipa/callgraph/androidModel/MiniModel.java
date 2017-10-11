@@ -78,6 +78,7 @@ public class MiniModel extends AndroidModel {
      *  
      *  {@inheritDoc}
      */
+    @Override
     protected boolean selectEntryPoint(AndroidEntryPoint ep) {
         if (ep.belongsTo(forCompo)) {
              
@@ -85,6 +86,7 @@ public class MiniModel extends AndroidModel {
         }
         return false;
     }
+    @Override
     public Descriptor getDescriptor() throws CancelException {
         final Descriptor descr = super.getDescriptor();
          
@@ -92,7 +94,7 @@ public class MiniModel extends AndroidModel {
     }
 
     public MiniModel(final IClassHierarchy cha, final AnalysisOptions options, final IAnalysisCacheView cache, 
-            final AndroidComponent forCompo) throws CancelException {
+            final AndroidComponent forCompo) {
         super(cha, options, cache);
     
         this.forCompo = forCompo;

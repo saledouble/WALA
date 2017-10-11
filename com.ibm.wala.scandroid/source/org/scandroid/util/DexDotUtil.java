@@ -110,12 +110,12 @@ public class DexDotUtil extends DotUtil {
             }
             if (output.available() > 0) {
               byte[] data = new byte[output.available()];
-              int nRead = output.read(data);
+              output.read(data);
               
             }
             if (error.available() > 0) {
               byte[] data = new byte[error.available()];
-              int nRead = error.read(data);
+              error.read(data);
               
             }
             try {
@@ -168,7 +168,7 @@ public class DexDotUtil extends DotUtil {
           return f;
 
         } catch (Exception e) {
-          throw new WalaException("Error writing dot file " + dotfile);
+          throw new WalaException("Error writing dot file " + dotfile, e);
         }
       }
 
@@ -176,7 +176,7 @@ public class DexDotUtil extends DotUtil {
        * @return StringBuffer holding dot output representing G
        * @throws WalaException
        */
-      private static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator<T> labels, String title) throws WalaException {
+      public static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator<T> labels, String title) throws WalaException {
         StringBuffer result = new StringBuffer("digraph \"DirectedGraph\" {\n");
 
         if (title != null) {
@@ -242,11 +242,11 @@ public class DexDotUtil extends DotUtil {
       /**
        * Compute the nodes to visualize
        */
-      private static <T> Collection<T> computeDotNodes(Graph<T> g) throws WalaException {
+      private static <T> Collection<T> computeDotNodes(Graph<T> g) {
         return Iterator2Collection.toSet(g.iterator());
       }
 
-      private static String getRankDir() throws WalaException {
+      private static String getRankDir() {
         return null;
       }
 
@@ -254,7 +254,7 @@ public class DexDotUtil extends DotUtil {
        * @param n node to decorate
        * @param d decorating master
        */
-      private static <T> String decorateNode(T n, NodeDecorator<T> d) throws WalaException {
+      private static <T> String decorateNode(T n, NodeDecorator<T> d) {
         StringBuffer result = new StringBuffer();
         result.append(" [ ]\n");
         return result.toString();

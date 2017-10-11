@@ -24,7 +24,6 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -36,7 +35,6 @@ import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.TypeReference;
@@ -76,7 +74,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
  * 
  * @author Julian Dolby
  */
-public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
+public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine<InstanceKey> {
 
   private final Set<JarFile> applicationJarFiles;
 
@@ -91,7 +89,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
   }
 
   @Override
-  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+  protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     return Util.makeZeroCFABuilder(options, cache, cha, scope);
   }
 
@@ -162,7 +160,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public Set<IClass> gatherThreadEscapingClasses() throws IOException, ClassHierarchyException, IllegalArgumentException,
+  public Set<IClass> gatherThreadEscapingClasses() throws IOException, IllegalArgumentException,
       CancelException {
 
     //
@@ -328,7 +326,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public static void main(String[] args) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+  public static void main(String[] args) throws IOException, IllegalArgumentException, CancelException {
     String mainClassName = args[0];
 
     Set<JarFile> jars = HashSetFactory.make();

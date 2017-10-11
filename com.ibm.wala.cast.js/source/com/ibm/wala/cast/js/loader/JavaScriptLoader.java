@@ -71,7 +71,6 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.LanguageImpl;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IComparisonInstruction.Operator;
@@ -146,7 +145,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       if (o == null) {
         return JavaScriptTypes.Null;
       } else {
-        Class c = o.getClass();
+        Class<?> c = o.getClass();
         if (c == Boolean.class) {
           return JavaScriptTypes.Boolean;
         } else if (c == String.class) {
@@ -654,7 +653,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return JavaScriptTypes.String;
     }
 
-    @SuppressWarnings("static-access")
     @Override
     public PrimitiveType getPrimitive(TypeReference reference) {
       return PrimitiveType.getPrimitive(reference);
@@ -678,13 +676,13 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
   private final JavaScriptTranslatorFactory translatorFactory;
   
-  private final CAstRewriterFactory preprocessor;
+  private final CAstRewriterFactory<?, ?> preprocessor;
   
   public JavaScriptLoader(IClassHierarchy cha, JavaScriptTranslatorFactory translatorFactory) {
     this(cha, translatorFactory, null);
   }
 
-  public JavaScriptLoader(IClassHierarchy cha, JavaScriptTranslatorFactory translatorFactory, CAstRewriterFactory preprocessor) {
+  public JavaScriptLoader(IClassHierarchy cha, JavaScriptTranslatorFactory translatorFactory, CAstRewriterFactory<?, ?> preprocessor) {
     super(cha);
     this.translatorFactory = translatorFactory;
     this.preprocessor = preprocessor;
@@ -802,7 +800,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     private WalkContext translationContext;
     private CAstEntity entity;
 
-    JavaScriptMethodObject(IClass cls, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+    JavaScriptMethodObject(IClass cls, AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
         Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
           hasMonitorOp, lexicalInfo, debugInfo, null);
@@ -916,14 +914,14 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     return makeCodeBodyType(name, JavaScriptTypes.Script, pos, entity, context);
   }
 
-  public IMethod defineCodeBodyCode(String clsName, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+  public IMethod defineCodeBodyCode(String clsName, AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
       Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     JavaScriptCodeBody C = (JavaScriptCodeBody) lookupClass(clsName, cha);
     assert C != null : clsName;
     return C.setCodeBody(makeCodeBodyCode(cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo, C));
   }
 
-  public JavaScriptMethodObject makeCodeBodyCode(AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+  public JavaScriptMethodObject makeCodeBodyCode(AbstractCFG<?, ?> cfg, SymbolTable symtab, boolean hasCatchBlock,
       Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo,
       IClass C) {
     return new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo,
@@ -1012,7 +1010,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     bootstrapFileNames.add(prologueFileName);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   protected TranslatorToCAst getTranslatorToCAst(final CAst ast, ModuleEntry module) {
     TranslatorToCAst translator = translatorFactory.make(ast, module);
