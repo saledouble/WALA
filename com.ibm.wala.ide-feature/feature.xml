@@ -2,11 +2,46 @@
 <feature
       id="com.ibm.wala.ide-feature"
       label="%featureName"
-      version="1.4.4.qualifier"
-      provider-name="%providerName">
+      version="1.3.10.qualifier"
+      provider-name="%providerName"
+      plugin="com.ibm.wala.ide">
+
+   <description url="https://github.com/ponder-lab/WALA">
+      T.J. Watson Libraries for Analysis
+   </description>
+
+   <url>
+      <update label="PONDER Lab WALA Update Site" url="https://raw.githubusercontent.com/ponder-lab/WALA/master/com.ibm.wala.updatesite"/>
+      <discovery label="PONDER Lab WALA Update Site" url="https://raw.githubusercontent.com/ponder-lab/WALA/master/com.ibm.wala.updatesite"/>
+   </url>
+
+   <requires>
+      <import plugin="com.ibm.wala.core"/>
+      <import plugin="com.ibm.wala.shrike"/>
+      <import plugin="org.eclipse.pde.core"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.jdt"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="com.ibm.wala.cast"/>
+      <import plugin="com.ibm.wala.cast.java"/>
+      <import plugin="com.ibm.wala.util"/>
+      <import plugin="com.ibm.wala.cast.java.ecj"/>
+   </requires>
 
    <plugin
          id="com.ibm.wala.ide"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.ibm.wala.ide.jdt"
          download-size="0"
          install-size="0"
          version="0.0.0"
