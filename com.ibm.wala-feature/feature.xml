@@ -5,6 +5,20 @@
       version="1.3.10.qualifier"
       provider-name="%providerName">
 
+   <description url="https://github.com/ponder-lab/WALA">
+      %featureName
+   </description>
+
+   <url>
+      <update label="PONDER Lab WALA Update Site" url="https://raw.githubusercontent.com/ponder-lab/WALA/master/com.ibm.wala.updatesite"/>
+   </url>
+
+   <requires>
+      <import plugin="com.ibm.wala.util" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.jdt.core"/>
+   </requires>
+
    <plugin
          id="com.ibm.wala.core"
          download-size="0"
@@ -35,6 +49,13 @@
 
    <plugin
          id="com.ibm.wala.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.ibm.wala.cast.java.ecj"
          download-size="0"
          install-size="0"
          version="0.0.0"
