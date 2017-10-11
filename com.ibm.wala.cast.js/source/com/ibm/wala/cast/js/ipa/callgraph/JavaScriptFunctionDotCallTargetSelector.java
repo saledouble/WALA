@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.util.Map;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
@@ -25,7 +26,6 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -62,11 +62,8 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
   private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_call");
   private final MethodTargetSelector base;
 
-  private IAnalysisCacheView cache;
-
-  public JavaScriptFunctionDotCallTargetSelector(MethodTargetSelector base, IAnalysisCacheView cache2) {
+  public JavaScriptFunctionDotCallTargetSelector(MethodTargetSelector base) {
     this.base = base;
-    this.cache = cache2;
   }
 
   /*
@@ -138,7 +135,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
       return callModels.get(key);
     }
     JSInstructionFactory insts = (JSInstructionFactory) receiver.getClassLoader().getInstructionFactory();
-    MethodReference ref = genSyntheticMethodRef(receiver, nargs, key);
+    MethodReference ref = genSyntheticMethodRef(receiver, key);
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs);
     
     if(WARN_ABOUT_IMPRECISE_CALLGRAPH && caller.getMethod().getName().toString().contains(SYNTHETIC_CALL_METHOD_PREFIX))
@@ -178,22 +175,22 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
 
   public static final String SYNTHETIC_CALL_METHOD_PREFIX = "$$ call_";
 
-  private MethodReference genSyntheticMethodRef(IClass receiver, int nargs, String key) {
+  private static MethodReference genSyntheticMethodRef(IClass receiver, String key) {
     Atom atom = Atom.findOrCreateUnicodeAtom(SYNTHETIC_CALL_METHOD_PREFIX + key);
     Descriptor desc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, "()LRoot;");
     MethodReference ref = MethodReference.findOrCreate(receiver.getReference(), atom, desc);
     return ref;
   }
 
-  private String getKey(int nargs, CGNode caller, CallSiteReference site) {
+  private static String getKey(int nargs, CGNode caller, CallSiteReference site) {
     if (SEPARATE_SYNTHETIC_METHOD_PER_SITE) {
-      return JSCallGraphUtil.getShortName(caller) + "_" + caller.getGraphNodeId() + "_" + site.getProgramCounter();
+      return CAstCallGraphUtil.getShortName(caller) + "_" + caller.getGraphNodeId() + "_" + site.getProgramCounter();
     } else {
       return ""+nargs;
     }
   }
 
-  private int getNumberOfArgsPassed(CGNode caller, CallSiteReference site) {
+  private static int getNumberOfArgsPassed(CGNode caller, CallSiteReference site) {
     IR callerIR = caller.getIR();
     SSAAbstractInvokeInstruction callStmts[] = callerIR.getCalls(site);
     assert callStmts.length == 1;

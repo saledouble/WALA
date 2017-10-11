@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.client;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 import java.util.jar.JarFile;
@@ -33,7 +32,6 @@ import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -60,15 +58,11 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
 
   @Override
   public void buildAnalysisScope() {
-    try {
-      loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
+    loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
 
-      SourceModule[] files = moduleFiles.toArray(new SourceModule[moduleFiles.size()]);
+    SourceModule[] files = moduleFiles.toArray(new SourceModule[moduleFiles.size()]);
 
-      scope = new CAstAnalysisScope(files, loaderFactory, Collections.singleton(JavaScriptLoader.JS));
-    } catch (IOException e) {
-      Assertions.UNREACHABLE(e.toString());
-    }
+    scope = new CAstAnalysisScope(files, loaderFactory, Collections.singleton(JavaScriptLoader.JS));
   }
 
   @Override
@@ -117,7 +111,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
   }
 
   public static class FieldBasedJavaScriptAnalysisEngine extends JavaScriptAnalysisEngine<ObjectVertex> {
-    public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE };
+    public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE }
     
     private BuilderType builderType = BuilderType.OPTIMISTIC;
     
@@ -194,8 +188,8 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey> extends Ab
   public static class PropagationJavaScriptAnalysisEngine extends JavaScriptAnalysisEngine<InstanceKey> {
   
     @Override
-    protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-      return new ZeroCFABuilderFactory().make((JSAnalysisOptions) options, cache, cha, scope, false);
+    protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+      return new ZeroCFABuilderFactory().make((JSAnalysisOptions) options, cache, cha);
     }
   }
   
