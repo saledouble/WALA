@@ -119,7 +119,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     /**
      * Remove from s any class file module entries which already are in t
      */
-    private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
+    private void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
     	Set<String> old = HashSetFactory.make();
     	for (Iterator<ModuleEntry> it = t.iterator(); it.hasNext();) {
     		ModuleEntry m = it.next();
@@ -135,10 +135,10 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     	s.removeAll(toRemove);
     }
     
-    private static Set<ModuleEntry> getDexFiles(Module M) {
+    private Set<ModuleEntry> getDexFiles(Module M) throws IOException {
     	HashSet<ModuleEntry> result = HashSetFactory.make();
     	for (Iterator<? extends ModuleEntry> it = M.getEntries(); it.hasNext();) {
-    		ModuleEntry entry = it.next();
+    		ModuleEntry entry = (ModuleEntry) it.next();
     		if (entry instanceof DexModuleEntry) {    		
     			result.add(entry);
     		} 
@@ -147,8 +147,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     }
     
     
-    @SuppressWarnings("unused")
-	private void loadAllDexClasses(Collection<ModuleEntry> moduleEntries) {
+    private void loadAllDexClasses(Collection<ModuleEntry> moduleEntries) {
     	
     	for (Iterator<ModuleEntry> it = moduleEntries.iterator(); it.hasNext();) {
     		ModuleEntry entry = it.next();

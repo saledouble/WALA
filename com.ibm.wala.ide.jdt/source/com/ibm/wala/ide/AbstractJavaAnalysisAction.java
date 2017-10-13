@@ -81,12 +81,13 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     if (selection == null) {
       throw new IllegalArgumentException("null selection");
     }
-    final Collection<EclipseProjectPath<?, ?>> projectPaths = new LinkedList<>();
+    final Collection<EclipseProjectPath> projectPaths = new LinkedList<>();
     Job job = new Job("Compute project paths") {
 
+      @SuppressWarnings("unchecked")
       @Override
       protected IStatus run(IProgressMonitor monitor) {
-        for (Iterator<Object> it = selection.iterator(); it.hasNext();) {
+        for (Iterator it = selection.iterator(); it.hasNext();) {
           Object object = it.next();
           if (object instanceof IJavaElement) {
             IJavaElement e = (IJavaElement) object;
@@ -133,10 +134,11 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   /**
    * compute the java projects represented by the current selection
    */
+  @SuppressWarnings("unchecked")
   protected Collection<IJavaProject> computeJavaProjects() {
     IStructuredSelection selection = (IStructuredSelection) currentSelection;
     Collection<IJavaProject> projects = HashSetFactory.make();
-    for (Iterator<Object> it = selection.iterator(); it.hasNext();) {
+    for (Iterator it = selection.iterator(); it.hasNext();) {
       Object object = it.next();
       if (object instanceof IJavaElement) {
         IJavaElement e = (IJavaElement) object;
@@ -152,7 +154,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   /**
    * create an analysis scope as the union of a bunch of EclipseProjectPath
    */
-  private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath<?, ?>> projectPaths) throws IOException {
+  private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath> projectPaths) throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
 
     Collection<Module> seen = HashSetFactory.make();
@@ -173,9 +175,9 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
    * @param scope the {@link AnalysisScope} under construction. This will be mutated.
    * @param seen set of {@link Module}s which have already been seen, and should not be added to the analysis scope
    */
-  private static void buildScope(ClassLoaderReference loader, Collection<EclipseProjectPath<?, ?>> projectPaths, AnalysisScope scope,
+  private static void buildScope(ClassLoaderReference loader, Collection<EclipseProjectPath> projectPaths, AnalysisScope scope,
       Collection<Module> seen) throws IOException {
-    for (EclipseProjectPath<?, ?> path : projectPaths) {
+    for (EclipseProjectPath path : projectPaths) {
       AnalysisScope pScope = path.toAnalysisScope((File) null);
       for (Module m : pScope.getModules(loader)) {
         if (!seen.contains(m)) {

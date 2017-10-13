@@ -252,7 +252,8 @@ public class TypeAnnotationTest extends WalaTestCase {
   }
 
   private void testClassAnnotations(TypeReference typeUnderTest, Collection<TypeAnnotation> expectedRuntimeInvisibleAnnotations,
-      Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations) throws InvalidClassFileException {
+      Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations) throws IOException, ClassHierarchyException,
+      InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
     harness.assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
     harness.assertTrue(classUnderTest + " must be BytecodeClass", classUnderTest instanceof ShrikeClass);
@@ -266,7 +267,8 @@ public class TypeAnnotationTest extends WalaTestCase {
   }
   
   private void testMethodAnnotations(MethodReference methodRefUnderTest, Collection<TypeAnnotation> expectedRuntimeInvisibleAnnotations,
-      Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations) throws InvalidClassFileException {
+      Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations) throws IOException, ClassHierarchyException,
+      InvalidClassFileException {
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
     harness.assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
     harness.assertTrue(methodUnderTest + " must be ShrikeCTMethod", methodUnderTest instanceof ShrikeCTMethod);
@@ -284,7 +286,8 @@ public class TypeAnnotationTest extends WalaTestCase {
   }
   
   
-  private void testFieldAnnotations(String fieldNameStr, TypeReference typeUnderTest, Collection<TypeAnnotation> expectedAnnotations) {
+  private void testFieldAnnotations(String fieldNameStr, TypeReference typeUnderTest, Collection<TypeAnnotation> expectedAnnotations) throws IOException, ClassHierarchyException,
+      InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
     harness.assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
     harness.assertTrue(classUnderTest + " must be BytecodeClass", classUnderTest instanceof ShrikeClass);

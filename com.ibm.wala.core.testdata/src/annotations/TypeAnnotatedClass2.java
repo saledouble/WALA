@@ -86,7 +86,6 @@ class Outer {
 }
 
 class Outer2 {
-  @SuppressWarnings("unused")
   class Middle<S> {
     class Inner<T> {
     }

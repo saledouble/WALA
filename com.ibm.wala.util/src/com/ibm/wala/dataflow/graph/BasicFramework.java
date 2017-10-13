@@ -16,7 +16,8 @@ import com.ibm.wala.util.graph.Graph;
 /**
  * a basic implementation of the dataflow framework
  */
-public class BasicFramework<T, V extends IVariable<V>> implements IKilldallFramework<T, V> {
+@SuppressWarnings("rawtypes")
+public class BasicFramework<T, V extends IVariable> implements IKilldallFramework<T, V> {
 
   private final Graph<T> flowGraph;
   private final ITransferFunctionProvider<T, V> transferFunctionProvider;

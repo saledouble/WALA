@@ -19,6 +19,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -67,9 +68,9 @@ public class CFGTest extends WalaTestCase {
         Assertions.UNREACHABLE("could not resolve " + mr);
       }
       AnalysisOptions options = new AnalysisOptions();
+      AnalysisCache cache = makeAnalysisCache();
       options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
-      IAnalysisCacheView cache = makeAnalysisCache(options.getSSAOptions());
-      IR ir = cache.getIR(m, Everywhere.EVERYWHERE);
+      IR ir = cache.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
 
       ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
       try {
@@ -111,9 +112,9 @@ public class CFGTest extends WalaTestCase {
     MethodReference mr = StringStuff.makeMethodReference("hello.Hello.main([Ljava/lang/String;)V");
 
     IMethod m = cha.resolveMethod(mr);
-    IAnalysisCacheView cache = makeAnalysisCache();
+    AnalysisCache cache = makeAnalysisCache();
     IR irBefore = cache.getIR(m);
-    cache.clear(); 
+    cache.getSSACache().wipe();
     IR irAfter = cache.getIR(m);
     for (int i = 0; i < irBefore.getInstructions().length; i++) {
       System.out.println(irBefore.getInstructions()[i]);

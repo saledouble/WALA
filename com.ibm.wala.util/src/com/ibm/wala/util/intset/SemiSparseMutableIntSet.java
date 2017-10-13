@@ -14,8 +14,6 @@ import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
 
 public class SemiSparseMutableIntSet implements MutableIntSet {
-  private static final long serialVersionUID = 8647721176321526013L;
-
   private static final boolean DEBUG = true;
 
   private static final double FIX_SPARSE_MOD = 12;
@@ -341,6 +339,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         return next;
       }
     }
+    ;
 
     if (sparsePart.isEmpty()) {
       if (densePart == null || densePart.isZero()) {

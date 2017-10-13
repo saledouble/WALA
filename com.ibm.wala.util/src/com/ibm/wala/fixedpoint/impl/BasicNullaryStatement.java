@@ -15,7 +15,8 @@ import com.ibm.wala.fixpoint.IVariable;
 /**
  * An implementation of NullaryStep that carries its operator explicitly
  */
-public class BasicNullaryStatement<T extends IVariable<T>> extends NullaryStatement<T> {
+@SuppressWarnings("rawtypes")
+public class BasicNullaryStatement<T extends IVariable> extends NullaryStatement<T> {
 
   /**
    * The operator in the equation

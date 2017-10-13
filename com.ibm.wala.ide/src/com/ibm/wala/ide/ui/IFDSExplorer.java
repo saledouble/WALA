@@ -52,7 +52,7 @@ public class IFDSExplorer {
     viewIFDS(r, roots, null);
   }
 
-  public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots, NodeDecorator<T> labels)
+  public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots, NodeDecorator labels)
       throws WalaException {
     Properties p = null;
     try {
@@ -65,7 +65,7 @@ public class IFDSExplorer {
     viewIFDS(r, roots, labels, scratch);
   }
 
-  public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots, NodeDecorator<T> labels,
+  public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots, NodeDecorator labels,
       String scratchDirectory) throws WalaException {
     if (r == null) {
       throw new IllegalArgumentException("r is null");

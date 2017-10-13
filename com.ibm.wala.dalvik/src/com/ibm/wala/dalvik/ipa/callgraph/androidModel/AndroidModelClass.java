@@ -84,7 +84,7 @@ import com.ibm.wala.util.strings.Atom;
  *  
  *  In the generated code this class may be found as "Lcom/ibm/wala/AndroidModelClass"
  *
- *  @see    com.ibm.wala.ipa.callgraph.impl.FakeRootClass
+ *  @see    com.ibm.wala.dalvik.ipa.callgraph.impl.FakeRootClass
  *
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  *  @todo   Move this class into an other loader? Currently: Primordial
@@ -127,7 +127,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
         clinit.setStatic(true);
         final TypeSafeInstructionFactory instructionFactory = new TypeSafeInstructionFactory(cha);
         
-        final Set<TypeReference> components = AndroidEntryPointManager.getComponents();
+        final Set<TypeReference> components = AndroidEntryPointManager.MANAGER.getComponents();
         int ssaNo = 1;
 
         if (AndroidEntryPointManager.MANAGER.doFlatComponents()) {

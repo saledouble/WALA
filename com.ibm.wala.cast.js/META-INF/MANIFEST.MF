@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %Bundle-Name
+Bundle-Name: JavaScript Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.js;singleton:=true
-Bundle-Version: 1.4.4.qualifier
+Bundle-Version: 1.3.10.qualifier
 Bundle-ClassPath: .,
  lib/jericho-html-3.2.jar
-Bundle-Vendor: %Bundle-Vendor
+Bundle-Vendor: IBM
 Export-Package: .,
  com.ibm.wala.cast.js.analysis.typeInference,
  com.ibm.wala.cast.js.callgraph.fieldbased,

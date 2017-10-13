@@ -39,7 +39,7 @@ public final class ImmutableByteArray {
     try {
       System.arraycopy(b, start, this.b, 0, length);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("illegal parameters " + b.length + " " + start + " " + length, e);
+      throw new IllegalArgumentException("illegal parameters " + b.length + " " + start + " " + length);
     }
   }
 
@@ -65,7 +65,7 @@ public final class ImmutableByteArray {
     try {
       System.arraycopy(b, i, result, 0, length);
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("Invalid combination: " + i + " " + length, e);
+      throw new IllegalArgumentException("Invalid combination: " + i + " " + length);
     }
     return result;
   }

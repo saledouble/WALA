@@ -26,7 +26,6 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
@@ -53,11 +52,11 @@ public class PDFCallGraph {
     return (new File(appJar).isDirectory());
   }
 
-  public static String findJarFiles(String[] directories) {
+  public static String findJarFiles(String[] directories) throws WalaException {
     Collection<String> result = HashSetFactory.make();
     for (int i = 0; i < directories.length; i++) {
       for (Iterator<File> it = FileUtil.listFiles(directories[i], ".*\\.jar", true).iterator(); it.hasNext();) {
-        File f = it.next();
+        File f = (File) it.next();
         result.add(f.getAbsolutePath());
       }
     }
@@ -86,7 +85,7 @@ public class PDFCallGraph {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public static void main(String[] args) throws IllegalArgumentException, CancelException {
+  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     run(args);
   }
 
@@ -97,7 +96,7 @@ public class PDFCallGraph {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public static Process run(String[] args) throws IllegalArgumentException, CancelException {
+  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
     return run(p.getProperty("appJar"), p.getProperty("exclusionFile", CallGraphTestUtil.REGRESSION_EXCLUSIONS));
@@ -157,7 +156,7 @@ public class PDFCallGraph {
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder = Util.makeZeroCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     System.err.println(CallGraphStats.getStats(cg));
@@ -167,7 +166,7 @@ public class PDFCallGraph {
     return g;
   }
 
-  public static Graph<CGNode> pruneForAppLoader(CallGraph g) {
+  public static Graph<CGNode> pruneForAppLoader(CallGraph g) throws WalaException {
     return PDFTypeHierarchy.pruneGraph(g, new ApplicationLoaderFilter());
   }
 
@@ -199,9 +198,15 @@ public class PDFCallGraph {
   private static class ApplicationLoaderFilter extends Predicate<CGNode> {
 
     @Override public boolean test(CGNode o) {
-      if (o == null)
+      if (o instanceof CGNode) {
+        CGNode n = (CGNode) o;
+        return n.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application);
+      } else if (o instanceof LocalPointerKey) {
+        LocalPointerKey l = (LocalPointerKey) o;
+        return test(l.getNode());
+      } else {
         return false;
-      return o.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application);
+      }
     }
   }
 }

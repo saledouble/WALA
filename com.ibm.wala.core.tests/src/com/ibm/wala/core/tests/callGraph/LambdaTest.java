@@ -48,7 +48,6 @@ public class LambdaTest extends WalaTestCase {
         "Lbug144/A");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    @SuppressWarnings("unused")
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
   }
   

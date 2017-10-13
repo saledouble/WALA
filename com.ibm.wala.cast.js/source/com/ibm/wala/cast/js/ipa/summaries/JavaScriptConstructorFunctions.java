@@ -88,7 +88,7 @@ public class JavaScriptConstructorFunctions {
     return m;
   }
 
-  private static IMethod makeNullaryValueConstructor(IClass cls, Object value) {
+  private IMethod makeNullaryValueConstructor(IClass cls, Object value) {
     JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
     MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
@@ -118,7 +118,7 @@ public class JavaScriptConstructorFunctions {
     return new JavaScriptConstructor(ref, S, cls, cls);
   }
 
-  private static IMethod makeUnaryValueConstructor(IClass cls) {
+  private IMethod makeUnaryValueConstructor(IClass cls) {
     JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
    MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);

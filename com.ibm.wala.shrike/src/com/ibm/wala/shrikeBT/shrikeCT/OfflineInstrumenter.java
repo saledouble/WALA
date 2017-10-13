@@ -24,13 +24,20 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
  * specialization of OfflineInstrumenterBase to use the shrikeCT functionality.
  */
 final public class OfflineInstrumenter extends OfflineInstrumenterBase {
+  private final boolean reuseStackMaps;
+  /**
+   * Create an empty collection of classes to instrument.
+   */
+  public OfflineInstrumenter(boolean reuseStackMaps) {
+    this.reuseStackMaps = reuseStackMaps;
+  }
 
   @Override
   protected Object makeClassFromStream(String inputName, BufferedInputStream s) throws IOException {
     byte[] bytes = new byte[s.available()];
     Util.readFully(s, bytes);
     try {
-      return new ClassInstrumenter(inputName, bytes, cha);
+      return new ClassInstrumenter(inputName, bytes, cha, reuseStackMaps);
     } catch (InvalidClassFileException e) {
       throw new IOException("Class is invalid: " + e.getMessage());
     }

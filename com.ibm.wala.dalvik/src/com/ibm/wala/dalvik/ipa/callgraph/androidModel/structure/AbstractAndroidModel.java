@@ -69,6 +69,7 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  which aids in keeping track of SSA-Variables and adding Phi-Functions.
  *
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder
+ *  @see        com.ibm.wala.dalvik.ipa.callgraph.impl.DexFakeRootMethod
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.AndroidModelParameterManager
  *
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
@@ -196,7 +197,7 @@ public abstract class AbstractAndroidModel  {
      *  Gets called when Label ExecutionOrder.AT_FIRST got stepped over.
      *
      *  In most cases you don't want to invoke this function directly but to use 
-     *  {@code enter(ExecutionOrder.AT_FIRST, int)} instead.
+     *  {@link #enter(ExecutionOrder.AT_FIRST, int)} instead.
      *
      *  Sideeffects: currentSection is updated, instructions are inserted into the body
      *
@@ -204,13 +205,13 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterAT_FIRST(int PC) { return PC; }
+    protected int enterAT_FIRST(int PC) { return PC; };
 
      /**
      *  Gets called when Label ExecutionOrder.BEFORE_LOOP got stepped over.
      *
      *  In most cases you don't want to invoke this function directly but to use 
-     *  {@code enter(ExecutionOrder.BEFORE_LOOP, int)} instead
+     *  {@link #enter(ExecutionOrder.BEFORE_LOOP, int)} instead
      *
      *  Sideeffects: currentSection is updated, instructions are inserted into the body
      *
@@ -218,13 +219,13 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterBEFORE_LOOP (int PC) { return PC; }
+    protected int enterBEFORE_LOOP (int PC) { return PC; };
 
     /**
      *  Gets called when Label ExecutionOrder.START_OF_LOOP got stepped over.
      *
      *  In most cases you don't want to invoke this function directly but to use 
-     *  {@code enter(ExecutionOrder.START_OF_LOOP, int)} instead
+     *  {@link #enter(ExecutionOrder.START_OF_LOOP, int)} instead
      *
      *  Sideeffects: currentSection is updated, instructions are inserted into the body
      *
@@ -232,13 +233,13 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterSTART_OF_LOOP (int PC) { return PC; }
+    protected int enterSTART_OF_LOOP (int PC) { return PC; };
 
     /**
      *  Gets called when Label ExecutionOrder.MIDDLE_OF_LOOP got stepped over.
      *
      *  In most cases you don't want to invoke this function directly but to use 
-     *  {@code enter(ExecutionOrder.MIDDLE_OF_LOOP, int)} instead
+     *  {@link #enter(ExecutionOrder.MIDDLE_OF_LOOP, int)} instead
      *
      *  Sideeffects: currentSection is updated, instructions are inserted into the body
      *
@@ -246,13 +247,13 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterMIDDLE_OF_LOOP (int PC) { return PC; }
+    protected int enterMIDDLE_OF_LOOP (int PC) { return PC; };
     
     /**
      *  Gets called when Label ExecutionOrder.MULTIPLE_TIMES_IN_LOOP got stepped over.
      *
      *  In most cases you don't want to invoke this function directly but to use 
-     *  {@code enter(ExecutionOrder.MULTIPLE_TIMES_IN_LOOP, int)} instead
+     *  {@link #enter(ExecutionOrder.MULTIPLE_TIMES_IN_LOOP, int)} instead
      *
      *  Sideeffects: currentSection is updated, instructions are inserted into the body
      *
@@ -260,13 +261,13 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterMULTIPLE_TIMES_IN_LOOP (int PC) { return PC; }
+    protected int enterMULTIPLE_TIMES_IN_LOOP (int PC) { return PC; };
 
     /**
      *  Gets called when Label ExecutionOrder.END_OF_LOOP got stepped over.
      *
      *  In most cases you don't want to invoke this function directly but to use 
-     *  {@code enter(ExecutionOrder.END_OF_LOOP, int)} instead
+     *  {@link #enter(ExecutionOrder.END_OF_LOOP, int)} instead
      *
      *  Sideeffects: currentSection is updated, instructions are inserted into the body
      *
@@ -274,13 +275,13 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterEND_OF_LOOP (int PC) { return PC; }
+    protected int enterEND_OF_LOOP (int PC) { return PC; };
 
     /**
      *  Gets called when Label ExecutionOrder.AFTER_LOOP got stepped over.
      *
      *  In most cases you don't want to invoke this function directly but to use 
-     *  {@code enter(ExecutionOrder.AFTER_LOOP, int)} instead
+     *  {@link #enter(ExecutionOrder.AFTER_LOOP, int)} instead
      *
      *  Sideeffects: currentSection is updated, instructions are inserted into the body
      *
@@ -288,13 +289,13 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterAFTER_LOOP (int PC) { return PC; }
+    protected int enterAFTER_LOOP (int PC) { return PC; };
 
     /**
      *  Gets called when Label ExecutionOrder.AT_LAST got stepped over.
      *
      *  In most cases you don't want to invoke this function directly but to use 
-     *  {@code enter(ExecutionOrder.AT_LAST, int)} instead
+     *  {@link #enter(ExecutionOrder.AT_LAST, int)} instead
      *  
      *  Sideeffects: currentSection is updated, instructions are inserted into the body
      *
@@ -302,7 +303,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int enterAT_LAST (int PC) { return PC; }
+    protected int enterAT_LAST (int PC) { return PC; };
 
     /**
      *  Gets called when the model gets finished.
@@ -316,7 +317,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected int leaveAT_LAST (int PC) { return PC; }
+    protected int leaveAT_LAST (int PC) { return PC; };
 
     /**
      *  Dispatches to the enterLABEL-functions. Does also call functions to any labels that

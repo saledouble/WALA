@@ -17,6 +17,7 @@ import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextItem;
@@ -61,7 +62,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     }
   }
 
-  private static IR makeIRForArgList(CGNode node) {
+  private IR makeIRForArgList(CGNode node) {
     // we have: v1 is dummy apply method
     // v2 is function to be invoked
     // v3 is argument to be passed as 'this'
@@ -121,7 +122,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
   }
 
   @SuppressWarnings("unused")
-  private static int passArbitraryPropertyValAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
+  private int passArbitraryPropertyValAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
     // read an arbitrary property name via EachElementGet
     int curValNum = nargs + 2;
     int eachElementGetResult = curValNum++;
@@ -139,7 +140,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     return curValNum;
   }
   
-  private static int passActualPropertyValsAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
+  private int passActualPropertyValsAsParams(JSInstructionFactory insts, int nargs, JavaScriptSummary S, int[] paramsToPassToInvoked) {
     // read an arbitrary property name via EachElementGet
     int nullVn = nargs + 2;
     S.addConstant(nullVn, new ConstantValue(null));
@@ -165,7 +166,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     return curValNum;
   }
 
-  private static IR makeIRForNoArgList(CGNode node) {
+  private IR makeIRForNoArgList(CGNode node) {
     // kind of a hack; re-use the summarized function infrastructure
     MethodReference ref = node.getMethod().getReference();
     IClass declaringClass = node.getMethod().getDeclaringClass();

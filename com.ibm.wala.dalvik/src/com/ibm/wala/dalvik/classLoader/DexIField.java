@@ -48,11 +48,18 @@
 package com.ibm.wala.dalvik.classLoader;
 
 
-import static org.jf.dexlib2.AccessFlags.*;
+import static org.jf.dexlib.Util.AccessFlags.FINAL;
+import static org.jf.dexlib.Util.AccessFlags.PRIVATE;
+import static org.jf.dexlib.Util.AccessFlags.PROTECTED;
+import static org.jf.dexlib.Util.AccessFlags.PUBLIC;
+import static org.jf.dexlib.Util.AccessFlags.STATIC;
+import static org.jf.dexlib.Util.AccessFlags.VOLATILE;
 
 import java.util.Collection;
 
-import org.jf.dexlib2.iface.Field;
+import org.jf.dexlib.ClassDataItem.EncodedField;
+import org.jf.dexlib.StringIdItem;
+import org.jf.dexlib.TypeIdItem;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -68,7 +75,7 @@ public class DexIField implements IField {
 /*
  * The EncodedFied object for which this DexIField is a wrapper
  */
-    private final Field eField;
+    private final EncodedField eField;
 
     /**
      * The declaring class for this method.
@@ -90,20 +97,19 @@ public class DexIField implements IField {
     private Atom name;
 
 
-    public DexIField(Field encodedField, DexIClass klass) {
+    public DexIField(EncodedField encodedField, DexIClass klass) {
     //public DexIField(EncodedField encodedField) {
         eField = encodedField;
         myClass = klass;
-        String fieldName = eField.getName();
-		name = Atom.findOrCreateUnicodeAtom(fieldName);
+        StringIdItem fieldName = eField.field.getFieldName();
+		name = Atom.findOrCreateUnicodeAtom(fieldName.getStringValue());
 
-        String fieldType = eField.getType();
+        TypeIdItem fieldType = eField.field.getFieldType();
 		TypeName T = DexUtil.getTypeName(fieldType);
         TypeReference type = TypeReference.findOrCreate(myClass.getClassLoader().getReference(), T);
         myFieldRef = FieldReference.findOrCreate(myClass.getReference(), name, type);
     }
 
-	@Override
 	public TypeReference getFieldTypeReference() {
 
         //compute the typeReference from the EncodedField
@@ -116,7 +122,6 @@ public class DexIField implements IField {
 
     }
 
-    @Override
     public FieldReference getReference() {
 
         if (fieldReference == null) {
@@ -130,54 +135,45 @@ public class DexIField implements IField {
 
     }
 
-    @Override
     public Atom getName() {
         return name;
     }
 
-    @Override
     public boolean isFinal() {
-        return (eField.getAccessFlags() & FINAL.getValue()) != 0;
+        return (eField.accessFlags & FINAL.getValue()) != 0;
     }
 
-    @Override
     public boolean isPrivate() {
-        return (eField.getAccessFlags() & PRIVATE.getValue()) != 0;
+        return (eField.accessFlags & PRIVATE.getValue()) != 0;
     }
 
-    @Override
     public boolean isProtected() {
-        return (eField.getAccessFlags() & PROTECTED.getValue()) != 0;
+        return (eField.accessFlags & PROTECTED.getValue()) != 0;
     }
 
-    @Override
     public boolean isPublic() {
-        return (eField.getAccessFlags() & PUBLIC.getValue()) != 0;
+        return (eField.accessFlags & PUBLIC.getValue()) != 0;
     }
 
-    @Override
     public boolean isStatic() {
-        return (eField.getAccessFlags() & STATIC.getValue()) != 0;
+        return (eField.accessFlags & STATIC.getValue()) != 0;
     }
 
-    @Override
     public IClass getDeclaringClass() {
         return myClass;
     }
 
-    @Override
     public boolean isVolatile() {
-        return (eField.getAccessFlags() & VOLATILE.getValue()) != 0;
+        return (eField.accessFlags & VOLATILE.getValue()) != 0;
     }
 
-    @Override
     public IClassHierarchy getClassHierarchy() {
         return myClass.getClassHierarchy();
     }
 
 	@Override
 	public Collection<Annotation> getAnnotations() {
-		return myClass.getAnnotations(eField);
+		return DexUtil.getAnnotations(myClass.getAnnotations(eField.field), myClass.getClassLoader().getReference());
 	}
 
 }

@@ -34,7 +34,7 @@ public abstract class AbstractReflectivePut extends ReflectiveMemberAccess {
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+   * @see com.ibm.wala.ssa.Instruction#getDef()
    */
   @Override
   public int getDef() {
@@ -42,7 +42,7 @@ public abstract class AbstractReflectivePut extends ReflectiveMemberAccess {
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
+   * @see com.ibm.wala.ssa.Instruction#getNumberOfUses()
    */
   @Override
   public int getNumberOfUses() {

@@ -33,7 +33,7 @@ import com.ibm.wala.util.graph.traverse.Topological;
 /**
  * Default implementation of a dataflow graph
  */
-public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPointSystem<T>  {
+public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPointSystem<T>  {
   static final boolean DEBUG = false;
 
   /**
@@ -261,7 +261,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   public Iterator<T> getVariables() {
     return new FilterIterator<>(graph.iterator(), new Predicate<T>() {
       @Override public boolean test(T x) {
-        return x != null;
+        return x instanceof IVariable;
       }
     });
   }

@@ -16,8 +16,6 @@ package com.ibm.wala.util;
  */
 public class CancelRuntimeException extends RuntimeException {
 
-  private static final long serialVersionUID = 5859062345002606705L;
-
   protected CancelRuntimeException(String msg) {
     super(msg);
   }

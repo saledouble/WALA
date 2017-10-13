@@ -32,10 +32,9 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 public class IrViewer extends JPanel{
-  private static final long serialVersionUID = -5668847442988389016L;
   private JTextField methodName;
-  private DefaultListModel<String> irLineList = new DefaultListModel<>();
-  private JList<String> irLines;
+  private DefaultListModel irLineList = new DefaultListModel();
+  private JList irLines;
 
   // mapping from ir viewer list line to source code line number.
   private Map<Integer, Integer> lineToPosition = null;
@@ -51,7 +50,7 @@ public class IrViewer extends JPanel{
   
   public IrViewer() {
     super(new BorderLayout());
-    irLines = new JList<String>(irLineList);
+    irLines = new JList(irLineList);
     methodName = new JTextField("IR");
     this.add(methodName, BorderLayout.PAGE_START);
     this.add(new JScrollPane(irLines, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -122,7 +121,7 @@ public class IrViewer extends JPanel{
 
   static final int NA = -1;
 
-  private static int parseIrLine(String line) {
+  private int parseIrLine(String line) {
     int firstSpace = line.indexOf(' ');
     if (firstSpace > 0) {
       String pcString = line.substring(0, firstSpace);

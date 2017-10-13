@@ -36,7 +36,7 @@ public class JavaScriptPropertyWrite extends AbstractReflectivePut {
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
+   * @see com.ibm.domo.ssa.Instruction#visit(Visitor)
    */
   @Override
   public void visit(IVisitor v) {

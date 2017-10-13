@@ -50,11 +50,12 @@ public class AnalysisScopeReader {
    */
   public static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
-    return read(scope, scopeFileName, exclusionsFile, javaLoader);
+    return read(scope, scopeFileName, exclusionsFile, javaLoader, new FileProvider());
   }
 
 
-  public static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader) throws IOException {
+  public static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader,
+      FileProvider fp) throws IOException {
     BufferedReader r = null;
     try {
       // Now reading from jar is included in WALA, but we can't use their version, because they load from
@@ -98,7 +99,8 @@ public class AnalysisScopeReader {
     return scope;
   }
 
-  protected static AnalysisScope read(AnalysisScope scope, final URI scopeFileURI, final File exclusionsFile, ClassLoader javaLoader) throws IOException {
+  protected static AnalysisScope read(AnalysisScope scope, final URI scopeFileURI, final File exclusionsFile, ClassLoader javaLoader,
+      FileProvider fp) throws IOException {
     BufferedReader r = null;
     try {
       String line;

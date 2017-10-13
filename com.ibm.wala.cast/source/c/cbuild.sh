@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash
 
 if (uname | grep -i "cygwin"); then
 	# This should be the default for most of cases;
@@ -10,7 +10,3 @@ if (uname | grep -i "cygwin"); then
 else
 	make
 fi
-
-# Local variables:
-# eval: (smie-config-local '((8 :after "else" 2) (8 :elem basic 2)))
-# End:

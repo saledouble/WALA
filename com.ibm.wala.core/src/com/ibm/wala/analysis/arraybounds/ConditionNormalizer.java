@@ -51,10 +51,10 @@ public class ConditionNormalizer {
 
 				if (i == 0) {
 					// make sure the other is lhs
-					this.op = swapOperator(this.op);
+					this.op = this.swapOperator(this.op);
 				}
 				if (!branchIsTaken) {
-					this.op = negateOperator(this.op);
+					this.op = this.negateOperator(this.op);
 				}
 				this.rhs = var;
 			}
@@ -73,7 +73,7 @@ public class ConditionNormalizer {
 		return this.rhs;
 	}
 
-	private static Operator negateOperator(Operator op) {
+	private Operator negateOperator(Operator op) {
 		switch (op) {
 		case EQ:
 			return Operator.NE;
@@ -93,7 +93,7 @@ public class ConditionNormalizer {
 		}
 	}
 
-	private static Operator swapOperator(Operator op) {
+	private Operator swapOperator(Operator op) {
 		switch (op) {
 		case EQ:
 			return op;

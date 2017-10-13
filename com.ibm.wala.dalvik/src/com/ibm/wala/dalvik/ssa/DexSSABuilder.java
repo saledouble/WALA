@@ -11,7 +11,10 @@
  *******************************************************************************/
 package com.ibm.wala.dalvik.ssa;
 
+import java.nio.ByteBuffer;
 import java.util.Iterator;
+
+import org.jf.dexlib.Code.Format.ArrayDataPseudoInstruction.ArrayElement;
 
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -45,6 +48,7 @@ import com.ibm.wala.dalvik.dex.instructions.Switch;
 import com.ibm.wala.dalvik.dex.instructions.Throw;
 import com.ibm.wala.dalvik.dex.instructions.UnaryOperation;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
+import com.ibm.wala.shrikeBT.CheckCastInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.GotoInstruction;
 import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
@@ -54,6 +58,7 @@ import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IGetInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
+import com.ibm.wala.shrikeBT.InstanceofInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
@@ -133,8 +138,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) {
         super(scfg);
         localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), method.getMaxLocals()) : null;
-        init(new SymbolTableMeeter(cfg, scfg), new SymbolicPropagator(scfg, instructions,
-                cfg, piNodePolicy));
+        init(new SymbolTableMeeter(cfg, instructions, scfg), new SymbolicPropagator(scfg, instructions,
+                localMap, cfg, piNodePolicy));
         this.method = method;
         this.symbolTable = symbolTable;
         this.insts = method.getDeclaringClass().getClassLoader().getInstructionFactory();
@@ -149,7 +154,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
         final DexCFG dexCFG;
 
-        SymbolTableMeeter(SSACFG cfg, DexCFG dexCFG) {
+        SymbolTableMeeter(SSACFG cfg, SSAInstruction[] instructions, DexCFG dexCFG) {
             this.cfg = cfg;
 //            this.instructions = instructions;
             this.dexCFG = dexCFG;
@@ -192,7 +197,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //          }
 //      }
 
-        @Override
         public int meetLocal(int n, int[] rhs, DexCFG.BasicBlock bb) {
             if (allTheSame(rhs)) {
                 for (int i = 0; i < rhs.length; i++) {
@@ -343,8 +347,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
         final SSAPiNodePolicy piNodePolicy;
 
-        public SymbolicPropagator(DexCFG dexCFG, SSAInstruction[] instructions, SSACFG cfg,
-                SSAPiNodePolicy piNodePolicy) {
+        public SymbolicPropagator(DexCFG dexCFG, SSAInstruction[] instructions, SSA2LocalMap localMap,
+                SSACFG cfg, SSAPiNodePolicy piNodePolicy) {
             super(dexCFG);
             this.piNodePolicy = piNodePolicy;
             this.cfg = cfg;
@@ -424,7 +428,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 			// TODO: make sure all visit functions are overridden
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitArrayLength(ArrayLengthInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLength(ArrayLengthInstruction)
              */
             @Override
             public void visitArrayLength(ArrayLength instruction) {
@@ -437,7 +441,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitArrayLoad(IArrayLoadInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLoad(IArrayLoadInstruction)
              */
             @Override
             public void visitArrayGet(ArrayGet instruction) {
@@ -458,7 +462,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitArrayStore(IArrayStoreInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayStore(IArrayStoreInstruction)
              */
             @Override
             public void visitArrayPut(ArrayPut instruction) {
@@ -477,37 +481,46 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
             @Override
             public void visitArrayFill(ArrayFill instruction) {
-                Iterator<Number> iae = instruction.getTable().getArrayElements().iterator();
+
+                Iterator<ArrayElement> iae = instruction.getTable().getElements();
                 int i = 0;
                 while (iae.hasNext())
                 {
-                    Number ae = iae.next();                    
+                    ArrayElement ae = (ArrayElement)iae.next();
+                    int ElementWidth = ae.elementWidth;
+
                     int index = symbolTable.getConstant(i);
                     int arrayRef = workingState.getLocal(instruction.array);
                     TypeReference t = instruction.getType();
 //                  System.out.println(t.getName().toString());
                     int value;
+
+                    //fetch the byte[] array for the element
+                    byte[] temp_byte = new byte[ElementWidth];
+                    for (int j = 0; j < ElementWidth; j++)
+                        temp_byte[j] = ae.buffer[ae.bufferIndex+(ElementWidth-1)-j];
+                    ByteBuffer byte_buffer = ByteBuffer.wrap(temp_byte);
 //
 //                      System.out.println("Index: " + ae.bufferIndex + ", Width: " + ae.elementWidth + ", Value: " +  byte_buffer.getSomethingDependingonType );
 
 
                     //okay to call the getConstant(String) for a char?
                     if (t.equals(TypeReference.Char))
-                        value = symbolTable.getConstant((char) ae.intValue());
+                        value = symbolTable.getConstant(Character.toString(byte_buffer.getChar()));
                     else if (t.equals(TypeReference.Byte))
-                        value = symbolTable.getConstant(ae.byteValue());
+                        value = symbolTable.getConstant((int)byte_buffer.get());
                     else if (t.equals(TypeReference.Short))
-                        value = symbolTable.getConstant(ae.shortValue());
+                        value = symbolTable.getConstant((int)byte_buffer.getShort());
                     else if (t.equals(TypeReference.Int))
-                        value = symbolTable.getConstant(ae.intValue());
+                        value = symbolTable.getConstant(byte_buffer.getInt());
                     else if (t.equals(TypeReference.Long))
-                        value = symbolTable.getConstant(ae.longValue());
+                        value = symbolTable.getConstant(byte_buffer.getLong());
                     else if (t.equals(TypeReference.Float))
-                        value = symbolTable.getConstant(ae.floatValue());
+                        value = symbolTable.getConstant(byte_buffer.getFloat());
                     else if (t.equals(TypeReference.Double))
-                        value = symbolTable.getConstant(ae.doubleValue());
+                        value = symbolTable.getConstant(byte_buffer.getDouble());
                     else if (t.equals(TypeReference.Boolean))
-                        value = symbolTable.getConstant(ae.intValue() != 0);
+                        value = symbolTable.getConstant((byte_buffer.get() == 1)?true:false);
                     else
                     {
                         
@@ -523,7 +536,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitBinaryOp(IBinaryOpInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitBinaryOp(IBinaryOpInstruction)
              */
             @Override
             public void visitBinaryOperation(BinaryOperation instruction) {
@@ -540,7 +553,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitBinaryOp(IBinaryOpInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitBinaryOp(IBinaryOpInstruction)
              */
             @Override
             public void visitBinaryLiteral(BinaryLiteralOperation instruction) {
@@ -584,7 +597,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 			}
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitCheckCast
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitCheckCast(CheckCastInstruction)
              */
             @Override
             public void visitCheckCast(CheckCast instruction) {
@@ -599,7 +612,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitConditionalBranch(IConditionalBranchInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConditionalBranch(IConditionalBranchInstruction)
              */
             @Override
             public void visitBranch(Branch instruction) {
@@ -629,7 +642,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitConstant(ConstantInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConstant(ConstantInstruction)
              */
             @Override
             public void visitConstant(Constant instruction) {
@@ -696,7 +709,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitConversion(IConversionInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConversion(IConversionInstruction)
              */
             // TODO: is this just a unary operation?
 //          @Override
@@ -713,7 +726,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //          }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGet(IGetInstruction)
              */
             @Override
             public void visitGetField(GetField instruction) {
@@ -749,7 +762,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitGoto(GotoInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGoto(GotoInstruction)
              */
             @Override
             public void visitGoto(Goto instruction) {
@@ -757,7 +770,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitInstanceof
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInstanceof(InstanceofInstruction)
              */
             @Override
             public void visitInstanceof(InstanceOf instruction) {
@@ -772,7 +785,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitInvoke(IInvokeInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInvoke(IInvokeInstruction)
              */
             @Override
             public void visitInvoke(Invoke instruction) {
@@ -890,7 +903,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //          }
 //
 //          /*
-//           * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitLocalStore(com.ibm.wala.shrikeBT.StoreInstruction)
+//           * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitLocalStore(com.ibm.wala.shrikeBT.StoreInstruction)
 //           */
 //          @Override
 //          public void visitLocalStore(IStoreInstruction instruction) {
@@ -901,7 +914,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //          }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitMonitor(MonitorInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitMonitor(MonitorInstruction)
              */
             @Override
             public void visitMonitor(Monitor instruction) {
@@ -911,7 +924,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitNew(NewInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitNew(NewInstruction)
              */
             @Override
             public void visitNew(New instruction) {
@@ -977,7 +990,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGet(IGetInstruction)
              */
             @Override
             public void visitPutField(PutField instruction) {
@@ -998,7 +1011,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitReturn(ReturnInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitReturn(ReturnInstruction)
              */
             @Override
             public void visitReturn(Return instruction) {
@@ -1033,7 +1046,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitShift(IShiftInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitShift(IShiftInstruction)
              */
             // TODO: this is just a binary operation
 //          @Override
@@ -1047,7 +1060,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //          }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitSwitch(SwitchInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitSwitch(SwitchInstruction)
              */
             @Override
             public void visitSwitch(Switch instruction) {
@@ -1091,7 +1104,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitThrow(ThrowInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitThrow(ThrowInstruction)
              */
             @Override
             public void visitThrow(Throw instruction) {
@@ -1110,7 +1123,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitUnaryOp(IUnaryOpInstruction)
+             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitUnaryOp(IUnaryOpInstruction)
              */
             @Override
             public void visitUnaryOperation(UnaryOperation instruction) {
@@ -1442,7 +1455,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
          * @param index - index into IR instruction array
          * @param vn - value number
          */
-        @Override
         public String[] getLocalNames(int index, int vn) {
             try {
                 if (!dexCFG.getMethod().hasLocalVariableTable()) {
@@ -1503,7 +1515,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         /**
          * @return the indices i s.t. x[i] == y, or null if none found.
          */
-        private static int[] extractIndices(int[] x, int y) {
+        private int[] extractIndices(int[] x, int y) {
             int count = 0;
             for (int i = 0; i < x.length; i++) {
                 if (x[i] == y) {

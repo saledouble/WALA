@@ -50,7 +50,6 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
    */
   protected SSACheckCastInstruction(int iindex, int result, int val, TypeReference[] types, boolean isPEI) {
     super(iindex);
-    assert val != -1;
     this.result = result;
     this.val = val;
     this.declaredResultTypes = types;

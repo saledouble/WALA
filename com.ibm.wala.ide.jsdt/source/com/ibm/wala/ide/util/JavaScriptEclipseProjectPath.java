@@ -51,7 +51,8 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 	
   private final Set<Pair<String, Plugin>> models = HashSetFactory.make();
 
-	protected JavaScriptEclipseProjectPath(Set<Pair<String, Plugin>> models) {
+	protected JavaScriptEclipseProjectPath(Set<Pair<String, Plugin>> models) throws IOException,
+			CoreException {
 		super(AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
 		this.models.addAll(models);
 		this.models.add(Pair.make("prologue.js", (Plugin)Activator.getDefault()));
@@ -65,8 +66,8 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 
 	
 	@Override
-  public EclipseProjectPath<?, ?> create(IProject project) throws CoreException, IOException {
-    EclipseProjectPath<?, ?> path = super.create(project);
+  public EclipseProjectPath create(IProject project) throws CoreException, IOException {
+    EclipseProjectPath path = super.create(project);
   
     Collection<Module> s = modules.get(JSLoader.JAVASCRIPT);
     for(Pair<String,Plugin> model : models) {

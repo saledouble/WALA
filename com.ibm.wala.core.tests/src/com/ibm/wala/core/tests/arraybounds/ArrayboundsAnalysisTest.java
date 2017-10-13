@@ -144,7 +144,7 @@ public class ArrayboundsAnalysisTest {
   }
 
   @AfterClass
-  public static void free() {
+  public static void free() throws IOException, ClassHierarchyException {
     scope = null;
     cha = null;
     irFactory = null;

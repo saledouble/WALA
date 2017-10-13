@@ -15,7 +15,6 @@ import java.util.Collection;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -35,16 +34,16 @@ import com.ibm.wala.util.WalaRuntimeException;
 /**
  * An {@link IRFactory} that for methods that originate from Shrike.
  */
-public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>> {
+public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
 
   public final static boolean buildLocalMap = true;
 
-  public ControlFlowGraph makeCFG(final IBytecodeMethod method) {
+  public ControlFlowGraph makeCFG(final IBytecodeMethod method, Context C) {
     return ShrikeCFG.make(method);
   }
 
   @Override
-  public IR makeIR(final IBytecodeMethod<IInstruction> method, Context C, final SSAOptions options) throws IllegalArgumentException {
+  public IR makeIR(final IBytecodeMethod method, Context C, final SSAOptions options) throws IllegalArgumentException {
 
     if (method == null) {
       throw new IllegalArgumentException("null method");
@@ -55,7 +54,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
     } catch (InvalidClassFileException e) {
       throw new WalaRuntimeException("bad method bytecodes", e);
     }
-    final ShrikeCFG shrikeCFG = (ShrikeCFG) makeCFG(method);
+    final ShrikeCFG shrikeCFG = (ShrikeCFG) makeCFG(method, C);
 
     final SymbolTable symbolTable = new SymbolTable(method.getNumberOfParameters());
     final SSAInstruction[] newInstrs = new SSAInstruction[shrikeInstructions.length];

@@ -225,7 +225,7 @@ public class JavaLauncher extends Launcher {
     return lastProcess;
   }
 
-  private static String makeLibPath() {
+  private String makeLibPath() {
     String libPath = System.getProperty("java.library.path");
     if (libPath == null) {
       return null;

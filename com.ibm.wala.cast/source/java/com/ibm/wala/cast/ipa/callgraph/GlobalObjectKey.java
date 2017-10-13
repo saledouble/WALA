@@ -25,7 +25,6 @@ import com.ibm.wala.util.collections.Pair;
  * 
  * @see JSSSAPropagationCallGraphBuilder
  */
-@SuppressWarnings("javadoc")
 public class GlobalObjectKey implements InstanceKey {
 
   private final IClass concreteType;

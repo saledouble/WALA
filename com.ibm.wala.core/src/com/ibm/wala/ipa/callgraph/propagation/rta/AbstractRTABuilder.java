@@ -20,6 +20,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.fixpoint.UnaryOperator;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -158,18 +159,18 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   private void addFieldConstraints(CGNode node) {
     for (Iterator it = getRTAContextInterpreter().iterateFieldsRead(node); it.hasNext();) {
       FieldReference f = (FieldReference) it.next();
-      processFieldAccess(f);
+      processFieldAccess(node, f);
     }
     for (Iterator it = getRTAContextInterpreter().iterateFieldsWritten(node); it.hasNext();) {
       FieldReference f = (FieldReference) it.next();
-      processFieldAccess(f);
+      processFieldAccess(node, f);
     }
   }
 
   /**
    * Is s is a getstatic or putstatic, then potentially add the relevant <clinit>to the newMethod set.
    */
-  private void processFieldAccess(FieldReference f) {
+  private void processFieldAccess(CGNode node, FieldReference f) {
     if (DEBUG) {
       System.err.println(("processFieldAccess: " + f));
     }

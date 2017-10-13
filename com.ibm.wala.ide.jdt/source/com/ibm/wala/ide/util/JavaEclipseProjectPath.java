@@ -47,7 +47,8 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
 		}
 	}
 	
-  protected JavaEclipseProjectPath(com.ibm.wala.ide.util.EclipseProjectPath.AnalysisScopeType scopeType) {
+  protected JavaEclipseProjectPath(com.ibm.wala.ide.util.EclipseProjectPath.AnalysisScopeType scopeType)
+      throws IOException, CoreException {
     super(scopeType);
   }
 
@@ -88,7 +89,7 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
 		  break;
 	  }
 	  case IClasspathEntry.CPE_PROJECT: {
-		  resolveProjectPathEntry(includeSource, entry.getPath());
+		  resolveProjectPathEntry(loader, includeSource, entry.getPath());
 		  break;
 	  }
 	  case IClasspathEntry.CPE_CONTAINER: {

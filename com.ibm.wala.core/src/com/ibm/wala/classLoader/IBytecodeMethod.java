@@ -13,6 +13,7 @@ package com.ibm.wala.classLoader;
 import java.util.Collection;
 
 import com.ibm.wala.shrikeBT.ExceptionHandler;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.annotations.Annotation;
@@ -20,7 +21,7 @@ import com.ibm.wala.types.annotations.Annotation;
 /**
  * A method which originated in bytecode, decoded by Shrike
  */
-public interface IBytecodeMethod<I>extends IMethod {
+public interface IBytecodeMethod extends IMethod {
 
   /**
    * @return the bytecode index corresponding to instruction i in the getInstructions() array
@@ -40,7 +41,7 @@ public interface IBytecodeMethod<I>extends IMethod {
   /**
    * @return the Shrike instructions decoded from the bytecode
    */
-  I[] getInstructions() throws InvalidClassFileException;
+  IInstruction[] getInstructions() throws InvalidClassFileException;
 
   /**there 
    * @return the call sites declared in the bytecode for this method

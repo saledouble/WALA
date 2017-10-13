@@ -109,7 +109,7 @@ public class UnknownTargetModel  extends AndroidModel {
      *  @param  target  Component Type, may be null: No restrictions are imposed on AndroidModel then
      */
     public UnknownTargetModel(final IClassHierarchy cha, final AnalysisOptions options, final IAnalysisCacheView cache, 
-            AndroidComponent target) {
+            AndroidComponent target) throws CancelException {
         super(cha, options, cache);
         
         if (target == null) {   // TODO: Enable

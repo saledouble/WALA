@@ -48,16 +48,15 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
+import org.jf.dexlib.Code.Opcode;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 
 public abstract class Instruction {
 
-    @SuppressWarnings("unused")
     public static class Visitor {
  
-		public void visitArrayLength(ArrayLength instruction) {
+        public void visitArrayLength(ArrayLength instruction) {
          }
 
         public void visitArrayGet(ArrayGet instruction) {
@@ -146,7 +145,7 @@ public abstract class Instruction {
      * True if the instruction can continue.
      * @see com.ibm.wala.shrikeBT.IInstruction#isFallThrough()
      */
-	public boolean isFallThrough() {
+    public boolean isFallThrough() {
         return opcode.canContinue();
     }
 
@@ -154,7 +153,7 @@ public abstract class Instruction {
      * True if the instruction can throw an exception
      * @see com.ibm.wala.shrikeBT.IInstruction#isPEI()
      */
-	public boolean isPEI() {
+    public boolean isPEI() {
         return opcode.canThrow();
     }
 
@@ -172,9 +171,11 @@ public abstract class Instruction {
         return opcode;
     }
 
-	public int[] getBranchTargets() {
+    public int[] getBranchTargets() {
         return noInstructions;
     }
+
+
 
     public abstract void visit(Visitor visitor);
 

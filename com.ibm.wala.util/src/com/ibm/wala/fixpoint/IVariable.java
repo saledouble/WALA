@@ -16,7 +16,8 @@ import com.ibm.wala.util.graph.INodeWithNumber;
 /**
  * Represents a single variable in a fixed-point iterative system.
  */
-public interface IVariable<T extends IVariable<T>> extends INodeWithNumber {
+@SuppressWarnings("rawtypes")
+public interface IVariable<T extends IVariable> extends INodeWithNumber {
   
   /**
    * Variables must allow the solver implementation to get/set an order number,

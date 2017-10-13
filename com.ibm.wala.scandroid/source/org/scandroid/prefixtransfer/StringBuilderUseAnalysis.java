@@ -74,14 +74,16 @@ public class StringBuilderUseAnalysis {
 
 	public final Map<ISSABasicBlock, ISSABasicBlock> blockOrdering;
 	
+	private final InstanceKey sbik;
 	private final CGNode node;
 	private final PointerAnalysis<InstanceKey> pa;
 	private final Set<LocalPointerKey> localPointerKeys = new HashSet<>();
 	private final List<SSAInstruction> instructions;
 	
-	public StringBuilderUseAnalysis(final InstanceKey ik, final PointerAnalysis<InstanceKey> pa) {
+	public StringBuilderUseAnalysis(final InstanceKey ik, final PointerAnalysis<InstanceKey> pa) throws Exception {
 		assert(ik.getConcreteType().getName().toString().equals("Ljava/lang/StringBuilder"));
 	
+		this.sbik = ik;
 		this.pa = pa;
 		this.node = findCGNode(ik, pa);
 		this.instructions = findInstructions();
@@ -106,7 +108,7 @@ public class StringBuilderUseAnalysis {
 		this.blockOrdering = blockOrdering;
 	}
 
-	private CGNode findCGNode(final InstanceKey ik, final PointerAnalysis<InstanceKey> pa) {
+	private CGNode findCGNode(final InstanceKey ik, final PointerAnalysis<InstanceKey> pa) throws Exception {
 		CGNode nominatedNode = null;
 		
 		for (final PointerKey pk : pa.getPointerKeys()) {
@@ -204,7 +206,6 @@ public class StringBuilderUseAnalysis {
 			return retVal;
 		}
 
-		@Override
 		public String toString() {
 			return ("StringBuilderToString(instanceID = " + instanceID + "; concatenatedInstanceKeys = " + concatenatedInstanceKeys + ")");
 		}

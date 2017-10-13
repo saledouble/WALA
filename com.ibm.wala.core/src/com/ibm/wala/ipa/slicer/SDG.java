@@ -83,7 +83,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
   /**
    * keeps track of PDG for each call graph node
    */
-  private final Map<CGNode, PDG<T>> pdgMap = HashMapFactory.make();
+  private final Map<CGNode, PDG> pdgMap = HashMapFactory.make();
 
   /**
    * governs data dependence edges in the graph
@@ -115,7 +115,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
    */
   private final HeapExclusions heapExclude;
 
-  private final ModRef<T> modRef;
+  private final ModRef modRef;
 
   /**
    * Have we eagerly populated all nodes of this SDG?
@@ -123,15 +123,15 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
   private boolean eagerComputed = false;
 
   public SDG(final CallGraph cg, PointerAnalysis<T> pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
-    this(cg, pa, new ModRef<T>(), dOptions, cOptions, null);
+    this(cg, pa, ModRef.make(), dOptions, cOptions, null);
   }
 
-  public SDG(final CallGraph cg, PointerAnalysis<T> pa, ModRef<T> modRef, DataDependenceOptions dOptions,
+  public SDG(final CallGraph cg, PointerAnalysis<T> pa, ModRef modRef, DataDependenceOptions dOptions,
       ControlDependenceOptions cOptions) {
     this(cg, pa, modRef, dOptions, cOptions, null);
   }
 
-  public SDG(CallGraph cg, PointerAnalysis<T> pa, ModRef<T> modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
+  public SDG(CallGraph cg, PointerAnalysis<T> pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
       HeapExclusions heapExclude) throws IllegalArgumentException {
     super();
     if (dOptions == null) {
@@ -179,7 +179,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
   private void addPDGStatementNodes(CGNode node) {
     if (!statementsAdded.contains(node)) {
       statementsAdded.add(node);
-      PDG<?> pdg = getPDG(node);
+      PDG pdg = getPDG(node);
       for (Iterator<? extends Statement> it = pdg.iterator(); it.hasNext();) {
         addNode(it.next());
       }
@@ -206,8 +206,6 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
   }
 
   private class Nodes extends SlowNumberedNodeManager<Statement> {
-
-    private static final long serialVersionUID = -1450214776332091211L;
 
     @Override
     public boolean containsNode(Statement N) {
@@ -427,7 +425,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       }
       case METHOD_ENTRY:
         Collection<Statement> result = HashSetFactory.make(5);
-        if (!cOptions.isIgnoreInterproc()) {
+        if (!cOptions.equals(ControlDependenceOptions.NONE)) {
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
             for (Iterator<CallSiteReference> it2 = cg.getPossibleSites(caller, N.getNode()); it2.hasNext();) {
@@ -463,7 +461,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       addPDGStatementNodes(N.getNode());
       switch (N.getKind()) {
       case NORMAL:
-        if (cOptions.isIgnoreInterproc()) {
+        if (cOptions.equals(ControlDependenceOptions.NONE)) {
           return getPDG(N.getNode()).getSuccNodes(N);
         } else {
           NormalStatement ns = (NormalStatement) N;
@@ -628,7 +626,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       addPDGStatementNodes(dst.getNode());
       switch (src.getKind()) {
       case NORMAL:
-        if (cOptions.isIgnoreInterproc()) {
+        if (cOptions.equals(ControlDependenceOptions.NONE)) {
           return getPDG(src.getNode()).hasEdge(src, dst);
         } else {
           NormalStatement ns = (NormalStatement) src;
@@ -798,7 +796,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
 
   @Override
   public PDG<T> getPDG(CGNode node) {
-    PDG<T> result = pdgMap.get(node);
+    PDG result = pdgMap.get(node);
     if (result == null) {
       result = new PDG<T>(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg, modRef);
       pdgMap.put(node, result);

@@ -21,6 +21,7 @@ import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -78,7 +79,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
   /**
    * The modules to analyze
    */
-  protected Collection<? extends Module> moduleFiles;
+  protected Collection<Module> moduleFiles;
 
   /**
    * A representation of the analysis scope
@@ -132,11 +133,11 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
     }
   };
 
-  protected abstract CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
+  protected abstract CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache2);
 
   protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis,
       IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
-    CallGraphBuilder<I> builder = getCallGraphBuilder(cha, options, cache);
+    CallGraphBuilder builder = getCallGraphBuilder(cha, options, cache);
 
     cg = builder.makeCallGraph(options, monitor);
 
@@ -148,7 +149,7 @@ public abstract class AbstractAnalysisEngine<I extends InstanceKey> implements A
   }
 
   @Override
-  public void setModuleFiles(Collection<? extends Module> moduleFiles) {
+  public void setModuleFiles(Collection moduleFiles) {
     this.moduleFiles = moduleFiles;
   }
 

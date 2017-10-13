@@ -50,10 +50,13 @@
 package org.scandroid.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,11 +65,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.dalvik.util.AndroidAnalysisScope;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -83,10 +87,12 @@ import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.XMLMethodSummaryReader;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 public class AndroidAnalysisContext {
@@ -103,25 +109,29 @@ public class AndroidAnalysisContext {
 
 	public AndroidAnalysisContext(ISCanDroidOptions options)
 			throws IllegalArgumentException, ClassHierarchyException,
-			IOException {
+			IOException, CancelException, URISyntaxException {
 		this(options, "Java60RegressionExclusions.txt");
 	}
 
 	/**
 	 * @param exclusions
+	 * @param classpath
+	 * @param packagename
 	 * @throws IOException
 	 * @throws IllegalArgumentException
+	 * @throws CancelException
 	 * @throws ClassHierarchyException
+	 * @throws URISyntaxException
 	 */
 	public AndroidAnalysisContext(ISCanDroidOptions options, String exclusions)
-			throws IOException, IllegalArgumentException, ClassHierarchyException {
+			throws IOException, IllegalArgumentException, CancelException,
+			       ClassHierarchyException, URISyntaxException {
 		
 		this.options = options;
 		scope = AndroidAnalysisScope.setUpAndroidAnalysisScope(options.getClasspath(), exclusions, getClass().getClassLoader(), options.getAndroidLibrary());
 		
 		cha = ClassHierarchyFactory.make(scope);
 
-		/*
 		if (options.classHierarchyWarnings()) {
 			// log ClassHierarchy warnings
 			for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
@@ -129,14 +139,22 @@ public class AndroidAnalysisContext {
 				
 			}
 		}
-		*/
 		Warnings.clear();
 	}
 	
 	
 
+	// ContextSelector, entry points, reflection options, IR Factory, call graph
+	// type, include library
+	public void buildGraphs(List<Entrypoint> localEntries,
+			InputStream summariesStream) throws CancelException {
+
+		
+
+	}
+
 	public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
-			AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
+			AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
 			AnalysisScope scope, ContextSelector customSelector,
 			SSAContextInterpreter customInterpreter,
 			InputStream summariesStream, MethodSummary extraSummary) {
@@ -174,12 +192,12 @@ public class AndroidAnalysisContext {
 	 * TODO: move
 	 */
 	public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
-			AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
+			AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
 			AnalysisScope scope, ContextSelector customSelector,
 			SSAContextInterpreter customInterpreter,
-			List<InputStream> arrayList, MethodSummary extraSummary) {
+			InputStream summariesStream, MethodSummary extraSummary) {
 				return makeZeroCFABuilder(options, cache, cha, scope,
-						customSelector, customInterpreter, Lists.newArrayList(arrayList),
+						customSelector, customInterpreter, Lists.newArrayList(summariesStream),
 						extraSummary);
 			}
 
@@ -201,7 +219,7 @@ public class AndroidAnalysisContext {
      * TODO: move
 	 */
 	public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
-			AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha,
+			AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
 			AnalysisScope scope, ContextSelector customSelector,
 			SSAContextInterpreter customInterpreter,
 			Collection<InputStream> summariesStreams, MethodSummary extraSummary) {
@@ -285,7 +303,8 @@ public class AndroidAnalysisContext {
 	}
 
 	private static XMLMethodSummaryReader loadMethodSummaries(
-			AnalysisScope scope, InputStream xmlIStream) {
+			AnalysisScope scope, InputStream xmlIStream)
+			throws FileNotFoundException {
 		try (InputStream s = xmlIStream != null ? xmlIStream :
 			AndroidAnalysisContext.class.getClassLoader()
 				.getResourceAsStream(

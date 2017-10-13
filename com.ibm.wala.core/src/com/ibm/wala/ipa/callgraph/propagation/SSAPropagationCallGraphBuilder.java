@@ -30,6 +30,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.fixpoint.AbstractOperator;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextKey;
@@ -44,6 +45,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -269,7 +271,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * Hook for aubclasses to add pointer flow constraints based on values in a given node
    * @throws CancelException 
    */
-  @SuppressWarnings("unused")
   protected void addNodeValueConstraints(CGNode node, IProgressMonitor monitor) throws CancelException {
  
   }
@@ -365,7 +366,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param exceptionVar PointerKey representing a pointer to an exception value
    * @param catchClasses the types "caught" by the exceptionVar
    */
-  @SuppressWarnings("unused")
   private void addExceptionDefConstraints(IRView ir, DefUse du, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
       Set<IClass> catchClasses) {
     if (DEBUG) {
@@ -567,7 +567,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
-    protected IntSet getParamObjects(int paramIndex, @SuppressWarnings("unused") int rhsi) {
+    protected IntSet getParamObjects(int paramIndex, int rhsi) {
       int paramVn = call.getUse(paramIndex);
       PointerKey var = getPointerKeyForLocal(caller, paramVn);
       IntSet s = system.findOrCreatePointsToSet(var).getValue();
@@ -728,7 +728,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     protected boolean isRootType(IClass klass) {
-      return SSAPropagationCallGraphBuilder.isRootType(klass);
+      return getBuilder().isRootType(klass);
     }
 
     /*
@@ -1601,7 +1601,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     processCallingConstraints(caller, instruction, target, constParams, uniqueCatchKey);
   }
   
-  @SuppressWarnings("unused")
   protected void processCallingConstraints(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
       InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
     // TODO: i'd like to enable this optimization, but it's a little tricky
@@ -1732,7 +1731,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
     
-    private byte cpa(final PointsToSetVariable[] rhs) {
+    private byte cpa(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
      final MutableBoolean changed = new MutableBoolean();
       for(int rhsIndex = 0; rhsIndex < rhs.length; rhsIndex++) { 
         final int y = rhsIndex;
@@ -1792,7 +1791,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
       assert dispatchIndices.length >= rhs.length : "bad operator at " + call;
       
-      return cpa(rhs);
+      return cpa(lhs, rhs);
       
       /*
       // did evaluating the dispatch operation add a new possible target
@@ -1891,7 +1890,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       */
     }
 
-    @SuppressWarnings("unused")
     private void handleAllReceivers(MutableIntSet receiverVals, InstanceKey[] keys, MutableBoolean sideEffect) {
       assert keys[0] == null;
       IntIterator receiverIter = receiverVals.intIterator();
@@ -2008,8 +2006,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
   }
 
-  protected void iterateCrossProduct(final CGNode caller, final SSAAbstractInvokeInstruction call, final InstanceKey[][] invariants,
-      final VoidFunction<InstanceKey[]> f) {
+  protected void iterateCrossProduct(final CGNode caller, final SSAAbstractInvokeInstruction call, IntSet parameters,
+      final InstanceKey[][] invariants, final VoidFunction<InstanceKey[]> f) {
     new CrossProductRec(invariants, call, caller, f).rec(0, 0);
   }
   
@@ -2021,6 +2019,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // to take the invoke instruction as a parameter instead, since invs is
     // associated with the instruction
     final CallSiteReference site = instruction.getCallSite();
+    IntSet params = getRelevantParameters(caller, site);
     final Set<CGNode> targets = HashSetFactory.make();
     VoidFunction<InstanceKey[]> f = new VoidFunction<InstanceKey[]>() {
       @Override
@@ -2035,7 +2034,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
       }
     };
-    iterateCrossProduct(caller, instruction, invs, f);
+    iterateCrossProduct(caller, instruction, params, invs, f);
      return targets;
   }
 
@@ -2069,7 +2068,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return true;
   }
 
-  protected InterestingVisitor makeInterestingVisitor(@SuppressWarnings("unused") CGNode node, int vn) {
+  protected InterestingVisitor makeInterestingVisitor(CGNode node, int vn) {
     return new InterestingVisitor(vn);
   }
 
@@ -2184,12 +2183,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return true;
   }
 
-  private static boolean isRootType(IClass klass) {
+  private boolean isRootType(IClass klass) {
     return klass.getClassHierarchy().isRootClass(klass);
   }
 
   @SuppressWarnings("unused")
-  private static boolean isRootType(FilteredPointerKey.TypeFilter filter) {
+  private boolean isRootType(FilteredPointerKey.TypeFilter filter) {
     if (filter instanceof FilteredPointerKey.SingleClassFilter) {
       return isRootType(((FilteredPointerKey.SingleClassFilter) filter).getConcreteType());
     } else {

@@ -76,8 +76,7 @@ public final class LocalVariableTableReader extends AttributeReader {
         }
 
         // check length
-        @SuppressWarnings("unused")
-        LocalVariableTableReader localVariableTableReader = new LocalVariableTableReader(iter);
+        new LocalVariableTableReader(iter);
         int attr = iter.getRawOffset();
         int count = cr.getUShort(attr + 6);
         int offset = attr + 8;

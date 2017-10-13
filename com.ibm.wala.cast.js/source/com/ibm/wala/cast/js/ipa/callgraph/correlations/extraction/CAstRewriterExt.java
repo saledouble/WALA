@@ -229,14 +229,14 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
 			enterEntity(root);
 			CAstEntity entity = super.rewrite(root);
 			rewrite_cache.put(root, entity);
-			leaveEntity();
+			leaveEntity(root);
 			entities.pop();
 			return entity;
 		}
 	}
 	
-	protected void enterEntity(@SuppressWarnings("unused") CAstEntity entity) {}
-	protected void leaveEntity() {}
+	protected void enterEntity(CAstEntity entity) {}
+	protected void leaveEntity(CAstEntity entity) {}
 
 	public CAstRewriterExt(CAst Ast, boolean recursive,	NodePos rootContext) {
 		super(Ast, recursive, rootContext);

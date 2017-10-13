@@ -283,8 +283,12 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
           pk = key;
         }
         FilteredPointerKey fpk = (FilteredPointerKey) pk;
-        assert fpk != null;
-        assert key != null;
+        if (fpk == null) {
+          Assertions.UNREACHABLE("fpk is null");
+        }
+        if (key == null) {
+          Assertions.UNREACHABLE("key is null");
+        }
         if (fpk.getTypeFilter() == null) {
           Assertions.UNREACHABLE("fpk.getTypeFilter() is null");
         }
@@ -390,14 +394,14 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * @return true iff the system changes
    */
-  public boolean newFieldWrite(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
+  public boolean newFieldWrite(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs, PointerKey container) {
     return newConstraint(lhs, op, rhs);
   }
 
   /**
    * @return true iff the system changes
    */
-  public boolean newFieldRead(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
+  public boolean newFieldRead(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs, PointerKey container) {
     return newConstraint(lhs, op, rhs);
   }
 
@@ -499,7 +503,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
   }
 
-  private static TypeReference makeArray(TypeReference element, int dim) {
+  private TypeReference makeArray(TypeReference element, int dim) {
     TypeReference iArrayRef = element;
     for (int i = 0; i < dim; i++) {
       iArrayRef = TypeReference.findOrCreateArrayOf(iArrayRef);
@@ -507,7 +511,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return iArrayRef;
   }
 
-  private void registerArrayInstanceWithAllSuperclassesOfElement(int index, IClass elementClass, int dim) {
+  private void registerArrayInstanceWithAllSuperclassesOfElement(int index, IClass elementClass, int dim)
+      throws ClassHierarchyException {
     IClass T;
     // register the array with each supertype of the element class
     T = elementClass.getSuperclass();

@@ -60,10 +60,9 @@ import com.ibm.wala.util.strings.Atom;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  *  @since  2013-10-25
  */
-public class DefaultInstantiationBehavior extends IInstantiationBehavior {
+public class DefaultInstantiationBehavior extends IInstantiationBehavior implements Serializable {
 
     /* package-private */ static final class BehviourValue implements Serializable {
-		private static final long serialVersionUID = 190943987799306506L;
 		public final InstanceBehavior behaviour;
         public final Exactness exactness;
         public final BehviourValue cacheFrom;
@@ -82,7 +81,6 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
     }
 
     /* package-private */ static final class BehaviorKey<T> implements Serializable {
-        private static final long serialVersionUID = -1932639921432060660L;
         // T is expected to be TypeName or Atom
         final T base;
 
@@ -105,7 +103,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
         @Override
         public boolean equals(Object o) {
             if (o instanceof BehaviorKey) {
-                BehaviorKey<?> other = (BehaviorKey<?>) o;
+                BehaviorKey other = (BehaviorKey) o;
                 return base.equals(other.base);
             } else {
                 return false;
@@ -124,7 +122,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
     }
 
 
-    private final Map<BehaviorKey<?>, BehviourValue> behaviours = new HashMap<>();
+    private final Map<BehaviorKey, BehviourValue> behaviours = new HashMap<>();
     private final transient IClassHierarchy cha;
 
     public DefaultInstantiationBehavior(final IClassHierarchy cha) {
@@ -352,8 +350,8 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
         if (this.serializationIncludesCache) {
             stream.writeObject(this.behaviours);
         } else {
-            final Map<BehaviorKey<?>, BehviourValue> strippedBehaviours = new HashMap<>();
-            for (final BehaviorKey<?> key : this.behaviours.keySet()) {
+            final Map<BehaviorKey, BehviourValue> strippedBehaviours = new HashMap<>();
+            for (final BehaviorKey key : this.behaviours.keySet()) {
                 final BehviourValue val = this.behaviours.get(key);
                 if (! val.isCached() ) {
                     strippedBehaviours.put(key, val);
@@ -370,12 +368,11 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
      *  hard-coded behaviors don't get mixed with loaded ones. It may be deserialized but using a
      *  LoadedInstantiationBehavior instead may be a better way (as it starts in an empty state)
      */
-	@SuppressWarnings("unchecked")
-	private void readObject(java.io.ObjectInputStream stream) 
+    private void readObject(java.io.ObjectInputStream stream) 
         throws IOException, ClassNotFoundException {
 
         DefaultInstantiationBehavior.this.behaviours.clear();
-        this.behaviours.putAll((Map<BehaviorKey<?>, BehviourValue>) stream.readObject());
+        this.behaviours.putAll((Map<BehaviorKey, BehviourValue>) stream.readObject());
     }
 
 }

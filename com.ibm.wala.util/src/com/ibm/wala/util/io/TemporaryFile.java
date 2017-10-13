@@ -15,22 +15,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class TemporaryFile {
 
-  private static Path outputDir;
+  private final static String outputDir;
+
+  static {
+    String dir = System.getProperty("java.io.tmpdir");
+
+    while (dir.endsWith(File.separator))
+      dir = dir.substring(0, dir.length()-1);
+      
+    dir = dir + File.separator;
+    
+    outputDir = dir;
+  }
 
   public static File urlToFile(String fileName, URL input) throws IOException {
-    if (input == null) {
-      throw new NullPointerException("input == null");
-    }
-    if (outputDir == null) {
-      outputDir = Files.createTempDirectory("wala");      
-    }
-    Path filePath = outputDir.resolve(fileName);
-    return urlToFile(filePath.toFile(), input);
+    File F = new File(outputDir + File.separator + fileName);
+    return urlToFile(F , input);
   }
 
   public static File urlToFile(File F, URL input) throws IOException {

@@ -12,7 +12,6 @@ package com.ibm.wala.core.tests.ptrs;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -39,6 +38,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.intset.OrdinalSet;
 
+import junit.framework.Assert;
+
 public class ZeroLengthArrayTest {
 
   @Test
@@ -50,7 +51,7 @@ public class ZeroLengthArrayTest {
         TestConstants.ZERO_LENGTH_ARRAY_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 //    System.err.println(pa);

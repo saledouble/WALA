@@ -76,6 +76,7 @@ import org.scandroid.util.CGAnalysisContext;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.IFDS.ICFGSupergraph;
+import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -121,7 +122,7 @@ public class OutflowAnalysis {
 		this.specs = specs;
 	}
 
-	private static void addEdge(
+	private void addEdge(
 			Map<FlowType<IExplodedBasicBlock>, Set<FlowType<IExplodedBasicBlock>>> graph,
 			FlowType<IExplodedBasicBlock> source,
 			FlowType<IExplodedBasicBlock> dest) {
@@ -408,13 +409,17 @@ public class OutflowAnalysis {
 	public Map<FlowType<IExplodedBasicBlock>, Set<FlowType<IExplodedBasicBlock>>> analyze(
 			TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
 			IFDSTaintDomain<IExplodedBasicBlock> domain) {
-		return analyze(flowResult, domain, specs);
+		return analyze(ctx.cg, ctx.getClassHierarchy(), ctx.graph, ctx.pa,
+				flowResult, domain, specs);
 	}
 
 	public Map<FlowType<IExplodedBasicBlock>, Set<FlowType<IExplodedBasicBlock>>> analyze(
+			CallGraph cg,
+			ClassHierarchy cha,
+			ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> graph,
+			PointerAnalysis<InstanceKey> pa,
 			TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
-			IFDSTaintDomain<IExplodedBasicBlock> domain,
-			ISpecs s) {
+			IFDSTaintDomain<IExplodedBasicBlock> domain, ISpecs s) {
 
 		
 		

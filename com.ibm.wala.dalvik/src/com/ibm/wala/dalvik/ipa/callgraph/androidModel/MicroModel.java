@@ -64,7 +64,6 @@ public class MicroModel extends AndroidModel {
      *  
      *  {@inheritDoc}
      */
-    @Override
     protected boolean selectEntryPoint(AndroidEntryPoint ep) {
         return ep.isMemberOf(this.target);
     }

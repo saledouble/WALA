@@ -99,8 +99,8 @@ public class JavaScriptModRef<T extends InstanceKey> extends AstModRef<T> {
   }
 
   @Override
-  protected RefVisitor<T, ? extends ExtendedHeapModel> makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
-    return new JavaScriptRefVisitor<>(n, result, pa, h);
+  protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h) {
+    return new JavaScriptRefVisitor(n, result, pa, h);
   }
 
   protected static class JavaScriptModVisitor<T extends InstanceKey> extends AstModVisitor<T> implements JSInstructionVisitor {
@@ -168,7 +168,7 @@ public class JavaScriptModRef<T extends InstanceKey> extends AstModRef<T> {
   }
 
   @Override
-  protected ModVisitor<T, ? extends ExtendedHeapModel> makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
+  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<T> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
     return new JavaScriptModVisitor<>(n, result, h, pa);
   }
 }

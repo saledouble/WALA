@@ -32,6 +32,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -339,7 +340,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    // SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
+    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return cache.getDefUse(getIR(node));
   }
 

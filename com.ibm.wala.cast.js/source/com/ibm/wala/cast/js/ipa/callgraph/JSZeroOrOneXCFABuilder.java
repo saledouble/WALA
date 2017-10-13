@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -37,7 +38,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
     SSAContextInterpreter contextInterpreter = setupSSAContextInterpreter(cha, options, cache, appContextInterpreter);
 
-    setupMethodTargetSelector(cha, options);
+    setupMethodTargetSelector(cha, options, cache);
 
     setupContextSelector(options, appContextSelector, doOneCFA);
 
@@ -70,11 +71,11 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
   }
 
   
-  private void setupMethodTargetSelector(IClassHierarchy cha, JSAnalysisOptions options) {
+  private void setupMethodTargetSelector(IClassHierarchy cha, JSAnalysisOptions options, IAnalysisCacheView cache) {
     MethodTargetSelector targetSelector = new JavaScriptConstructTargetSelector(cha, options
         .getMethodTargetSelector());
     if (options.handleCallApply()) {
-      targetSelector = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(targetSelector));
+      targetSelector = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(targetSelector, cache));
     }
     if (options.useLoadFileTargetSelector()) {
       targetSelector = new LoadFileTargetSelector(targetSelector, this);
@@ -107,7 +108,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
    *          specifications.
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
-  public static JSCFABuilder make(JSAnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, ClassLoader cl,
+  public static JSCFABuilder make(JSAnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
       AnalysisScope scope, String[] xmlFiles, byte instancePolicy, boolean doOneCFA) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     for (int i = 0; i < xmlFiles.length; i++) {

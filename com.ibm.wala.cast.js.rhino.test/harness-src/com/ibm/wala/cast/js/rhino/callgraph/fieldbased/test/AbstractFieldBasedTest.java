@@ -1,5 +1,6 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +20,8 @@ import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.ProgressMaster;
 import com.ibm.wala.util.WalaException;
 
+import junit.framework.AssertionFailedError;
+
 public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
 
   protected FieldBasedCGUtil util;
@@ -33,11 +36,11 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   	util = new FieldBasedCGUtil(new CAstRhinoTranslatorFactory());
   }
 
-  protected JSCallGraph runTest(String script, Object[][] assertions, BuilderType... builderTypes) throws WalaException, Error, CancelException {
+  protected JSCallGraph runTest(String script, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error, CancelException {
      return runTest(TestFieldBasedCG.class.getClassLoader().getResource(script), assertions, builderTypes);
    }
 
-  protected JSCallGraph runTest(URL url, Object[][] assertions, BuilderType... builderTypes) throws WalaException, Error, CancelException {
+  protected JSCallGraph runTest(URL url, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error, CancelException {
     JSCallGraph cg = null;
     for(BuilderType builderType : builderTypes) {
       ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
@@ -45,8 +48,8 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
         cg = util.buildCG(url, builderType, monitor, false, DefaultSourceExtractor.factory).fst;
         System.err.println(cg);
         verifyGraphAssertions(cg, assertions);
-      } catch(AssertionError afe) {
-        throw new AssertionError(builderType + ": " + afe.getMessage());
+      } catch(AssertionFailedError afe) {
+        throw new AssertionFailedError(builderType + ": " + afe.getMessage());
       } 
     }
     return cg;
@@ -55,7 +58,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   /**
    * for long-running tests that tend to time out on Travis
    */
-  protected JSCallGraph runTestExceptOnTravis(URL url, Object[][] assertions, BuilderType... builderTypes) throws WalaException, Error, CancelException {
+  protected JSCallGraph runTestExceptOnTravis(URL url, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error, CancelException {
     if (System.getenv("TRAVIS") == null) {
       return runTest(url, assertions, builderTypes);
     } else {

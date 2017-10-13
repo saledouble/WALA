@@ -15,7 +15,8 @@ package com.ibm.wala.fixpoint;
 /**
  * Represents a single step, restricted to a unary operator.
  */
-public abstract class UnaryStatement<T extends IVariable<T>> extends AbstractStatement<T, UnaryOperator<T>> {
+@SuppressWarnings("rawtypes")
+public abstract class UnaryStatement<T extends IVariable> extends AbstractStatement<T, UnaryOperator<T>> {
 
   /**
    * The operands
@@ -55,9 +56,8 @@ public abstract class UnaryStatement<T extends IVariable<T>> extends AbstractSta
   /** 
    * Return the operands in this equation.
    */
-  public IVariable<T>[] getOperands() {
-    @SuppressWarnings("unchecked")
-    IVariable<T>[] result = new IVariable[2];
+  public IVariable[] getOperands() {
+    IVariable[] result = new IVariable[2];
     result[0] = lhs;
     result[1] = rhs;
     return result;
@@ -108,7 +108,7 @@ public abstract class UnaryStatement<T extends IVariable<T>> extends AbstractSta
   @Override
   public boolean equals(Object o) {
     if (o instanceof UnaryStatement) {
-      UnaryStatement<?> other = (UnaryStatement<?>) o;
+      UnaryStatement other = (UnaryStatement) o;
 
       if (!getOperator().equals(other.getOperator())) {
         return false;

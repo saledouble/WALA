@@ -136,8 +136,8 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     return result;
   }
 
-  protected CGNode getNode(Key K) {
-    return nodes.get(K);
+  protected NodeImpl getNode(Key K) {
+    return (NodeImpl) nodes.get(K);
   }
 
   @Override
@@ -145,7 +145,6 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     return fakeRoot;
   }
 
-  @Override
   public CGNode getFakeWorldClinitNode() {
     return fakeWorldClinit;
   }
@@ -233,23 +232,18 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     StringBuffer result = new StringBuffer("");
     for (Iterator i = DFS.iterateDiscoverTime(this, new NonNullSingletonIterator<CGNode>(getFakeRootNode())); i.hasNext();) {
       CGNode n = (CGNode) i.next();
-      result.append(nodeToString(this, n) + "\n");
-    }
-    return result.toString();
-  }
-
-  public static String nodeToString(CallGraph CG, CGNode n) {
-    StringBuffer result = new StringBuffer(n.toString() +  "\n");
-     if (n.getMethod() != null) {
-      for (Iterator sites = n.iterateCallSites(); sites.hasNext();) {
-        CallSiteReference site = (CallSiteReference) sites.next();
-        Iterator targets = CG.getPossibleTargets(n, site).iterator();
-        if (targets.hasNext()) {
-          result.append(" - " + site + "\n");
-        }
-        for (; targets.hasNext();) {
-          CGNode target = (CGNode) targets.next();
-          result.append("     -> " + target + "\n");
+      result.append(n + "\n");
+      if (n.getMethod() != null) {
+        for (Iterator sites = n.iterateCallSites(); sites.hasNext();) {
+          CallSiteReference site = (CallSiteReference) sites.next();
+          Iterator targets = getPossibleTargets(n, site).iterator();
+          if (targets.hasNext()) {
+            result.append(" - " + site + "\n");
+          }
+          for (; targets.hasNext();) {
+            CGNode target = (CGNode) targets.next();
+            result.append("     -> " + target + "\n");
+          }
         }
       }
     }

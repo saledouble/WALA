@@ -70,13 +70,13 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.classLoader.DexIRFactory;
 import com.ibm.wala.dataflow.IFDS.ICFGSupergraph;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.PartialCallGraph;
@@ -87,7 +87,11 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSACFG;
+import com.ibm.wala.ssa.SSACFG.BasicBlock;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Predicate;
@@ -95,6 +99,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.intset.OrdinalSet;
+import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
@@ -135,14 +140,12 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 
 		entrypoints = specifier.specify(analysisContext);
 		AnalysisOptions analysisOptions = new AnalysisOptions(scope, entrypoints);
-		/*
 		for (Entrypoint e : entrypoints) {
 			
 		}
-		*/
 		analysisOptions.setReflectionOptions(options.getReflectionOptions());
 
-		IAnalysisCacheView cache = new AnalysisCacheImpl(new DexIRFactory());
+		AnalysisCache cache = new AnalysisCacheImpl((IRFactory<IMethod>) new DexIRFactory());
 
 		SSAPropagationCallGraphBuilder cgb;
 
@@ -155,7 +158,6 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		cgb = AndroidAnalysisContext.makeZeroCFABuilder(analysisOptions, cache,	cha, scope,
 				new DefaultContextSelector(analysisOptions, cha), null, extraSummaries, null);
 
-		/*
 		if (analysisContext.getOptions().cgBuilderWarnings()) {
 			// CallGraphBuilder construction warnings
 			for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
@@ -163,7 +165,6 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 				
 			}
 		}
-		*/
 		Warnings.clear();
 
 		
@@ -188,13 +189,11 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			System.exit(status);
 		}
 
-		/*
 		// makeCallGraph warnings
 		for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
 			Warning w = wi.next();
 			
 		}
-		*/
 		Warnings.clear();
 
 		pa = cgb.getPointerAnalysis();
@@ -206,7 +205,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			}
 		});
 		if (options.includeLibrary()) {
-			graph = (ISupergraph) ICFGSupergraph.make(cg);
+			graph = (ISupergraph) ICFGSupergraph.make(cg, cache);
 		} else {
 
 			Collection<CGNode> nodes = HashSetFactory.make();
@@ -214,7 +213,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 				nodes.add(nIter.next());
 			}
 			CallGraph pcg = PartialCallGraph.make(cg, cg.getEntrypointNodes(), nodes);
-			graph = (ISupergraph) ICFGSupergraph.make(pcg);
+			graph = (ISupergraph) ICFGSupergraph.make(pcg, cache);
 		}
 
 		oneLevelGraph = GraphSlicer.prune(cg, new Predicate<CGNode>() {
@@ -278,7 +277,6 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			}
 		});
 
-		/*
 		if (options.stdoutCG()) {
 			for (Iterator<CGNode> nodeI = cg.iterator(); nodeI.hasNext();) {
 				CGNode node = nodeI.next();
@@ -301,7 +299,6 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 				}
 			}
 		}
-		*/
 	}
 
 	/**

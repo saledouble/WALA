@@ -16,7 +16,6 @@ import com.ibm.wala.util.graph.Graph;
 
 abstract class GraphDFSDiscoverTimeIterator<T> extends DFSDiscoverTimeIterator<T> {
 
-  private static final long serialVersionUID = -5673397879499010863L;
   /**
    * the graph being searched
    */

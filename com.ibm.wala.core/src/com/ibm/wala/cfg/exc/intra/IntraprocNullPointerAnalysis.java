@@ -135,12 +135,13 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
       } else {
         final List<T> catched = searchNodesWithPathToCatchAll(cfg);
         final NullPointerFrameWork<T> problem = new NullPointerFrameWork<T>(cfg, ir);
+        final int[] paramValNum = ir.getParameterValueNumbers();
       
-        solver = new NullPointerSolver<T>(problem, maxVarNum, cfg.entry(), ir, initialState);
+        solver = new NullPointerSolver<T>(problem, maxVarNum, paramValNum, cfg.entry(), ir, initialState);
         
         solver.solve(progress);
         
-        final Graph<T> deleted = createDeletedGraph();
+        final Graph<T> deleted = createDeletedGraph(solver);
         
         for (final T ch : catched) {
           deleted.addNode(ch);
@@ -160,8 +161,8 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
     }
   }
   
-  private Graph<T> createDeletedGraph() {
-    NegativeCFGBuilderVisitor nCFGbuilder = new NegativeCFGBuilderVisitor();
+  private Graph<T> createDeletedGraph(NullPointerSolver<T> solver) {
+    NegativeCFGBuilderVisitor nCFGbuilder = new NegativeCFGBuilderVisitor(solver);
     for (T bb : cfg) {
       nCFGbuilder.work(bb);
     }
@@ -200,7 +201,10 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
   private class NegativeCFGBuilderVisitor implements IVisitor {
 
     private final Graph<T> deleted;
-    private NegativeCFGBuilderVisitor() {
+    private final NullPointerSolver<T> solver;
+    
+    private NegativeCFGBuilderVisitor(NullPointerSolver<T> solver) {
+      this.solver = solver;
       this.deleted = new SparseNumberedGraph<T>(2);
       for (T bb : cfg) {
         deleted.addNode(bb);

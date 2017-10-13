@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.CollectionFilter;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
@@ -84,7 +85,7 @@ public class SWTTypeHierarchy {
   /**
    * Return a view of an {@link IClassHierarchy} as a {@link Graph}, with edges from classes to immediate subtypes
    */
-  public static Graph<IClass> typeHierarchy2Graph(IClassHierarchy cha) {
+  public static Graph<IClass> typeHierarchy2Graph(IClassHierarchy cha) throws WalaException {
     Graph<IClass> result = SlowSparseNumberedGraph.make();
     for (IClass c : cha) {
       result.addNode(c);
@@ -105,7 +106,7 @@ public class SWTTypeHierarchy {
   /**
    * Restrict g to nodes from the Application loader
    */
-  static Graph<IClass> pruneForAppLoader(Graph<IClass> g) {
+  static Graph<IClass> pruneForAppLoader(Graph<IClass> g) throws WalaException {
     Predicate<IClass> f = new Predicate<IClass>() {
       @Override public boolean test(IClass c) {
         return (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
@@ -117,7 +118,7 @@ public class SWTTypeHierarchy {
   /**
    * Remove from a graph g any nodes that are not accepted by a {@link Predicate}
    */
-  public static <T> Graph<T> pruneGraph(Graph<T> g, Predicate<T> f) {
+  public static <T> Graph<T> pruneGraph(Graph<T> g, Predicate<T> f) throws WalaException {
     Collection<T> slice = GraphSlicer.slice(g, f);
     return GraphSlicer.prune(g, new CollectionFilter<>(slice));
   }

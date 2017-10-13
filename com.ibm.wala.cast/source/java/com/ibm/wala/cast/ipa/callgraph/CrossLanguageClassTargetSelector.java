@@ -29,9 +29,9 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class CrossLanguageClassTargetSelector implements ClassTargetSelector {
 
-  private final Map<Atom, ClassTargetSelector> languageSelectors;
+  private final Map languageSelectors;
 
-  public CrossLanguageClassTargetSelector(Map<Atom, ClassTargetSelector> languageSelectors) {
+  public CrossLanguageClassTargetSelector(Map languageSelectors) {
     this.languageSelectors = languageSelectors;
   }
 
@@ -43,7 +43,7 @@ public class CrossLanguageClassTargetSelector implements ClassTargetSelector {
   }
 
   private ClassTargetSelector getSelector(NewSiteReference site) {
-    return languageSelectors.get(getLanguage(site));
+    return (ClassTargetSelector)languageSelectors.get(getLanguage(site));
   }
 
   @Override

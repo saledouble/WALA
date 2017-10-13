@@ -35,11 +35,12 @@ public class IntraproceduralNullPointerAnalysis {
 		this.ir = ir;
 
 		final int maxVarNum = ir.getSymbolTable().getMaxValueNumber();
+		final int[] paramValNum = ir.getParameterValueNumbers();
 		SSACFG cfg = ir.getControlFlowGraph();
 		final NullPointerFrameWork<ISSABasicBlock> problem = new NullPointerFrameWork<ISSABasicBlock>(
 				cfg, ir);
 		this.solver = new NullPointerSolver<ISSABasicBlock>(problem, maxVarNum,
-				ir, cfg.entry());
+				paramValNum, ir, cfg.entry());
 		try {
 			this.solver.solve(NO_PROGRESS_MONITOR);
 		} catch (final CancelException e) {

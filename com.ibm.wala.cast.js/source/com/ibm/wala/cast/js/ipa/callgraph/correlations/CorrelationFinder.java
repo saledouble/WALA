@@ -12,6 +12,7 @@
 package com.ibm.wala.cast.js.ipa.callgraph.correlations;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -85,7 +86,6 @@ public class CorrelationFinder {
     this.translatorFactory = translatorFactory;
   }
 
-  @SuppressWarnings("unused")
   public static CorrelationSummary findCorrelatedAccesses(IMethod method, IR ir) {
     AstMethod astMethod = (AstMethod)method;
     DefUse du = new DefUse(ir);
@@ -239,11 +239,11 @@ public class CorrelationFinder {
   }
 
   @SuppressWarnings("unused")
-  private void printCorrelatedAccesses(URL url) throws ClassHierarchyException {
+  private void printCorrelatedAccesses(URL url) throws IOException, ClassHierarchyException {
     printCorrelatedAccesses(findCorrelatedAccesses(url));
   }
 
-  private static void printCorrelatedAccesses(Map<IMethod, CorrelationSummary> summaries) {
+  private void printCorrelatedAccesses(Map<IMethod, CorrelationSummary> summaries) {
     List<Pair<Position, String>> correlations = new ArrayList<>();
     for(CorrelationSummary summary : summaries.values())
       correlations.addAll(summary.pp());
@@ -260,7 +260,7 @@ public class CorrelationFinder {
       System.out.println((i++) + " -- " + p.fst + ": " + p.snd);
   }
 
-  public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(URL url) throws ClassHierarchyException {
+  public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(URL url) throws IOException, ClassHierarchyException {
     Set<? extends SourceModule> scripts = null;
     if(url.getPath().endsWith(".js")) {
       scripts = Collections.singleton(new SourceURLModule(url));
@@ -277,11 +277,13 @@ public class CorrelationFinder {
     return summaries;
   }
 
-  public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(Collection<? extends SourceModule> scripts) throws ClassHierarchyException {
+  public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(Collection<? extends SourceModule> scripts) throws IOException,
+      ClassHierarchyException {
     return findCorrelatedAccesses(scripts.toArray(new SourceModule[scripts.size()]));
   }
 
-  public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(SourceModule[] scripts_array) throws ClassHierarchyException {
+  public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(SourceModule[] scripts_array) throws IOException,
+      ClassHierarchyException {
     JSCallGraphUtil.setTranslatorFactory(translatorFactory);
     JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(null);
     CAstAnalysisScope scope = new CAstAnalysisScope(scripts_array, loaders, Collections.singleton(JavaScriptLoader.JS));

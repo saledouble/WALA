@@ -145,7 +145,7 @@ public final class MethodEditor {
     }
   }
 
-  private static String getStateMessage(int state) {
+  private String getStateMessage(int state) {
     switch (state) {
     case BEFORE_PASS:
       return "This operation can only be performed before or after an editing pass";
@@ -415,7 +415,7 @@ public final class MethodEditor {
       }
       patchCount++;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid i", e);
+      throw new IllegalArgumentException("invalid i");
     }
   }
 
@@ -454,7 +454,7 @@ public final class MethodEditor {
       instructionHandlerPatches[i] = new HandlerPatch(instructionHandlerPatches[i], catchClass, allocateLabel(), p);
       patchCount++;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid i: " + i, e);
+      throw new IllegalArgumentException("invalid i: " + i);
     }
   }
 

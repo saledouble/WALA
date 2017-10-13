@@ -13,8 +13,6 @@ package com.ibm.wala.examples.analysis.dataflow;
 
 import java.io.IOException;
 
-import org.junit.Assert;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -28,8 +26,8 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
@@ -39,6 +37,8 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.io.FileProvider;
+
+import junit.framework.Assert;
 
 public class InitializerTest {
 
@@ -69,7 +69,7 @@ public class InitializerTest {
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "LstaticInit/TestStaticInit");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = null;
     try {
       cg = builder.makeCallGraph(options, null);
@@ -83,7 +83,8 @@ public class InitializerTest {
     
     System.out.println("Start");
     
-    StaticInitializer reachingDefs = new StaticInitializer(cg);
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
+    StaticInitializer reachingDefs = new StaticInitializer(cg, cache);
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, IClass> result = reachingDefs.analyze();
     ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> supergraph = reachingDefs.getSupergraph();
     for (BasicBlockInContext<IExplodedBasicBlock> bb : supergraph) {

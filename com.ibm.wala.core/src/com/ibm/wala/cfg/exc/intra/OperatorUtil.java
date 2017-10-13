@@ -19,7 +19,7 @@ public class OperatorUtil {
    * 
    * @author Martin Hecker, martin.hecker@kit.edu 
    */
-  public static class UnaryOperatorSequence<T extends IVariable<T>> extends UnaryOperator<T> {
+  public static class UnaryOperatorSequence<T extends IVariable> extends UnaryOperator<T> {
     
     final UnaryOperator<T>[] operators;
     
@@ -29,7 +29,6 @@ public class OperatorUtil {
       this.operators = operators.toArray(new UnaryOperator[operators.size()]);
     }
     
-    @SafeVarargs
     public UnaryOperatorSequence(UnaryOperator<T>... operators) {
       if (operators.length == 0 ) throw new IllegalArgumentException("Empty Operator-Sequence");
       this.operators = Arrays.copyOf(operators, operators.length);

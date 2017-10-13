@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
 import com.ibm.wala.dalvik.classLoader.DexIRFactory;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.LocatorFlags;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
@@ -90,7 +92,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 	}
 	
 
-	public void dynamicCG(File javaJarPath, String mainClass, String... args) throws FileNotFoundException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, IllegalArgumentException, InterruptedException {
+	public void dynamicCG(File javaJarPath, String mainClass, String... args) throws FileNotFoundException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, InterruptedException {
 		File F;
 		try (final FileInputStream in = new FileInputStream(javaJarPath)) {
 		  F = TemporaryFile.streamToFile(new File("test_jar.jar"), in);
@@ -132,7 +134,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
 		final IClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
-		IAnalysisCacheView cache = new AnalysisCacheImpl(new DexIRFactory());
+		AnalysisCache cache = new AnalysisCacheImpl(new DexIRFactory());
 
 		List<? extends Entrypoint> es = getEntrypoints(cha);
 
@@ -174,7 +176,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 		
 		Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, mainClassName);
 		
-		IAnalysisCacheView cache = new AnalysisCacheImpl(new DexIRFactory());
+		AnalysisCache cache = new AnalysisCacheImpl(new DexIRFactory());
 
 		AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 

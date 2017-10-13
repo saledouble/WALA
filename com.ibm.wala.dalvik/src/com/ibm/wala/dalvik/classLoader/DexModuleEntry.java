@@ -50,21 +50,19 @@ package com.ibm.wala.dalvik.classLoader;
 
 import java.io.InputStream;
 
-import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib.ClassDefItem;
 
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 
 public class DexModuleEntry implements ModuleEntry {
 
-    private final ClassDef classDefItem;
+    private final ClassDefItem classDefItem;
     private final String className;
-    private final DexFileModule container;
-    
-    public DexModuleEntry(ClassDef cdefitems, DexFileModule container) {
+
+    public DexModuleEntry(ClassDefItem cdefitems) {
         classDefItem = cdefitems;
-        this.container = container;
-        String temp =cdefitems.getType();
+        String temp =cdefitems.getClassType().getTypeDescriptor();
 //      className = temp;
         if (temp.endsWith(";"))
             className = temp.substring(0,temp.length()-1); //remove last ';'
@@ -73,7 +71,7 @@ public class DexModuleEntry implements ModuleEntry {
 //      System.out.println(className);
     }
 
-    public ClassDef getClassDefItem(){
+    public ClassDefItem getClassDefItem(){
         return classDefItem;
     }
 
@@ -81,7 +79,6 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
      */
-    @Override
     public Module asModule() {
         throw new UnsupportedOperationException();
     }
@@ -90,7 +87,6 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
      */
-    @Override
     public String getClassName() {
         return className;
     }
@@ -99,7 +95,6 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
      */
-    @Override
     public InputStream getInputStream() {
         throw new UnsupportedOperationException();
     }
@@ -108,7 +103,6 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#getName()
      */
-    @Override
     public String getName() {
         return className;
     }
@@ -117,7 +111,6 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
      */
-    @Override
     public boolean isClassFile() {
         return false;
     }
@@ -126,7 +119,6 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
      */
-    @Override
     public boolean isModuleFile() {
         return false;
     }
@@ -135,14 +127,13 @@ public class DexModuleEntry implements ModuleEntry {
      * (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
      */
-    @Override
     public boolean isSourceFile() {
         return false;
     }
 
 	@Override
-	public DexFileModule getContainer() {
-		return container;
+	public Module getContainer() {
+		return asModule();
 	}
 
     @Override

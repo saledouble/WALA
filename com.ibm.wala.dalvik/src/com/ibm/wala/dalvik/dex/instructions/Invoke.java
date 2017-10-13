@@ -48,12 +48,11 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
+import org.jf.dexlib.Code.Opcode;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction.IDispatch;
-import com.ibm.wala.types.Descriptor;
 
 public abstract class Invoke extends Instruction {
 
@@ -69,8 +68,6 @@ public abstract class Invoke extends Instruction {
         this.methodName = methodName;
         this.descriptor = descriptor;
         this.args = args;
-        
-        assert Descriptor.findOrCreateUTF8(descriptor) != null;
     }
 
     public static class InvokeVirtual extends Invoke

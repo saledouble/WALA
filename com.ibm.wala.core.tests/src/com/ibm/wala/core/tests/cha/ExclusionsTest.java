@@ -12,7 +12,6 @@ package com.ibm.wala.core.tests.cha;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -22,6 +21,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.StringStuff;
+
+import junit.framework.Assert;
 
 public class ExclusionsTest {
 

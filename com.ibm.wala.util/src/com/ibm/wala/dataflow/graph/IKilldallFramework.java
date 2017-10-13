@@ -19,7 +19,8 @@ import com.ibm.wala.util.graph.Graph;
  * 
  * @param <T> type of nodes in the graph
  */
-public interface IKilldallFramework<T,V extends IVariable<V>> {
+@SuppressWarnings("rawtypes")
+public interface IKilldallFramework<T,V extends IVariable> {
 
   /**
    * @return the flow graph which induces this dataflow problem

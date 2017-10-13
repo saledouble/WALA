@@ -182,7 +182,6 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     getNodeManager().removeNode(n);
   }
 
-  @SuppressWarnings("unused")
   protected String edgeString(T from, T to) {
     return " --> ";
   }

@@ -47,7 +47,7 @@ import com.ibm.wala.util.collections.Pair;
  *          a key used to ease cloning of partial ASTs. When rewriting an AST,
  *          sub-classes maintain a mapping from (original node, key) pairs
  *          (where key is of type K) to new nodes; see
- *          {@link #copyNodes}
+ *          {@link #copyNodes(CAstNode, RewriteContext, Map)}
  */
 public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K extends CAstRewriter.CopyKey<K>> {
 
@@ -57,7 +57,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
    * interface to be implemented by keys used for cloning sub-trees during the
    * rewrite
    */
-  public interface CopyKey<Self extends CopyKey<Self>> {
+  public interface CopyKey<Self extends CopyKey> {
 
     @Override
     int hashCode();
@@ -71,19 +71,19 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
      */
     Self parent();
 
-  }
+  };
 
   /**
    * interface to be implemented by contexts used while traversing the AST
    */
-  public interface RewriteContext<K extends CopyKey<K>> {
+  public interface RewriteContext<K extends CopyKey> {
 
     /**
      * get the cloning key for this context
      */
     K key();
 
-  }
+  };
 
   /**
    * represents a rewritten CAst
@@ -133,7 +133,6 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
    * rewritten AST? By default, just uses the original target.
    * 
    */
-  @SuppressWarnings("unused")
   protected CAstNode flowOutTo(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
       CAstControlFlowMap orig, CAstSourcePositionMap src) {
     return oldTarget;
@@ -191,8 +190,8 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
           // try to find a k in key's parent chain such that (oldTarget, k) is
           // in nodeMap's key set
-          Pair<CAstNode,CopyKey<K>> targetKey;
-          CopyKey<K> k = key;
+          Pair targetKey;
+          CopyKey k = key;
           do {
             targetKey = Pair.make(oldTarget, k);
             if (k != null) {
@@ -308,7 +307,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     }
   }
 
-  protected Map<CAstNode, Collection<CAstEntity>> copyChildren(@SuppressWarnings("unused") CAstNode root, Map<Pair<CAstNode, K>, CAstNode> nodeMap,
+  protected Map<CAstNode, Collection<CAstEntity>> copyChildren(CAstNode root, Map<Pair<CAstNode, K>, CAstNode> nodeMap,
       Map<CAstNode, Collection<CAstEntity>> children) {
     final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<>();
 
@@ -322,8 +321,8 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       if (children.containsKey(oldNode)) {
         Set<CAstEntity> newEntities = new LinkedHashSet<>();
         newChildren.put(newNode, newEntities);
-        for (Iterator<CAstEntity> oldEntities = children.get(oldNode).iterator(); oldEntities.hasNext();) {
-          newEntities.add(rewrite(oldEntities.next()));
+        for (Iterator oldEntities = ((Collection) children.get(oldNode)).iterator(); oldEntities.hasNext();) {
+          newEntities.add(rewrite((CAstEntity) oldEntities.next()));
         }
       }
     }
@@ -334,8 +333,8 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       if (key == null) {
         Set<CAstEntity> newEntities = new LinkedHashSet<>();
         newChildren.put(key, newEntities);
-        for (CAstEntity oldEntity : entry.getValue()) {
-          newEntities.add(rewrite(oldEntity));
+        for (Iterator oldEntities = ((Collection) entry.getValue()).iterator(); oldEntities.hasNext();) {
+          newEntities.add(rewrite((CAstEntity) oldEntities.next()));
         }
       }
     }
@@ -455,8 +454,8 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
         CAstNode key = entry.getKey();
         Set<CAstEntity> newValues = new LinkedHashSet<>();
         newChildren.put(key, newValues);
-        for (CAstEntity entity : entry.getValue()) {
-          newValues.add(rewrite(entity));
+        for (Iterator es = entry.getValue().iterator(); es.hasNext();) {
+          newValues.add(rewrite((CAstEntity) es.next()));
         }
       }
 

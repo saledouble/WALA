@@ -31,6 +31,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -80,7 +81,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		 uncalledFunctions.put("VirtualDispatch2.apk",  x);
 	}
 	
-	public static Set<IMethod> assertUserCodeReachable(CallGraph cg, Set<MethodReference> uncalled) {
+	public static Set<IMethod> assertUserCodeReachable(CallGraph cg, Set<MethodReference> uncalled) throws InvalidClassFileException {
 		Set<IMethod> result = HashSetFactory.make();
 	  for(Iterator<IClass> clss = cg.getClassHierarchy().getLoader(ClassLoaderReference.Application).iterateAllClasses();
 			clss.hasNext(); ) 

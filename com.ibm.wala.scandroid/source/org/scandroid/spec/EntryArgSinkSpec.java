@@ -71,7 +71,6 @@ public class EntryArgSinkSpec extends SinkSpec {
 		argNums = args;
 	}
 
-	@Override
 	public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
 			BasicBlockInContext<E> block) {
 

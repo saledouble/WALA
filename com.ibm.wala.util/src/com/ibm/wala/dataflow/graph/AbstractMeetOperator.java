@@ -16,7 +16,8 @@ import com.ibm.wala.fixpoint.IVariable;
 /**
  * Abstract superclass for meet operators
  */
-public abstract class AbstractMeetOperator<T extends IVariable<T>> extends AbstractOperator<T> {
+@SuppressWarnings("rawtypes")
+public abstract class AbstractMeetOperator<T extends IVariable> extends AbstractOperator<T> {
 
   /**
    * subclasses can override if needed

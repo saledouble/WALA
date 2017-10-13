@@ -16,6 +16,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.ssa.DexSSABuilder;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
@@ -28,6 +29,7 @@ import com.ibm.wala.ssa.analysis.DeadAssignmentElimination;
 public class DexIRFactory extends DefaultIRFactory {
     public final static boolean buildLocalMap = false;
 
+    @SuppressWarnings("rawtypes")
 	@Override
     public ControlFlowGraph makeCFG(IMethod method, Context C) throws IllegalArgumentException {
     	if (method == null) {
@@ -82,6 +84,7 @@ public class DexIRFactory extends DefaultIRFactory {
 
             @Override
             protected String instructionPosition(int instructionIndex) {
+                            try {
                 int bcIndex = method.getBytecodeIndex(instructionIndex);
                 int lineNumber = method.getLineNumber(bcIndex);
 
@@ -90,6 +93,9 @@ public class DexIRFactory extends DefaultIRFactory {
                 } else {
                     return "(line " + lineNumber + ")";
                 }
+                            } catch (InvalidClassFileException e) {
+                              return "";
+                            }
             }
 
             @Override

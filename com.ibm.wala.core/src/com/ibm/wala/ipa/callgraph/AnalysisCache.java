@@ -89,9 +89,4 @@ public class AnalysisCache implements IAnalysisCacheView {
     }
     return ssaCache.findOrCreateDU(ir, Everywhere.EVERYWHERE);
   }
-
-  @Override
-  public void clear() {
-    ssaCache.wipe();   
-  }
 }

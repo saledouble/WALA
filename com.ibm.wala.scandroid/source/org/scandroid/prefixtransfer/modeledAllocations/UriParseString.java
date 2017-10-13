@@ -73,7 +73,6 @@ public class UriParseString extends InstanceKeySite {
         return retVal;
     }
 
-    @Override
     public String toString() {
         return ("UriParseString(instanceID = " + instanceID + "; stringInstanceID = " + stringInstanceID + ")");
     }

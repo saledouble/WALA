@@ -36,18 +36,18 @@ import com.ibm.wala.types.TypeReference;
 
 public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
 
-  public ControlFlowGraph<?, ?> makeCFG(final IMethod method) {
+  public ControlFlowGraph makeCFG(final IMethod method, final Context context) {
     return ((AstMethod) method).getControlFlowGraph();
   }
 
-  public static class AstDefaultIRFactory<T extends IMethod> extends DefaultIRFactory {
-    private final AstIRFactory<T> astFactory;
+  public static class AstDefaultIRFactory extends DefaultIRFactory {
+    private final AstIRFactory astFactory;
 
     public AstDefaultIRFactory() {
-      this(new AstIRFactory<T>());
+      this(new AstIRFactory());
     }
     
-    public AstDefaultIRFactory(AstIRFactory<T> astFactory) {
+    public AstDefaultIRFactory(AstIRFactory astFactory) {
       this.astFactory = astFactory;
     }
 
@@ -63,7 +63,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
     @Override
     public ControlFlowGraph makeCFG(IMethod method, Context context) {
       if (method instanceof AstMethod) {
-        return astFactory.makeCFG(method);
+        return astFactory.makeCFG(method, context);
       } else {
         return super.makeCFG(method, context);
       }
@@ -79,7 +79,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
       return lexicalInfo;
     }
     
-    private void setCatchInstructions(SSACFG ssacfg, AbstractCFG<?, ?> oldcfg) {
+    private void setCatchInstructions(SSACFG ssacfg, AbstractCFG oldcfg) {
       for (int i = 0; i < oldcfg.getNumberOfNodes(); i++)
         if (oldcfg.isCatchBlock(i)) {
           ExceptionHandlerBasicBlock B = (ExceptionHandlerBasicBlock) ssacfg.getNode(i);
@@ -144,7 +144,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
   public IR makeIR(final IMethod method, final Context context, final SSAOptions options) {
     assert method instanceof AstMethod : method.toString();
   
-    AbstractCFG<?, ?> oldCfg = ((AstMethod) method).cfg();
+    AbstractCFG oldCfg = ((AstMethod) method).cfg();
     SSAInstruction[] oldInstrs = (SSAInstruction[]) oldCfg.getInstructions();
     SSAInstruction[] instrs = new SSAInstruction[ oldInstrs.length ];
     System.arraycopy(oldInstrs, 0, instrs, 0, instrs.length);
@@ -156,7 +156,7 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
   }
 
   public static IRFactory<IMethod> makeDefaultFactory() {
-    return new AstDefaultIRFactory<>();
+    return new AstDefaultIRFactory();
   }
 
   @Override

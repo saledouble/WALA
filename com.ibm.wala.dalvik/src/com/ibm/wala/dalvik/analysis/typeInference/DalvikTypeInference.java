@@ -6,6 +6,7 @@ import com.ibm.wala.analysis.typeInference.TypeVariable;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IVisitorWithAddresses;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 
@@ -21,7 +22,6 @@ public class DalvikTypeInference extends TypeInference {
 		super(ir, doPrimitives);
 	}
 
-	@Override
 	protected void initialize() {
 		init(ir, this.new DalvikTypeVarFactory(), this.new TypeOperatorFactory());
 	}
@@ -50,7 +50,7 @@ public class DalvikTypeInference extends TypeInference {
 		}
 	}
 
-	protected class TypeOperatorFactory extends TypeInference.TypeOperatorFactory {
+	protected class TypeOperatorFactory extends TypeInference.TypeOperatorFactory implements IVisitorWithAddresses, OperatorFactory<TypeVariable> {
 
 		@Override
 		public void visitPhi(SSAPhiInstruction instruction) {
@@ -94,7 +94,7 @@ public class DalvikTypeInference extends TypeInference {
 			}
 		}
 
-		private static boolean containsNonPrimitiveAndZero(DalvikTypeVariable[] types) {
+		private boolean containsNonPrimitiveAndZero(DalvikTypeVariable[] types) {
 			boolean containsNonPrimitive = false;
 			boolean containsZero = false;
 			for (int i = 0; i < types.length; i++) {

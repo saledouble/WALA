@@ -93,7 +93,6 @@ public class ClassLoaderImpl implements IClassLoader {
    * @param parent parent loader for delegation
    * @param exclusions set of classes to exclude from loading
    */
-  @SuppressWarnings("unused")
   public ClassLoaderImpl(ClassLoaderReference loader, ArrayClassLoader arrayClassLoader, IClassLoader parent,
       SetOfClasses exclusions, IClassHierarchy cha) {
 
@@ -119,7 +118,6 @@ public class ClassLoaderImpl implements IClassLoader {
    * @return the Set of source files in the module
    * @throws IOException
    */
-  @SuppressWarnings("unused")
   private Set<ModuleEntry> getSourceFiles(Module M) throws IOException {
     if (DEBUG_LEVEL > 0) {
       System.err.println("Get source files for " + M);
@@ -149,7 +147,6 @@ public class ClassLoaderImpl implements IClassLoader {
    * @return the Set of class Files in the module
    * @throws IOException
    */
-  @SuppressWarnings("unused")
   private Set<ModuleEntry> getClassFiles(Module M) throws IOException {
     if (DEBUG_LEVEL > 0) {
       System.err.println("Get class files for " + M);
@@ -181,7 +178,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * Remove from s any class file module entries which already are in t
    */
-  private static void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
+  private void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
     Set<String> old = HashSetFactory.make();
     for (Iterator<ModuleEntry> it = t.iterator(); it.hasNext();) {
       ModuleEntry m = it.next();
@@ -241,7 +238,6 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * Set up the set of classes loaded by this object.
    */
-  @SuppressWarnings("unused")
   private void loadAllClasses(Collection<ModuleEntry> moduleEntries, Map<String, Object> fileContents) {
     for (Iterator<ModuleEntry> it = moduleEntries.iterator(); it.hasNext();) {
       ModuleEntry entry = it.next();
@@ -320,7 +316,7 @@ public class ClassLoaderImpl implements IClassLoader {
       JarInputStream s = new JarInputStream(new ByteArrayInputStream(jarFileContents), false);
       JarEntry entry = null;
       while ((entry = s.getNextJarEntry()) != null) {
-        byte[] entryBytes = getEntryBytes(entrySizesForFile.get(entry.getName()), s);
+        byte[] entryBytes = getEntryBytes(entry, entrySizesForFile.get(entry.getName()), s);
         if (entryBytes == null) {
           return null;
         }
@@ -345,7 +341,7 @@ public class ClassLoaderImpl implements IClassLoader {
     return result;
   }
 
-  private static byte[] getEntryBytes(Long size, InputStream is) throws IOException {
+  private byte[] getEntryBytes(JarEntry entry, Long size, InputStream is) throws IOException {
     if (size == null) {
       return null;
     }
@@ -410,7 +406,6 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * Set up mapping from type name to Module Entry
    */
-  @SuppressWarnings("unused")
   protected void loadAllSources(Set<ModuleEntry> sourceModules) {
     for (Iterator<ModuleEntry> it = sourceModules.iterator(); it.hasNext();) {
       ModuleEntry entry = it.next();
@@ -479,7 +474,6 @@ public class ClassLoaderImpl implements IClassLoader {
    * 
    * @throws IllegalArgumentException if modules is null
    */
-  @SuppressWarnings("unused")
   @Override
   public void init(List<Module> modules) throws IOException {
 
@@ -556,7 +550,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * get the contents of a jar file. if any IO exceptions occur, catch and return null.
    */
-  private static void getJarFileContents(JarFileModule archive) {
+  private void getJarFileContents(JarFileModule archive) {
     String jarFileName = archive.getJarFile().getName();
     InputStream s = null;
     try {
@@ -592,7 +586,6 @@ public class ClassLoaderImpl implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#lookupClass(com.ibm.wala.types.TypeName)
    */
-  @SuppressWarnings("unused")
   @Override
   public IClass lookupClass(TypeName className) {
     if (className == null) {
@@ -698,7 +691,6 @@ public class ClassLoaderImpl implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
    */
-  @SuppressWarnings("unused")
   @Override
   public void removeAll(Collection<IClass> toRemove) {
     if (toRemove == null) {

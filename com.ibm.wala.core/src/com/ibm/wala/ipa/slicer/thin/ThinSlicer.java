@@ -34,7 +34,7 @@ public class ThinSlicer extends CISlicer {
     this(cg, pa, ModRef.make());
   }
 
-  public ThinSlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef<InstanceKey> modRef) {
+  public ThinSlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef modRef) {
     super(cg, pa, modRef, DataDependenceOptions.NO_HEAP, ControlDependenceOptions.NONE);
   }
 }

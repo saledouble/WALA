@@ -21,10 +21,10 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -57,6 +57,8 @@ public class LocalNamesTest extends WalaTestCase {
 
   private static AnalysisOptions options;
 
+  private static AnalysisCache cache;
+
   public static void main(String[] args) {
     justThisTest(LocalNamesTest.class);
   }
@@ -71,12 +73,13 @@ public class LocalNamesTest extends WalaTestCase {
         (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
+    cache = new AnalysisCacheImpl();
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {
       cha = ClassHierarchyFactory.make(scope, factory);
     } catch (ClassHierarchyException e) {
-      throw new Exception(e);
+      throw new Exception();
     }
   }
 
@@ -90,6 +93,7 @@ public class LocalNamesTest extends WalaTestCase {
     scope = null;
     cha = null;
     options = null;
+    cache = null;
   }
 
   /**
@@ -109,10 +113,7 @@ public class LocalNamesTest extends WalaTestCase {
 
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
-      
-      IAnalysisCacheView cache = new AnalysisCacheImpl(options.getSSAOptions());
-
-      IR ir = cache.getIR(m, Everywhere.EVERYWHERE);
+      IR ir = cache.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
 
       for (int offsetIndex = 0; offsetIndex < ir.getInstructions().length; offsetIndex++) {
         SSAInstruction instr = ir.getInstructions()[offsetIndex];
@@ -140,7 +141,6 @@ public class LocalNamesTest extends WalaTestCase {
     Assert.assertNotNull("method not found", mref);
     IMethod imethod = cha.resolveMethod(mref);
     Assert.assertNotNull("imethod not found", imethod);
-    IAnalysisCacheView cache = new AnalysisCacheImpl(options.getSSAOptions());
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSAOptions().setPiNodePolicy(save);
 
@@ -170,7 +170,6 @@ public class LocalNamesTest extends WalaTestCase {
     Assert.assertNotNull("method not found", mref);
     IMethod imethod = cha.resolveMethod(mref);
     Assert.assertNotNull("imethod not found", imethod);
-    IAnalysisCacheView cache = new AnalysisCacheImpl(options.getSSAOptions());
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSAOptions().setPiNodePolicy(save);
 

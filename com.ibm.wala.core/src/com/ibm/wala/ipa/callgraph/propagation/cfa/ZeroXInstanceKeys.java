@@ -268,7 +268,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  private static boolean isReflectiveType(TypeReference type) {
+  private boolean isReflectiveType(TypeReference type) {
     return type.equals(TypeReference.JavaLangReflectConstructor) || type.equals(TypeReference.JavaLangReflectMethod);
   }
 

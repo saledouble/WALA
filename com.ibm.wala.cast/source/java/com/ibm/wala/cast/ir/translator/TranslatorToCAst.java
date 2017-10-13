@@ -34,7 +34,6 @@ public interface TranslatorToCAst {
   public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend);
 
   public class Error extends WalaException {
-    private static final long serialVersionUID = -8440950320425119751L;
     public final Set<Warning> warning;
     
     public Error(Set<Warning> message) {
@@ -216,6 +215,6 @@ public interface TranslatorToCAst {
             breakNode);
       }
     }
-    }
+    };
 
 }

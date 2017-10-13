@@ -20,6 +20,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
@@ -364,7 +365,7 @@ public class Util {
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
    */
-  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
+  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache,
       IClassHierarchy cha, AnalysisScope scope) {
     return makeZeroOneCFABuilder(options, cache, cha, scope, null, null);
   }
@@ -378,7 +379,7 @@ public class Util {
    * @return a 0-1-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
    */
-  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IAnalysisCacheView analysisCache,
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache,
       IClassHierarchy cha, AnalysisScope scope, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -387,7 +388,7 @@ public class Util {
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return ZeroXCFABuilder.make(cha, options, analysisCache, customSelector, customInterpreter, ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.CONSTANT_SPECIFIC);
+    return ZeroXCFABuilder.make(cha, options, cache, customSelector, customInterpreter, ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.CONSTANT_SPECIFIC);
   }
 
   /**
@@ -397,9 +398,9 @@ public class Util {
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
    */
-  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IAnalysisCacheView analysisCache,
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache,
       IClassHierarchy cha, AnalysisScope scope) {
-    return makeVanillaZeroOneCFABuilder(options, analysisCache, cha, scope, null, null);
+    return makeVanillaZeroOneCFABuilder(options, cache, cha, scope, null, null);
   }
 
   /**
@@ -411,7 +412,7 @@ public class Util {
    * @return a 0-1-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
    */
-  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
+  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache,
       IClassHierarchy cha, AnalysisScope scope, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -475,7 +476,7 @@ public class Util {
    * with call-string length limited to n, and a context-sensitive
    * allocation-site-based heap abstraction.
    */
-  public static SSAPropagationCallGraphBuilder makeNCFABuilder(int n, AnalysisOptions options, IAnalysisCacheView cache,
+  public static SSAPropagationCallGraphBuilder makeNCFABuilder(int n, AnalysisOptions options, AnalysisCache cache,
       IClassHierarchy cha, AnalysisScope scope) {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
@@ -498,7 +499,7 @@ public class Util {
    * allocation-site-based heap abstraction. Standard optimizations in the heap
    * abstraction like smushing of strings are disabled.
    */
-  public static SSAPropagationCallGraphBuilder makeVanillaNCFABuilder(int n, AnalysisOptions options, IAnalysisCacheView cache,
+  public static SSAPropagationCallGraphBuilder makeVanillaNCFABuilder(int n, AnalysisOptions options, AnalysisCache cache,
       IClassHierarchy cha, AnalysisScope scope) {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
@@ -521,7 +522,7 @@ public class Util {
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for containers
    * @throws IllegalArgumentException if options is null
    */
-  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options, IAnalysisCacheView cache,
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options, AnalysisCache cache,
       IClassHierarchy cha, AnalysisScope scope) {
 
     if (options == null) {

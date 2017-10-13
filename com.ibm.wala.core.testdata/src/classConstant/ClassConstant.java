@@ -13,7 +13,7 @@ package classConstant;
 class ClassConstant {
 
   public static void main(String args[]) {
-    Class<ClassConstant> x = ClassConstant.class;
+    Class x = ClassConstant.class;
     x.hashCode();
   }
 

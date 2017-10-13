@@ -26,7 +26,6 @@ public interface RTAContextInterpreter extends CHAContextInterpreter {
   /**
    * @return an Iterator of the types that may be allocated by a given method in a given context.
    */
-  @Override
   public abstract Iterator<NewSiteReference> iterateNewSites(CGNode node);
 
   /**

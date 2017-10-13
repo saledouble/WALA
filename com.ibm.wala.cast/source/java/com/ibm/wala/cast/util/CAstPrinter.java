@@ -13,6 +13,7 @@ package com.ibm.wala.cast.util;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.Iterator;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -188,10 +189,10 @@ public class CAstPrinter {
   }
 
   public static void xmlTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
-      doXmlTo(top, pos, w);
+      instance.doXmlTo(top, pos, w);
   }
 
-  private static void doXmlTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
+  private void doXmlTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
     printTo(top, pos, w, 0, true);
   }
 
@@ -303,9 +304,11 @@ public class CAstPrinter {
 	    doPrintTo(e.getAST(), e.getSourceMap(), w);
 	    w.write('\n');
 	}
-	for (Collection<CAstEntity> collection : e.getAllScopedEntities().values()) {
-	  for (CAstEntity entity : collection) {
-	    doPrintTo(entity, w);
+	for(Iterator i= e.getAllScopedEntities().values().iterator();
+	    i.hasNext(); ) 
+	{
+	  for(Iterator j = ((Collection) i.next()).iterator(); j.hasNext(); ) {
+	    doPrintTo((CAstEntity) j.next(), w);
 	  }
 	}
 	w.flush();

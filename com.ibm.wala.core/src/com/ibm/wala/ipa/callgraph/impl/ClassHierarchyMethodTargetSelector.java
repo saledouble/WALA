@@ -16,6 +16,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 
 /**
@@ -73,7 +74,14 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
     return classHierarchy.resolveMethod(klass, call.getDeclaredTarget().getSelector());
   }
 
-  public boolean mightReturnSyntheticMethod() {
+  public boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site) {
+    return false;
+  }
+
+  /*
+   * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.types.MethodReference)
+   */
+  public boolean mightReturnSyntheticMethod(MethodReference declaredTarget) {
     return false;
   }
 }

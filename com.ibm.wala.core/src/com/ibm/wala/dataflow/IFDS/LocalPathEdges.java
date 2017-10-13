@@ -99,7 +99,6 @@ public class LocalPathEdges {
    * 
    * @param j
    */
-  @SuppressWarnings("unused")
   public void addPathEdge(int i, int n, int j) {
 
     if (i == 0) {
@@ -138,7 +137,6 @@ public class LocalPathEdges {
    * 
    * @param n local block number of the basic block n
    */
-  @SuppressWarnings("unused")
   private void addIdentityPathEdge(int i, int n) {
     BitVectorIntSet s = (BitVectorIntSet) identityPaths.get(i);
     if (s == null) {
@@ -169,7 +167,6 @@ public class LocalPathEdges {
    * 
    * @param j
    */
-  @SuppressWarnings("unused")
   private void addZeroPathEdge(int n, int j) {
 
     BitVectorIntSet z = (BitVectorIntSet) zeroPaths.get(j);

@@ -167,7 +167,7 @@ public class AndroidModel /* makes SummarizedMethod */
      *  Generates the model on a sub-set of Entrypoints. 
      *
      *  Asks {@link #selectEntryPoint(AndroidEntryPoint)} for each EntryPoint known to the AndroidEntryPointManager,
-     *  if the EntryPoint should be included in the model. Then calls {@link #build(Atom, Collection)}
+     *  if the EntryPoint should be included in the model. Then calls {@link #build(Atom, Iterable<? extends Entrypoint>)}
      *  on these.
      *
      *  @param  name    The name the generated method will be known as
@@ -334,7 +334,7 @@ public class AndroidModel /* makes SummarizedMethod */
     /**
      *  Add Instructions to the model.
      *
-     *  {@link #build(Atom, Collection)} prepares the MethodSummary, then calls populate() to
+     *  {@link #build(Iterable<?extends Entrypoint>)} prepares the MethodSummary, then calls populate() to
      *  add the instructions, then finishes the model. Populate is only an extra function to shorten build(),
      *  calling it doesn't make sense in an other context.
      */
@@ -382,8 +382,8 @@ public class AndroidModel /* makes SummarizedMethod */
 
             
             {
-                final AndroidBoot boot = new AndroidBoot(); 
-                boot.addBootCode(tsif, paramManager, this.body);
+                final AndroidBoot boot = new AndroidBoot(null); 
+                boot.addBootCode(tsif, null, paramManager, this.body);
                 //tool.attachActivities(allActivities, application, boot.getMainThread(), /* Should be application context TODO */
                 //        boot.getPackageContext(), nullBinder, nullIntent); 
             }
@@ -575,6 +575,7 @@ public class AndroidModel /* makes SummarizedMethod */
      *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters
      *
      *  @param  asMethod    The signature to generate
+     *  @param  flags       Control the behavior of the wrapper, may be null
      *  @param  caller      The class of the caller; only needed depending on the flags
      *  @param  info        The IntentSterter used
      *  @param  callerNd    CGNoodle of the caller - may be null
@@ -699,7 +700,7 @@ public class AndroidModel /* makes SummarizedMethod */
         final SSAValue intent = acc.firstExtends(AndroidTypes.Intent, cha);
 
         final AndroidStartComponentTool tool = new AndroidStartComponentTool(getClassHierarchy(), asMethod, flags, caller, instructionFactory,
-                acc, pm, redirect, self, info);
+                acc, pm, redirect, self, info, callerNd);
 
         final AndroidTypes.AndroidContextType contextType;
         final SSAValue androidContext;  // of AndroidTypes.Context: The callers android-context
@@ -934,7 +935,6 @@ public class AndroidModel /* makes SummarizedMethod */
         return method;
     }
 
-    @Override
     public IClassHierarchy getClassHierarchy() {
         return this.cha;
     }

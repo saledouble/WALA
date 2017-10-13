@@ -90,7 +90,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
 
     @Override
     public void acceptAST(String source, CompilationUnit ast) {
-      JDTJava2CAstTranslator<Position> jdt2cast = makeCAstTranslator(ast, source);
+      JDTJava2CAstTranslator jdt2cast = makeCAstTranslator(ast, source);
       final Java2IRTranslator java2ir = makeIRTranslator();
       java2ir.translate(sourceMap.get(source), jdt2cast.translateToCAst());
  
@@ -128,7 +128,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     libs = paths.snd;
   }
 
-  private static Pair<String[],String[]> computeClassPath(AnalysisScope scope) {
+  private Pair<String[],String[]> computeClassPath(AnalysisScope scope) {
     List<String> sources = new LinkedList<>();
     List<String> libs = new LinkedList<>();
     for (ClassLoaderReference cl : scope.getLoaders()) {
@@ -171,6 +171,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
    * Project -> AST code from org.eclipse.jdt.core.tests.performance
    */
 
+  @SuppressWarnings("unchecked")
   @Override
   public void loadAllSources(Set<ModuleEntry> modules) {
     List<String> sources = new LinkedList<>();
@@ -187,7 +188,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     final ASTParser parser = ASTParser.newParser(AST.JLS8);
     parser.setResolveBindings(true);
     parser.setEnvironment(libs, this.sources, null, false);
-    Hashtable<String, String> options = JavaCore.getOptions();
+    Hashtable options = JavaCore.getOptions();
     options.put(JavaCore.COMPILER_SOURCE, "1.8");
     parser.setCompilerOptions(options);
     parser.createASTs(sourceFiles, null, new String[0], new ECJAstToIR(sourceMap), new NullProgressMonitor());
@@ -197,7 +198,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     return new Java2IRTranslator(sourceLoader);
   }
 
-  protected JDTJava2CAstTranslator<Position> makeCAstTranslator(CompilationUnit cu, String fullPath) {
+  protected JDTJava2CAstTranslator makeCAstTranslator(CompilationUnit cu, String fullPath) {
     return new JDTJava2CAstTranslator<Position>(sourceLoader, cu, fullPath, false, dump) {
       @Override
       public Position makePosition(int start, int end) {

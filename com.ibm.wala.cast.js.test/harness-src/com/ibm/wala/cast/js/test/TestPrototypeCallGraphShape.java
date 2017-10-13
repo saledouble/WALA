@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
+import java.io.IOException;
 import java.net.URL;
 
 import org.junit.Ignore;
@@ -31,7 +32,7 @@ public abstract class TestPrototypeCallGraphShape extends TestJSCallGraphShape {
 
   @Ignore("reminder that this no longer works with correlation tracking")
   @Test 
-  public void testPrototype() throws IllegalArgumentException, CancelException, WalaException {
+  public void testPrototype() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/prototype.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPrototype);

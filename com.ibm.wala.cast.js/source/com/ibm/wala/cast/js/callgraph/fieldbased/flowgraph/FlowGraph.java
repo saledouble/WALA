@@ -104,14 +104,14 @@ public class FlowGraph implements Iterable<Vertex> {
 		optimistic_closure = computeClosure(graph, monitor, FuncVertex.class);
 	}
 	
-	private static <T> GraphReachability<Vertex, T> computeClosure(NumberedGraph<Vertex> graph, IProgressMonitor monitor, final Class<?> type) throws CancelException {
+	private <T> GraphReachability<Vertex, T> computeClosure(NumberedGraph<Vertex> graph, IProgressMonitor monitor, final Class<?> type) throws CancelException {
 		// prune flowgraph by taking out 'unknown' vertex
 		Graph<Vertex> pruned_flowgraph = GraphSlicer.prune(graph, new Predicate<Vertex>() {
 			@Override
 			public boolean test(Vertex t) {
 				return t.accept(new AbstractVertexVisitor<Boolean>() {
 					@Override
-					public Boolean visitVertex() {
+					public Boolean visitVertex(Vertex vertex) {
 						return true;
 					}
 					
@@ -432,8 +432,6 @@ public class FlowGraph implements Iterable<Vertex> {
 
           final PointerAnalysis<ObjectVertex> pa = this;
           class FieldBasedHeapGraph extends SlowSparseNumberedGraph<Object> implements HeapGraph<ObjectVertex> {
-
-            private static final long serialVersionUID = -3544629644808422215L;
 
             private <X> X ensureNode(X n) {
               if (!containsNode(n)) {

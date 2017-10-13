@@ -21,7 +21,8 @@ import com.ibm.wala.fixpoint.UnaryOperator;
  * @param <T> type of node in the graph 
  * @param <V> type of abstract states computed 
  */
-public interface ITransferFunctionProvider<T, V extends IVariable<V>> {
+@SuppressWarnings("rawtypes")
+public interface ITransferFunctionProvider<T, V extends IVariable> {
 
   /**
    * @return the transfer function from IN_node -&gt; OUT_node

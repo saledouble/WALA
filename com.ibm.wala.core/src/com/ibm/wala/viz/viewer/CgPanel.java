@@ -32,7 +32,6 @@ import com.ibm.wala.ssa.IR;
 
 public class CgPanel extends JSplitPane{
 
-  private static final long serialVersionUID = -4094408933344852549L;
   private final CallGraph cg;
 
   public CgPanel(CallGraph cg) {
@@ -42,7 +41,7 @@ public class CgPanel extends JSplitPane{
     this.setLeftComponent(new JScrollPane(tree));
 
     
-    final IrAndSourceViewer irViewer = new IrAndSourceViewer();
+    final IrAndSourceViewer irViewer = new IrAndSourceViewer(cg);
     this.setRightComponent(irViewer.getComponent());
 
     tree.addTreeSelectionListener(new TreeSelectionListener() {

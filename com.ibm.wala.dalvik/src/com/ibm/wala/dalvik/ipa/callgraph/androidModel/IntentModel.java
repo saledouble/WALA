@@ -64,7 +64,6 @@ public class IntentModel extends AndroidModel {
      *  
      *  {@inheritDoc}
      */
-    @Override
     protected boolean selectEntryPoint(AndroidEntryPoint ep) {
         return ep.isMemberOf(this.target) || ep.belongsTo(AndroidComponent.APPLICATION) ||
             ep.belongsTo(AndroidComponent.PROVIDER);

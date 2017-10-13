@@ -96,7 +96,6 @@ public class JarStreamModule extends JarInputStream implements Module {
   /*
    * @see com.ibm.wala.classLoader.Module#getEntries()
    */
-  @Override
   public Iterator<ModuleEntry> getEntries() {
     populateCache();
     final Iterator<String> it = cache.keySet().iterator();
@@ -114,19 +113,16 @@ public class JarStreamModule extends JarInputStream implements Module {
         }
       }
 
-      @Override
       public boolean hasNext() {
         return next != null;
       }
 
-      @Override
       public ModuleEntry next() {
         ModuleEntry result = new Entry(next);
         advance();
         return result;
       }
 
-      @Override
       public void remove() {
         Assertions.UNREACHABLE();
       }
@@ -147,7 +143,6 @@ public class JarStreamModule extends JarInputStream implements Module {
     /*
      * @see com.ibm.wala.classLoader.ModuleEntry#getName()
      */
-    @Override
     public String getName() {
       return name;
     }
@@ -155,7 +150,6 @@ public class JarStreamModule extends JarInputStream implements Module {
     /*
      * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
      */
-    @Override
     public boolean isClassFile() {
       return FileSuffixes.isClassFile(getName());
     }
@@ -163,7 +157,6 @@ public class JarStreamModule extends JarInputStream implements Module {
     /*
      * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
      */
-    @Override
     public InputStream getInputStream() {
       return JarStreamModule.this.getInputStream(name);
     }
@@ -171,7 +164,6 @@ public class JarStreamModule extends JarInputStream implements Module {
     /*
      * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
      */
-    @Override
     public boolean isModuleFile() {
       return false;
     }
@@ -179,7 +171,6 @@ public class JarStreamModule extends JarInputStream implements Module {
     /*
      * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
      */
-    @Override
     public Module asModule() {
       Assertions.UNREACHABLE();
       return null;
@@ -193,7 +184,6 @@ public class JarStreamModule extends JarInputStream implements Module {
     /*
      * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
      */
-    @Override
     public String getClassName() {
       return FileSuffixes.stripSuffix(getName());
     }
@@ -201,7 +191,6 @@ public class JarStreamModule extends JarInputStream implements Module {
     /*
      * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
      */
-    @Override
     public boolean isSourceFile() {
       return FileSuffixes.isSourceFile(getName());
     }

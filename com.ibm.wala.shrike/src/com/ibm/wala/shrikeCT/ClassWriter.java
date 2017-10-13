@@ -952,7 +952,7 @@ public class ClassWriter implements ClassConstants {
     try {
       buf[offset] = (byte) v;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid offset: " + offset, e);
+      throw new IllegalArgumentException("invalid offset: " + offset);
     }
   }
 
@@ -971,7 +971,7 @@ public class ClassWriter implements ClassConstants {
       buf[offset + 2] = (byte) (v >> 8);
       buf[offset + 3] = (byte) v;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("illegal offset " + offset, e);
+      throw new IllegalArgumentException("illegal offset " + offset);
     }
   }
 
@@ -1013,7 +1013,7 @@ public class ClassWriter implements ClassConstants {
       buf[offset] = (byte) (v >> 8);
       buf[offset + 1] = (byte) v;
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid offset: " + offset, e);
+      throw new IllegalArgumentException("invalid offset: " + offset);
     }
   }
 }

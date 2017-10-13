@@ -180,6 +180,7 @@ import com.ibm.wala.util.debug.Assertions;
 // * boxing (YUCK). see resolveBoxing()
 // * enums (probably in simplename or something. but using resolveConstantExpressionValue() possible)
 
+@SuppressWarnings("unchecked")
 public abstract class JDTJava2CAstTranslator<T extends Position> {
   protected boolean dump = false;
   
@@ -286,13 +287,16 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     private final T fSourcePosition;
 
+    private final Set<CAstAnnotation> annotations;
+    
     public ClassEntity(ITypeBinding jdtType, String name, Collection<CAstQualifier> quals, Collection<CAstEntity> entities,
-        T pos) {
+        T pos, Set<CAstAnnotation> annotations) {
       fName = name;
       fQuals = quals;
       fEntities = entities;
       fJdtType = jdtType;
       fSourcePosition = pos;
+      this.annotations = annotations;
     }
 
     @Override
@@ -344,7 +348,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+    public Iterator getScopedEntities(CAstNode construct) {
       Assertions.UNREACHABLE("Non-AST-bearing entity (ClassEntity) asked for scoped entities related to a given AST node");
       return null;
     }
@@ -383,7 +387,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Collection<CAstQualifier> getQualifiers() {
+    public Collection getQualifiers() {
       return fQuals;
     }
 
@@ -395,7 +399,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   }
 
-  private static boolean isInterface(AbstractTypeDeclaration decl) {
+  private boolean isInterface(AbstractTypeDeclaration decl) {
     return decl instanceof AnnotationTypeDeclaration ||
       (decl instanceof TypeDeclaration && ((TypeDeclaration)decl).isInterface());
   }
@@ -415,8 +419,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * @param context
    * @return
    */
-  private CAstEntity createClassDeclaration(ASTNode n, List<BodyDeclaration> bodyDecls,
-      List<EnumConstantDeclaration> enumConstants, ITypeBinding typeBinding, String name, int modifiers, 
+  private CAstEntity createClassDeclaration(ASTNode n, List/* <BodyDeclaration> */bodyDecls,
+      List/* EnumConstantDeclaration */enumConstants, ITypeBinding typeBinding, String name, int modifiers, 
       boolean isInterface, boolean isAnnotation, WalkContext context) {
     final List<CAstEntity> memberEntities = new ArrayList<>();
 
@@ -508,12 +512,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         else if (met.getParameterTypes().length > 0)
           memberEntities.add(createDefaultConstructorWithParameters(met, n, context, inits));
         else
-          memberEntities.add(createDefaultConstructor(typeBinding, context, inits, n));
+          memberEntities.add(createDefaultConstructor(name, typeBinding, context, inits, n));
       }
     }
 
     if (typeBinding.isEnum() && !typeBinding.isAnonymous())
-      doEnumHiddenEntities(typeBinding, memberEntities, context);
+      doEnumHiddenEntities(typeBinding, staticInits, memberEntities, context);
 
     // collect static inits
     if (!staticInits.isEmpty()) {
@@ -530,7 +534,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     Collection<CAstQualifier> quals = JDT2CAstUtils.mapModifiersToQualifiers(modifiers, isInterface, isAnnotation);
 
-    return new ClassEntity(typeBinding, name, quals, memberEntities, makePosition(n));
+    Set<CAstAnnotation> annotations = handleAnnotations(typeBinding);
+
+    return new ClassEntity(typeBinding, name, quals, memberEntities, makePosition(n), annotations);
   }
 
   private CAstEntity visit(AnonymousClassDeclaration n, WalkContext context) {
@@ -542,7 +548,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // TODO 1.6: enums of course...
     AbstractTypeDeclaration decl = n.getDeclaration();
     assert decl instanceof TypeDeclaration : "Local enum declaration not yet supported";
-    CAstEntity classEntity = visitTypeDecl(decl, context);
+    CAstEntity classEntity = visitTypeDecl((TypeDeclaration) decl, context);
 
     // these statements doin't actually do anything, just define a type
     final CAstNode lcdNode = makeNode(context, fFactory, n, CAstNode.EMPTY);
@@ -628,8 +634,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   }
 
-  private CAstEntity createDefaultConstructor(ITypeBinding classBinding, WalkContext oldContext, ArrayList<ASTNode> inits,
-      ASTNode positioningNode) {
+  private CAstEntity createDefaultConstructor(String className, ITypeBinding classBinding, WalkContext oldContext,
+      ArrayList<ASTNode> inits, ASTNode positioningNode) {
     MethodDeclaration fakeCtor = ast.newMethodDeclaration();
     fakeCtor.setConstructor(true);
     // fakeCtor.setName(ast.newSimpleName(className)); will crash on anonymous types...
@@ -639,7 +645,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     return visit(fakeCtor, classBinding, oldContext, inits);
   }
 
-  private static IMethodBinding findDefaultCtor(ITypeBinding superClass) {
+  private IMethodBinding findDefaultCtor(ITypeBinding superClass) {
     for (IMethodBinding met : superClass.getDeclaredMethods()) {
       if (met.isConstructor() && met.getParameterTypes().length == 0)
         return met;
@@ -857,7 +863,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+    public Iterator getScopedEntities(CAstNode construct) {
       if (fEntities.containsKey(construct)) {
         return (fEntities.get(construct)).iterator();
       } else {
@@ -924,7 +930,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
       // from CodeBodyEntity
       fEntities = new LinkedHashMap<>();
-      for (CAstNode key : entities.keySet()) {
+      for (Iterator keys = entities.keySet().iterator(); keys.hasNext();) {
+        CAstNode key = (CAstNode) keys.next();
         fEntities.put(key, Collections.singleton(entities.get(key)));
       }
 
@@ -1031,7 +1038,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Collection<CAstQualifier> getQualifiers() {
+    public Collection getQualifiers() {
       if (fDecl == null)
         return JDT2CAstUtils.mapModifiersToQualifiers(Modifier.STATIC, false, false); // static init
       else
@@ -1201,7 +1208,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+    public Iterator getScopedEntities(CAstNode construct) {
       return EmptyIterator.instance();
     }
 
@@ -1244,7 +1251,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Collection<CAstQualifier> getQualifiers() {
+    public Collection getQualifiers() {
       return quals;
     }
 
@@ -1325,7 +1332,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     eltNodes[idx++] = makeNode(context, fFactory, n, CAstNode.NEW, fFactory.makeConstant(newTypeRef), fFactory.makeConstant(n
         .expressions().size()));
-    for (Iterator<CAstEntity> iter = n.expressions().iterator(); iter.hasNext(); idx++) {
+    for (Iterator iter = n.expressions().iterator(); iter.hasNext(); idx++) {
       Expression element = (Expression) iter.next();
       eltNodes[idx] = visitNode(element, context);
       if (eltNodes[idx] == null)
@@ -1340,7 +1347,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         .getAnonymousClassDeclaration(), context);
   }
 
-  private CAstNode createClassInstanceCreation(ASTNode nn, List<?> arguments, IMethodBinding ctorBinding,
+  private CAstNode createClassInstanceCreation(ASTNode nn, List/* Expression or CAstNode */arguments, IMethodBinding ctorBinding,
       Expression qual, AnonymousClassDeclaration anonDecl, WalkContext context) {
     // a new instruction is actually two things: a NEW object and a CALL to a constructor
     CAstNode newNode;
@@ -1412,7 +1419,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     argNodes[idx++] = fFactory.makeConstant(callSiteRef);
 
     // rest of args
-    for (Iterator<?> iter = arguments.iterator(); iter.hasNext();) {
+    for (Iterator iter = arguments.iterator(); iter.hasNext();) {
       Object arg = iter.next();
       argNodes[idx++] = (arg instanceof CAstNode) ? ((CAstNode) arg) : visitNode((Expression) arg, context);
     }
@@ -1526,7 +1533,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private CAstNode createMethodInvocation(ASTNode pos, IMethodBinding methodBinding, CAstNode target,
-      List<?> arguments, WalkContext context) {
+      List/* Expression or CAstNode */arguments, WalkContext context) {
     // MethodMethodInstance methodInstance = n.methodInstance();
     boolean isStatic = (methodBinding.getModifiers() & Modifier.STATIC) != 0;
     ITypeBinding methodOwner = methodBinding.getDeclaringClass();
@@ -1585,7 +1592,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * @param arguments
    * @param context
    */
-  private void populateArguments(CAstNode[] children, IMethodBinding methodBinding, List<?/* CAstNode or Expression */> arguments,
+  private void populateArguments(CAstNode[] children, IMethodBinding methodBinding, List/* CAstNode or Expression */arguments,
       WalkContext context) {
     int nFormals = methodBinding.getParameterTypes().length;
     assert children.length == nFormals + 2;
@@ -1675,6 +1682,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * where field 'y' is parameterized to type string. then += is not defined for type 'object'. This function is a hack that expands
    * the code into an assignment and binary operation.
    * 
+   * @param leftCast this is the left cast in the original expression. We throw most of it away, although we use the "Cast from" and
+   *          "cast to"
+   * @param left
    * @param context
    * @return
    */
@@ -1732,19 +1742,19 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     return visitNode(n.getExpression(), context);
   }
 
-  private CAstNode visit(BooleanLiteral n) {
+  private CAstNode visit(BooleanLiteral n, WalkContext context) {
     return fFactory.makeConstant(n.booleanValue());
   }
 
-  private CAstNode visit(CharacterLiteral n) {
+  private CAstNode visit(CharacterLiteral n, WalkContext context) {
     return fFactory.makeConstant(n.charValue());
   }
 
-  private CAstNode visit() {
+  private CAstNode visit(NullLiteral n, WalkContext context) {
     return fFactory.makeConstant(null);
   }
 
-  private CAstNode visit(StringLiteral n) {
+  private CAstNode visit(StringLiteral n, WalkContext context) {
     return fFactory.makeConstant(n.getLiteralValue());
   }
 
@@ -1753,7 +1763,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     return makeNode(context, fFactory, n, CAstNode.TYPE_LITERAL_EXPR, fFactory.makeConstant(typeName));
   }
 
-  private CAstNode visit(NumberLiteral n) {
+  private CAstNode visit(NumberLiteral n, WalkContext context) {
     return fFactory.makeConstant(n.resolveConstantExpressionValue());
   }
 
@@ -1828,10 +1838,11 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * owningTypeRef or the subtype that the field is accessed thru, for expanding "f = 5" into "TheClass.this.f = 5".
    * 
    * @param typeOfThis
+   * @param owningTypeRef
    * @param isPrivate
    * @return
    */
-  private static ITypeBinding findClosestEnclosingClassSubclassOf(ITypeBinding typeOfThis, ITypeBinding owningType, boolean isPrivate) {
+  private ITypeBinding findClosestEnclosingClassSubclassOf(ITypeBinding typeOfThis, ITypeBinding owningType, boolean isPrivate) {
     // GENERICS
 //    if (owningType.isParameterizedType())
 //      owningType = owningType.getTypeDeclaration();
@@ -1889,9 +1900,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * exception. maybe handle this in here as a special case? i don't know... or check if targetNode is THIS, that should even work
    * for this.x = 5 and (this).x = 5
    * 
-   * @param targetNode Used to evaluate the field access. In the case of static field accesses, this is included in the first part of a
+   * @param target Used to evaluate the field access. In the case of static field accesses, this is included in the first part of a
    *          block -- thus it is evaluated for any side effects but thrown away.
    * @param fieldName Name of the field.
+   * @param fieldBinding This is used to determine the field's class.
    * @param positioningNode Used only for making a JdtPosition.
    * @param context
    * @return
@@ -1938,11 +1950,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
       if (targetNode.getKind() != CAstNode.THIS) { // this.x will never throw a null pointer exception, because this
         // can never be null
-        Collection<Pair<ITypeBinding, Object>> excTargets = context.getCatchTargets(fNullPointerExcType);
+        Collection excTargets = context.getCatchTargets(fNullPointerExcType);
         if (!excTargets.isEmpty()) {
           // connect NPE exception edge to relevant catch targets
           // (presumably only one)
-          for (Pair<ITypeBinding, Object> catchPair : excTargets) {
+          for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
+            Pair catchPair = (Pair) iterator.next();
             context.cfg().add(refNode, catchPair.snd, fNullPointerExcType);
           }
         } else {
@@ -2074,9 +2087,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         if (JDT2CAstUtils.isLongOrLess(leftType)
             && JDT2CAstUtils.isLongOrLess(rightType)
             && (JDT2CAstUtils.mapBinaryOpcode(op) == CAstOperator.OP_DIV || JDT2CAstUtils.mapBinaryOpcode(op) == CAstOperator.OP_MOD)) {
-          Collection<Pair<ITypeBinding, Object>> excTargets = context.getCatchTargets(fDivByZeroExcType);
+          Collection excTargets = context.getCatchTargets(fDivByZeroExcType);
           if (!excTargets.isEmpty()) {
-            for (Pair<ITypeBinding, Object> catchPair : excTargets) {
+            for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
+              Pair catchPair = (Pair) iterator.next();
               context.cfg().add(op, catchPair.snd, fDivByZeroExcType);
             }
           } else {
@@ -2119,7 +2133,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   /**
    * callerNode: used for positioning and also in CFG (handleThrowsFrom Call)
    */
-  private CAstNode createConstructorInvocation(IMethodBinding ctorBinding, List<Expression> arguments, ASTNode callerNode,
+  private CAstNode createConstructorInvocation(IMethodBinding ctorBinding, List/* <Expression> */arguments, ASTNode callerNode,
       WalkContext context, boolean isSuper) {
     ITypeBinding ctorType = ctorBinding.getDeclaringClass();
     assert ctorType.isClass();
@@ -2175,11 +2189,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     CAstNode ast = makeNode(context, fFactory, pos, CAstNode.CAST, fFactory.makeConstant(fTypeDict.getCAstTypeFor(castedTo)),
         argNode, fFactory.makeConstant(fTypeDict.getCAstTypeFor(castedFrom)));
 
-    Collection<Pair<ITypeBinding, Object>> excTargets = context.getCatchTargets(fClassCastExcType);
+    Collection excTargets = context.getCatchTargets(fClassCastExcType);
     if (!excTargets.isEmpty()) {
       // connect ClassCastException exception edge to relevant catch targets
       // (presumably only one)
-      for (Pair<ITypeBinding, Object> catchPair : excTargets) {
+      for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
+        Pair catchPair = (Pair) iterator.next();
         context.cfg().add(cfgMapDummy, catchPair.snd, fClassCastExcType);
       }
     } else {
@@ -2312,7 +2327,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     ASTNode continueTarget = makeBreakOrContinueTarget(n, "continueLabel" + n.getStartPosition());
     CAstNode continueNode = visitNode(continueTarget, context);
 
-    String loopLabel = context.getLabelMap().get(n);
+    String loopLabel = (String) context.getLabelMap().get(n);
     LoopContext lc = new LoopContext(context, loopLabel, breakTarget, continueTarget);
 
     /*
@@ -2362,15 +2377,15 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   private CAstNode visit(SwitchStatement n, WalkContext context) {
     ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel" + n.getStartPosition());
     CAstNode breakAst = visitNode(breakTarget, context);
-    String loopLabel = context.getLabelMap().get(n); // set by labeled statement (if there is one before this
+    String loopLabel = (String) context.getLabelMap().get(n); // set by labeled statement (if there is one before this
     // switch statement)
     WalkContext childContext = new BreakContext(context, loopLabel, breakTarget);
     Expression cond = n.getExpression();
-    List<Statement> cases = n.statements();
+    List/* <Statement> */cases = n.statements();
 
     // First compute the control flow edges for the various case labels
     for (int i = 0; i < cases.size(); i++) {
-      Statement se = cases.get(i);
+      Statement se = (Statement) cases.get(i);
       if (se instanceof SwitchCase) {
         SwitchCase c = (SwitchCase) se;
 
@@ -2383,11 +2398,11 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       }
     }
 
-    ArrayList<CAstNode> caseNodes = new ArrayList<>();
+    ArrayList<CAstNode> caseNodes = new ArrayList<CAstNode>();
 
     // polyglot bundles all statements in between two statements into a block.
     // this is temporary place to hold current bundle of nodes.
-    ArrayList<CAstNode> currentBlock = new ArrayList<>();
+    ArrayList<CAstNode> currentBlock = new ArrayList<CAstNode>();
 
     // Now produce the CAst representation for each case
     for (Object o : cases) {
@@ -2443,9 +2458,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     WalkContext loopContext = new LoopContext(context, loopLabel, breakTarget, continueTarget);
     CAstNode loopBody = visitNode(n.getBody(), loopContext);
 
-    CAstNode madeNode = doLoopTranslator.translateDoLoop(loopTest, loopBody, continueNode, breakNode, context);
-    context.pos().setPosition(madeNode, makePosition(n));
-    return madeNode;
+    return doLoopTranslator.translateDoLoop(loopTest, loopBody, continueNode, breakNode, context);  
   }
 
   /**
@@ -2614,7 +2627,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel" + n.getStartPosition());
     ASTNode continueTarget = makeBreakOrContinueTarget(n, "continueLabel" + n.getStartPosition());
-    String loopLabel = context.getLabelMap().get(n);
+    String loopLabel = (String) context.getLabelMap().get(n);
     WalkContext loopContext = new LoopContext(context, loopLabel, breakTarget, continueTarget);
 
     return makeNode(context, fFactory, n, CAstNode.LOCAL_SCOPE,
@@ -2630,10 +2643,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   private CAstNode visit(ForStatement n, WalkContext context) {
     ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel" + n.getStartPosition());
     ASTNode continueTarget = makeBreakOrContinueTarget(n, "continueLabel" + n.getStartPosition());
-    String loopLabel = context.getLabelMap().get(n);
+    String loopLabel = (String) context.getLabelMap().get(n);
     WalkContext loopContext = new LoopContext(context, loopLabel, breakTarget, continueTarget);
 
-    ArrayList<CAstNode> inits = new ArrayList<>();
+    ArrayList<CAstNode> inits = new ArrayList<CAstNode>();
     for (int i = 0; i < n.initializers().size(); i++) {
       ASTNode init = (ASTNode) n.initializers().get(i);
       if (init instanceof VariableDeclarationExpression) {
@@ -2659,7 +2672,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private CAstNode visit(TryStatement n, WalkContext context) {
-    List<CatchClause> catchBlocks = n.catchClauses();
+    List/* <CatchClause> */catchBlocks = n.catchClauses();
     Block finallyBlock = n.getFinally();
     Block tryBlock = n.getBody();
 
@@ -2672,8 +2685,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       TryCatchContext tc = new TryCatchContext(context, n);
 
       CAstNode tryNode = visitNode(tryBlock, tc);
-      for (CatchClause catchClause : catchBlocks) {
-        tryNode = makeNode(context, fFactory, n, CAstNode.TRY, tryNode, visitNode(catchClause, context));
+      for (Iterator iter = catchBlocks.iterator(); iter.hasNext();) {
+        tryNode = makeNode(context, fFactory, n, CAstNode.TRY, tryNode, visitNode((CatchClause) iter.next(), context));
       }
 
       // try/catch
@@ -2707,9 +2720,11 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     context.cfg().map(n, result);
 
-    Collection<Pair<ITypeBinding, Object>> catchNodes = context.getCatchTargets(label);
+    Collection/* <Pair<Type,Node>> */catchNodes = context.getCatchTargets(label);
 
-    for (Pair<ITypeBinding, Object> catchNode : catchNodes) {
+    for (Iterator iter = catchNodes.iterator(); iter.hasNext();) {
+      Pair/* <Type,Node> */catchNode = (Pair/* <Type,Node> */) iter.next();
+
       context.cfg().add(n, catchNode.snd, catchNode.fst);
     }
 
@@ -2717,11 +2732,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private void hookUpNPETargets(ASTNode n, WalkContext wc) {
-    Collection<Pair<ITypeBinding, Object>> excTargets = wc.getCatchTargets(fNullPointerExcType);
+    Collection excTargets = wc.getCatchTargets(fNullPointerExcType);
     if (!excTargets.isEmpty()) {
       // connect NPE exception edge to relevant catch targets
       // (presumably only one)
-      for (Pair<ITypeBinding, Object> catchPair : excTargets) {
+      for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
+        Pair catchPair = (Pair) iterator.next();
         wc.cfg().add(n, catchPair.snd, fNullPointerExcType);
       }
     } else {
@@ -2758,12 +2774,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else {
       TypeReference arrayTypeRef = fIdentityMapper.getTypeRef(newType);
 
-      List<Expression> dims = n.dimensions();
+      List/* <Expression> */dims = n.dimensions();
       CAstNode[] args = new CAstNode[dims.size() + 1];
 
       int idx = 0;
       args[idx++] = fFactory.makeConstant(arrayTypeRef);
-      for (Expression dimExpr : dims) {
+      for (Iterator iter = dims.iterator(); iter.hasNext();) {
+        Expression dimExpr = (Expression) iter.next();
         args[idx++] = visitNode(dimExpr, context);
       }
       return makeNode(context, fFactory, n, CAstNode.NEW, args);
@@ -2823,6 +2840,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   /**
    * Giant switch statement, part deux
    * 
+   * @param body
    * @param context
    * @return
    */
@@ -2843,7 +2861,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof Block) {
       return visit((Block) n, context);
     } else if (n instanceof BooleanLiteral) {
-      return visit((BooleanLiteral) n);
+      return visit((BooleanLiteral) n, context);
     } else if (n instanceof BreakStatement) {
       return visit((BreakStatement) n, context);
     } else if (n instanceof CastExpression) {
@@ -2851,7 +2869,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof CatchClause) {
       return visit((CatchClause) n, context);
     } else if (n instanceof CharacterLiteral) {
-      return visit((CharacterLiteral) n);
+      return visit((CharacterLiteral) n, context);
     } else if (n instanceof ClassInstanceCreation) {
       return visit((ClassInstanceCreation) n, context);
     } else if (n instanceof ConditionalExpression) {
@@ -2883,9 +2901,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof MethodInvocation) {
       return visit((MethodInvocation) n, context);
     } else if (n instanceof NumberLiteral) {
-      return visit((NumberLiteral) n);
+      return visit((NumberLiteral) n, context);
     } else if (n instanceof NullLiteral) {
-      return visit();
+      return visit((NullLiteral) n, context);
     } else if (n instanceof ParenthesizedExpression) {
       return visit((ParenthesizedExpression) n, context);
     } else if (n instanceof PostfixExpression) {
@@ -2899,7 +2917,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof SimpleName) {
       return visit((SimpleName) n, context);
     } else if (n instanceof StringLiteral) {
-      return visit((StringLiteral) n);
+      return visit((StringLiteral) n, context);
     } else if (n instanceof SuperConstructorInvocation) {
       return visit((SuperConstructorInvocation) n, context);
     } else if (n instanceof SuperFieldAccess) {
@@ -2998,7 +3016,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+    public Iterator getScopedEntities(CAstNode construct) {
       Assertions.UNREACHABLE("CompilationUnitEntity asked for AST-related entities, but it has no AST.");
       return null;
     }
@@ -3032,8 +3050,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     @Override
-    public Collection<CAstQualifier> getQualifiers() {
-      return Collections.emptyList();
+    public Collection getQualifiers() {
+      return Collections.EMPTY_LIST;
     }
 
     @Override
@@ -3123,13 +3141,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private static class TryCatchContext extends DelegatingContext {
-    Collection<Pair<ITypeBinding, Object>> fCatchNodes = new ArrayList<>();
+    Collection<Pair<ITypeBinding, Object>> fCatchNodes = new ArrayList<Pair<ITypeBinding, Object>>();
 
     TryCatchContext(WalkContext parent, TryStatement tryNode) {
       super(parent);
 
-      for (Iterator<CatchClause> catchIter = tryNode.catchClauses().iterator(); catchIter.hasNext();) {
-        CatchClause c = catchIter.next();
+      for (Iterator catchIter = tryNode.catchClauses().iterator(); catchIter.hasNext();) {
+        CatchClause c = (CatchClause) catchIter.next();
         Pair<ITypeBinding, Object> p = Pair.make(c.getException().resolveBinding().getType(), (Object) c);
 
         fCatchNodes.add(p);
@@ -3141,10 +3159,11 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // Look for all matching targets for this thrown type:
       // if supertpe match, then return only matches at this catch
       // if subtype match, then matches here and parent matches
-      Collection<Pair<ITypeBinding, Object>> catchNodes = new ArrayList<>();
+      Collection<Pair<ITypeBinding, Object>> catchNodes = new ArrayList<Pair<ITypeBinding, Object>>();
 
-      for (Pair<ITypeBinding, Object> p : fCatchNodes) {
-        ITypeBinding catchType = p.fst;
+      for (Iterator<Pair<ITypeBinding, Object>> iter = fCatchNodes.iterator(); iter.hasNext();) {
+        Pair<ITypeBinding, Object> p = (Pair<ITypeBinding, Object>) iter.next();
+        ITypeBinding catchType = (ITypeBinding) p.fst;
 
         // catchType here should NEVER be FakeExceptionTypeBinary, because these can only be thrown (not caught) by
         // "1/0", implicit null pointer exceptions, etc.
@@ -3322,7 +3341,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   // // ENUM TRANSFORMATION //////////////////////////////////////////
   // /////////////////////////////////////////////////////////////////
 
-  private static final ArrayList<CAstQualifier> enumQuals = new ArrayList<>(3);
+  private static final ArrayList<CAstQualifier> enumQuals = new ArrayList<CAstQualifier>(3);
   static {
     enumQuals.add(CAstQualifier.PUBLIC);
     enumQuals.add(CAstQualifier.STATIC);
@@ -3353,7 +3372,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
           fFactory.makeConstant(fieldRef));
 
       // CONSTRUCT ARGUMENTS & "new MyEnum(...)" statement
-      ArrayList<Object> arguments = new ArrayList<>();
+      ArrayList<Object> arguments = new ArrayList<Object>();
       arguments.add(fFactory.makeConstant(node.getName().getIdentifier())); // name of constant
       arguments.add(fFactory.makeConstant(node.resolveVariable().getVariableId())); // id
       arguments.addAll(node.arguments());
@@ -3386,7 +3405,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         superMet = m;
     assert met != null && superMet != null : "Couldn't find enum values() function in JDT bindings!";
 
-    Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<>();
+    Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<CAstNode, CAstEntity>();
     final MethodContext context = new MethodContext(oldContext, memberEntities);
 
     MethodDeclaration fakeMet = ast.newMethodDeclaration();
@@ -3404,7 +3423,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     CAstNode typeLit = makeNode(context, fFactory, fakeMet, CAstNode.TYPE_LITERAL_EXPR, fFactory.makeConstant(fIdentityMapper
         .typeToTypeID(enumType)));
     CAstNode stringSvar = makeNode(context, fFactory, fakeMet, CAstNode.VAR, fFactory.makeConstant("s"), fFactory.makeConstant(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("java.lang.String"))));
-    ArrayList<Object> args = new ArrayList<>();
+    ArrayList<Object> args = new ArrayList<Object>();
     args.add(typeLit);
     args.add(stringSvar);
     CAstNode call = createMethodInvocation(fakeMet, superMet, makeNode(context, fFactory, fakeMet, CAstNode.VOID), args, context);
@@ -3412,7 +3431,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     CAstNode bodyNode = makeNode(context, fFactory, fakeMet, CAstNode.LOCAL_SCOPE, makeNode(context, fFactory, fakeMet,
         CAstNode.BLOCK_STMT, makeNode(context, fFactory, fakeMet, CAstNode.RETURN, cast)));
 
-    ArrayList<CAstType> paramTypes = new ArrayList<>(1);
+    ArrayList<CAstType> paramTypes = new ArrayList<CAstType>(1);
     paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("java.lang.String")));
 
     return new ProcedureEntity(bodyNode, fakeMet, enumType, memberEntities, context, paramTypes, enumType, met.getModifiers(), handleAnnotations(met));
@@ -3425,7 +3444,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         met = m;
     assert met != null : "Couldn't find enum values() function in JDT bindings!";
 
-    Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<>();
+    Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<CAstNode, CAstEntity>();
     final MethodContext context = new MethodContext(oldContext, memberEntities);
 
     MethodDeclaration fakeMet = ast.newMethodDeclaration();
@@ -3446,12 +3465,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         CAstNode.BLOCK_STMT, makeNode(context, fFactory, fakeMet, CAstNode.RETURN, makeNode(context, fFactory, fakeMet,
             CAstNode.ARRAY_LITERAL, eltNodes))));
 
-    ArrayList<CAstType> paramTypes = new ArrayList<>(0);
+    ArrayList<CAstType> paramTypes = new ArrayList<CAstType>(0);
     return new ProcedureEntity(bodyNode, fakeMet, enumType, memberEntities, context, paramTypes, enumType.createArrayType(1), met
         .getModifiers(), handleAnnotations(enumType));
   }
 
-  private void doEnumHiddenEntities(ITypeBinding typeBinding, List<CAstEntity> memberEntities, WalkContext context) {
+  private void doEnumHiddenEntities(ITypeBinding typeBinding, ArrayList<ASTNode> staticInits, List<CAstEntity> memberEntities,
+      WalkContext context) {
     // PART I: create a $VALUES field
     // collect constants
     // ArrayList<String> constants = new ArrayList<String>();
@@ -3471,7 +3491,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // fakeValuesDecl.setProperty("com.ibm.wala.cast.java.translator.jdt.fakeValuesDeclConstants", constants);
     // staticInits.add(fakeValuesDecl);
 
-    ArrayList<IVariableBinding> constants = new ArrayList<>();
+    ArrayList<IVariableBinding> constants = new ArrayList<IVariableBinding>();
     for (IVariableBinding var : typeBinding.getDeclaredFields())
       if (var.isEnumConstant())
         constants.add(var);
@@ -3520,7 +3540,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // PART II: make ctor with simply "super(a,b,c...)"
     // TODO: extra CAstNodes
-    final Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<>();
+    final Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<CAstNode, CAstEntity>();
     final MethodContext context = new MethodContext(oldContext, memberEntities);
     MethodDeclaration fakeCtor = ast.newMethodDeclaration();
     fakeCtor.setConstructor(true);
@@ -3540,7 +3560,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         fakeArguments[i] = ((SingleVariableDeclaration) nonDefaultCtor.parameters().get(i - 3)).getName().getIdentifier();
     }
 
-    ArrayList<CAstType> paramTypes = new ArrayList<>(superCtor.getParameterTypes().length);
+    ArrayList<CAstType> paramTypes = new ArrayList<CAstType>(superCtor.getParameterTypes().length);
     fakeArguments[0] = "this";
     fakeArguments[1] = "__wala_jdtcast_argument1"; // TODO FIXME: change to invalid name in the case that nonDefaultCtor != null
     fakeArguments[2] = "__wala_jdtcast_argument2"; // otherwise there will be conflicts if we name our variable

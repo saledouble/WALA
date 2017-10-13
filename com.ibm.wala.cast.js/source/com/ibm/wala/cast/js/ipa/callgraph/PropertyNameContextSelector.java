@@ -153,7 +153,7 @@ public class PropertyNameContextSelector implements ContextSelector {
     this.base = base;
   }
   
-  private enum Frequency { NEVER, SOMETIMES, ALWAYS }
+  private enum Frequency { NEVER, SOMETIMES, ALWAYS };
   private final HashMap<MethodReference, Frequency> usesFirstArgAsPropertyName_cache = HashMapFactory.make();
   
   /** Determine whether the method never/sometimes/always uses its first argument as a property name. */
@@ -205,7 +205,6 @@ public class PropertyNameContextSelector implements ContextSelector {
     if (PROPNAME_MARKER.equals(caller.getContext().get(PROPNAME_KEY))) {
       if (!identifyDependentParameters(caller, site).isEmpty()) {
         // use a MarkerForInContext to clone based on the InstanceKey used in the caller context
-        @SuppressWarnings("unchecked")
         InstanceKey callerIk = ((ContextItem.Value<InstanceKey>)caller.getContext().get(INSTANCE_KEY_KEY)).getValue();
         return new MarkerForInContext(baseContext, callerIk);
       } else {

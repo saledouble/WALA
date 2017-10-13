@@ -20,8 +20,6 @@ import com.ibm.wala.util.CancelException;
  */
 public class CallGraphBuilderCancelException extends CancelException {
 
-  private static final long serialVersionUID = -3071193971009314659L;
-
   private final CallGraph cg;
 
   private final PointerAnalysis<InstanceKey> pointerAnalysis;

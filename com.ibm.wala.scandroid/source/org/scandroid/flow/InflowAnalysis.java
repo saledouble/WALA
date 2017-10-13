@@ -86,7 +86,7 @@ import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 @SuppressWarnings("rawtypes")
-public class InflowAnalysis {
+public class InflowAnalysis <E extends ISSABasicBlock> {
 
     @SuppressWarnings("unchecked")
 	public static <E extends ISSABasicBlock>
@@ -154,6 +154,7 @@ public class InflowAnalysis {
                             StaticFieldSourceSpec ss, 
                             CallGraph cg, 
                             ISupergraph<BasicBlockInContext<E>, CGNode> graph,
+                            ClassHierarchy cha,
                             PointerAnalysis<InstanceKey> pa) {
     	// get the first block:
     	BasicBlockInContext<E> bb = null;
@@ -215,9 +216,9 @@ public class InflowAnalysis {
 
     public static <E extends ISSABasicBlock>
       Map<BasicBlockInContext<E>,Map<FlowType<E>,Set<CodeElement>>> analyze(
-            CGAnalysisContext<E> analysisContext,
+            CGAnalysisContext<E> analysisContext, Map<InstanceKey, String> prefixes,
             ISpecs s) {
-        return analyze(analysisContext, analysisContext.cg, analysisContext.getClassHierarchy(), analysisContext.graph, analysisContext.pa, s);
+        return analyze(analysisContext, analysisContext.cg, analysisContext.getClassHierarchy(), analysisContext.graph, analysisContext.pa, prefixes, s);
     }
 
     public static <E extends ISSABasicBlock>
@@ -227,6 +228,7 @@ public class InflowAnalysis {
           ClassHierarchy cha, 
           ISupergraph<BasicBlockInContext<E>, CGNode> graph,
           PointerAnalysis<InstanceKey> pa, 
+          Map<InstanceKey, String> prefixes,
           ISpecs s) {
 
         Map<BasicBlockInContext<E>, Map<FlowType<E>,Set<CodeElement>>> taintMap = HashMapFactory.make();
@@ -240,7 +242,7 @@ public class InflowAnalysis {
         	else if (ss[i] instanceof CallRetSourceSpec || ss[i] instanceof CallArgSourceSpec)
         		ssAL.add(ss[i]);
         	else if (ss[i] instanceof StaticFieldSourceSpec) {
-        		processStaticFieldSource(ctx, taintMap, (StaticFieldSourceSpec)ss[i], cg, graph, pa);
+        		processStaticFieldSource(ctx, taintMap, (StaticFieldSourceSpec)ss[i], cg, graph, cha, pa);
         	} else 
         		throw new UnsupportedOperationException("Unrecognized SourceSpec");
         } 

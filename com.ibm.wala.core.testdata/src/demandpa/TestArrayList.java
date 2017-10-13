@@ -44,9 +44,10 @@ public class TestArrayList {
   /**
    * @param args
    */
+  @SuppressWarnings("unchecked")
   public static void main(String[] args) {
-    ArrayList<Object> l1 = new ArrayList<Object>();
-    ArrayList<Object> l2 = new ArrayList<Object>();
+    ArrayList l1 = new ArrayList();
+    ArrayList l2 = new ArrayList();
     l1.add(new Object());
     l2.add(new Object());
     Object o1 = l1.get(0);

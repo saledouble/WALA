@@ -27,7 +27,7 @@ public abstract class AbstractPointerAnalysis implements PointerAnalysis<Instanc
   /**
    * graph representation of pointer-analysis results
    */
-  private HeapGraph<InstanceKey> heapGraph;
+  private HeapGraph heapGraph;
   /**
    * Governing call graph.
    */
@@ -44,9 +44,9 @@ public abstract class AbstractPointerAnalysis implements PointerAnalysis<Instanc
   }
 
   @Override
-  public HeapGraph<InstanceKey> getHeapGraph() {
+  public HeapGraph getHeapGraph() {
     if (heapGraph == null) {
-      heapGraph = new BasicHeapGraph<InstanceKey>(this, cg);
+      heapGraph = new BasicHeapGraph(this, cg);
     }
     return heapGraph;
   }

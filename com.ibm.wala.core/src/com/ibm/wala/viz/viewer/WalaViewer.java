@@ -29,7 +29,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
  */
 public class WalaViewer extends JFrame {
 
-  private static final long serialVersionUID = -8580178580211053765L;
   protected static final String DefaultMutableTreeNode = null;
 
 

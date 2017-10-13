@@ -344,7 +344,10 @@ public class Instantiator implements IInstantiator {
         return instance; 
     }
 
-    private static void createPrimitive(SSAValue instance) {
+    /**
+     *  @return an unallocated SSAVariable
+     */
+    private void createPrimitive(SSAValue instance) {
         // XXX; something else?
         instance.setAssigned();
     }
@@ -383,7 +386,7 @@ public class Instantiator implements IInstantiator {
      *
      *  @param  self the "this" to call the constructor on
      *  @param  ctor the constructor to call
-     *  @param  ctorParams parameters to the ctor _without_ implicit this
+     *  @param  params parameters to the ctor _without_ implicit this
      */
     private void addCallCtor(SSAValue self, MethodReference ctor, List<SSAValue> ctorParams) {
         final int pc = this.body.getNextProgramCounter();
@@ -533,7 +536,6 @@ public class Instantiator implements IInstantiator {
     /**
      *  Path back to Object (including T itself).
      */
-    @SuppressWarnings("unused")
     private List<TypeReference> getAllSuper(final TypeReference T) {
         if (T.isPrimitiveType()) {
             throw new IllegalArgumentException("Not you that call primitive type on :P");
@@ -661,8 +663,6 @@ public class Instantiator implements IInstantiator {
     /**
      *  Satisfy the interface.
      */
-    @Override
-    @SuppressWarnings("unchecked")
     public int createInstance(TypeReference type, Object... instantiatorArgs) {
         // public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<SSAValue> seen) {
         if (! (instantiatorArgs[0] instanceof Boolean)) {
@@ -676,7 +676,7 @@ public class Instantiator implements IInstantiator {
                     "got: " + instantiatorArgs[2].getClass()); 
         }
         if (instantiatorArgs[2] != null) {
-            final Set<?> seen = (Set<?>) instantiatorArgs[2];
+            final Set seen = (Set) instantiatorArgs[2];
             if (! seen.isEmpty()) {
                 final Object o = seen.iterator().next();
                 if (! (o instanceof SSAValue)) {

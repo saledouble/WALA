@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -37,7 +36,6 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.ExplodedInterproceduralCFG;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -55,6 +53,8 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
+
+import junit.framework.Assert;
 
 /**
  * Tests of various flow analysis engines.
@@ -91,7 +91,7 @@ public class DataflowTest extends WalaTestCase {
     try {
       cha = ClassHierarchyFactory.make(scope);
     } catch (ClassHierarchyException e) {
-      throw new Exception(e);
+      throw new Exception();
     }
   }
 
@@ -151,7 +151,7 @@ public class DataflowTest extends WalaTestCase {
         "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     ExplodedInterproceduralCFG icfg = ExplodedInterproceduralCFG.make(cg);
     ContextInsensitiveReachingDefs reachingDefs = new ContextInsensitiveReachingDefs(icfg, cha);
@@ -183,9 +183,10 @@ public class DataflowTest extends WalaTestCase {
         "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
-    ContextSensitiveReachingDefs reachingDefs = new ContextSensitiveReachingDefs(cg);
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
+    ContextSensitiveReachingDefs reachingDefs = new ContextSensitiveReachingDefs(cg, cache);
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> result = reachingDefs.analyze();
     ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> supergraph = reachingDefs.getSupergraph();
     for (BasicBlockInContext<IExplodedBasicBlock> bb : supergraph) {

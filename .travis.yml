@@ -5,7 +5,6 @@ dist: trusty
 addons:
     apt:
         packages:
-            - realpath
             - xvfb
 before_install:
  - "export DISPLAY=:99.0"
@@ -13,25 +12,19 @@ before_install:
  - "pushd /tmp"
  - "git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git"
  - "popd"
- - export M2_HOME=$HOME/apache-maven-3.5.0
- - if [ ! -d $M2_HOME/bin ]; then curl https://archive.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz | tar zxf - -C $HOME; fi
- - export PATH=$M2_HOME/bin:$PATH
  - "mkdir -p $TRAVIS_BUILD_DIR/com.ibm.wala.dalvik.test/lib"
  - "find /usr/local -name dx.jar -exec cp '{}' $TRAVIS_BUILD_DIR/com.ibm.wala.dalvik.test/lib/dx.jar ';'"
 install:
-- mvn clean verify -DskipTests=true -B -q
+ - mvn clean verify -DskipTests=true -B -q
 script:
-- xvfb-run mvn clean install -B -q
-- bash ./dependent-projects-trigger.sh $AUTH_TOKEN
-- mvn javadoc:aggregate -B -q
-- bash ./upload-javascript.sh $GH_TOKEN
-- ./build-maven-jars.py "install -Dgpg.skip"
+ - mvn clean verify -B -q
+ - jdk_switcher use oraclejdk7
+ - ./build-maven-jars.py "install -Dgpg.skip"
 sudo: false
 cache:
   - apt
   - directories:
-      - "$HOME/.m2"
-      - "$HOME/apache-maven-3.5.0"
-      - "$TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib"
+      - $HOME/.m2
+      - $TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib
 notifications:
     slack: cunyponder:A8GuEoj0voEn2H7MJDL1eNji

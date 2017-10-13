@@ -79,29 +79,45 @@ final public class CTDecoder extends Decoder {
       return cp.getItemType(index);
     }
 
-    private static Error convertToError(InvalidClassFileException e) {
+    private Error convertToError(InvalidClassFileException e) {
       e.printStackTrace();
       return new Error("Invalid class file: " + e.getMessage());
     }
 
     @Override
     public int getConstantPoolInteger(int index) {
-      return cp.getCPInt(index);
+      try {
+        return cp.getCPInt(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
     }
 
     @Override
     public float getConstantPoolFloat(int index) {
-      return cp.getCPFloat(index);
+      try {
+        return cp.getCPFloat(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
     }
 
     @Override
     public long getConstantPoolLong(int index) {
-      return cp.getCPLong(index);
+      try {
+        return cp.getCPLong(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
     }
 
     @Override
     public double getConstantPoolDouble(int index) {
-      return cp.getCPDouble(index);
+      try {
+        return cp.getCPDouble(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
     }
 
     @Override

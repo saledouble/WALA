@@ -54,7 +54,6 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  */
 public class PaPanel extends JSplitPane {
 
-  private static final long serialVersionUID = 8120735305334110889L;
   protected final PointerAnalysis<InstanceKey> pa;
   protected final CallGraph cg;
 
@@ -98,7 +97,7 @@ public class PaPanel extends JSplitPane {
     this.setRightComponent(rightPanel);
     fullName = new JTextField("");
     rightPanel.add(fullName, BorderLayout.PAGE_START);
-    irViewer = new IrAndSourceViewer();
+    irViewer = new IrAndSourceViewer(cg);
     rightPanel.add(irViewer.getComponent(), BorderLayout.CENTER);
 
     heapTree.addTreeExpansionListener(new TreeExpansionListener() {
@@ -168,7 +167,7 @@ public class PaPanel extends JSplitPane {
   }
 
   private void initDataStructures(PointerAnalysis<InstanceKey> pa) {
-    HeapGraph<InstanceKey> heapGraph = pa.getHeapGraph();
+    HeapGraph heapGraph = pa.getHeapGraph();
     OrdinalSetMapping<InstanceKey> instanceKeyMapping = pa.getInstanceKeyMapping();
     for (Object n : heapGraph){
       if (heapGraph.getPredNodeCount(n) == 0){ // considering only roots of the heap graph.

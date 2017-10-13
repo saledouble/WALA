@@ -175,6 +175,7 @@ public class XMLSummaryWriter {
      * No guarantees as to the state of the Document if an exception is thrown.
      * 
      * @param summary
+     * @return
      * @throws DOMException
      * @throws UTFDataFormatException
      * @throws SSASerializationException
@@ -269,7 +270,7 @@ public class XMLSummaryWriter {
      * @param summary
      * @return
      */
-    private static String getMethodDescriptor(MethodSummary summary) {
+    private String getMethodDescriptor(MethodSummary summary) {
         StringBuilder typeSigs = new StringBuilder("(");
         
         int i=0;

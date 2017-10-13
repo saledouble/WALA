@@ -48,7 +48,7 @@
 
 package com.ibm.wala.dalvik.dex.instructions;
 
-import org.jf.dexlib2.Opcode;
+import org.jf.dexlib.Code.Opcode;
 
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.dalvik.classLoader.DexIMethod;

@@ -30,7 +30,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class ChaPanel extends JSplitPane {
 
-  private static final long serialVersionUID = -9058908127737757320L;
   private final IClassHierarchy cha;
 
   public ChaPanel(IClassHierarchy cha) {
@@ -40,8 +39,8 @@ public class ChaPanel extends JSplitPane {
     JTree tree = buildTree();
     this.setLeftComponent(new JScrollPane(tree));
     
-    final DefaultListModel<String> methodListModel = new DefaultListModel<>();
-    JList methodList = new JList<String>(methodListModel);
+    final DefaultListModel methodListModel = new DefaultListModel();
+    JList methodList = new JList(methodListModel);
     this.setRightComponent(methodList);
     
     tree.addTreeSelectionListener(new TreeSelectionListener(){

@@ -44,7 +44,6 @@ public class OverridesOnePointFour {
 	
 	static class Sub implements Super {
 		
-    @Override
     public Long get() {
 			return new Long(6);
 		}

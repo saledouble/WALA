@@ -267,7 +267,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       return "delared type := " + type;
     }
 
-    public static boolean isNullary() {
+    public boolean isNullary() {
       return true;
     }
 

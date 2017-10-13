@@ -49,7 +49,7 @@ public class JavaScriptPropertyRead extends AbstractReflectiveGet {
 
   /**
   /* (non-Javadoc)
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(com.ibm.wala.ssa.SSAInstruction.IVisitor)
+   * @see com.ibm.domo.ssa.SSAInstruction#visit(com.ibm.domo.ssa.SSAInstruction.Visitor)
    */
   @Override
   public void visit(IVisitor v) {

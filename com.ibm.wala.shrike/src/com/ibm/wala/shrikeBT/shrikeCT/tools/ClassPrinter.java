@@ -72,7 +72,7 @@ public class ClassPrinter {
   }
 
   public static void main(String[] args) throws Exception {
-    OfflineInstrumenter oi = new OfflineInstrumenter();
+    OfflineInstrumenter oi = new OfflineInstrumenter(true);
     args = oi.parseStandardArgs(args);
 
     PrintWriter w = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
@@ -154,7 +154,7 @@ public class ClassPrinter {
     return "0x" + Integer.toString(16, flags) + "(" + buf.toString() + ")";
   }
 
-  private void dumpAttributes(ClassReader cr, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
+  private void dumpAttributes(ClassReader cr, int i, ClassReader.AttrIterator attrs) throws InvalidClassFileException,
       InvalidBytecodeException, IOException {
     for (; attrs.isValid(); attrs.advance()) {
       String name = attrs.getName();
@@ -266,7 +266,7 @@ public class ClassPrinter {
         w.write("    signature: " + cr.getCP().getCPUtf8(sr.getSignatureCPIndex()) + "\n");
       } else if (AnnotationsReader.isKnownAnnotation(name)) {
         AnnotationsReader r = new AnnotationsReader(attrs, name);
-        printAnnotations(r);
+        printAnnotations(cr, attrs, r);
       } else {
         int len = attrs.getDataSize();
         int pos = attrs.getDataOffset();
@@ -280,7 +280,7 @@ public class ClassPrinter {
     }
   }
 
-  private void printAnnotations(AnnotationsReader r)
+  private void printAnnotations(ClassReader cr, ClassReader.AttrIterator attrs, AnnotationsReader r)
       throws InvalidClassFileException {
     for (AnnotationAttribute annot : r.getAllAnnotations()) {
       w.write("    Annotation type: " + annot.type + "\n");      
@@ -380,7 +380,7 @@ public class ClassPrinter {
 
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
     cr.initClassAttributeIterator(attrs);
-    dumpAttributes(cr, attrs);
+    dumpAttributes(cr, 0, attrs);
     w.write("\n");
 
     int fieldCount = cr.getFieldCount();
@@ -388,7 +388,7 @@ public class ClassPrinter {
     for (int i = 0; i < fieldCount; i++) {
       w.write(cr.getFieldName(i) + " " + cr.getFieldType(i) + " " + dumpFlags(cr.getFieldAccessFlags(i)) + "\n");
       cr.initFieldAttributeIterator(i, attrs);
-      dumpAttributes(cr, attrs);
+      dumpAttributes(cr, i, attrs);
     }
     w.write("\n");
 
@@ -397,7 +397,7 @@ public class ClassPrinter {
     for (int i = 0; i < methodCount; i++) {
       w.write(cr.getMethodName(i) + " " + cr.getMethodType(i) + " " + dumpFlags(cr.getMethodAccessFlags(i)) + "\n");
       cr.initMethodAttributeIterator(i, attrs);
-      dumpAttributes(cr, attrs);
+      dumpAttributes(cr, i, attrs);
     }
     w.write("\n");
   }

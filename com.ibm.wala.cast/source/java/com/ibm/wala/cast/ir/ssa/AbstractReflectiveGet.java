@@ -34,7 +34,7 @@ public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+   * @see com.ibm.wala.ssa.Instruction#getDef()
    */
   @Override
   public boolean hasDef() {
@@ -52,7 +52,7 @@ public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
+   * @see com.ibm.wala.ssa.Instruction#getNumberOfUses()
    */
   @Override
   public int getNumberOfUses() {

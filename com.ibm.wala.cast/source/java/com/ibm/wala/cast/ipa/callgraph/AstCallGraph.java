@@ -29,6 +29,8 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
@@ -81,6 +83,10 @@ public class AstCallGraph extends ExplicitCallGraph {
   public class AstCGNode extends ExplicitNode {
     private Set<Function<Object, Object>> callbacks;
 
+    private IR cachedIR;
+    
+    private DefUse cachedDU;
+    
     private AstCGNode(IMethod method, Context context) {
       super(method, context);
     }
@@ -118,7 +124,7 @@ public class AstCallGraph extends ExplicitCallGraph {
 
         callbacks.add(callback);
 
-        for (Iterator<CGNode> ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
+        for (Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
           ((AstCGNode) ps.next()).addCallback(callback);
         }
       }
@@ -132,7 +138,7 @@ public class AstCallGraph extends ExplicitCallGraph {
 
         callbacks.addAll(callback);
 
-        for (Iterator<CGNode> ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
+        for (Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
           ((AstCGNode) ps.next()).addAllCallbacks(callback);
         }
       }

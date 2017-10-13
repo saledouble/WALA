@@ -13,7 +13,13 @@ package com.ibm.wala.cast.js.nodejs;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -111,12 +117,12 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 	    return className;
 	  }
 
-	private static void loadWrapperSources() throws IOException {
+	private void loadWrapperSources() throws IOException {
 		MODULE_WRAPPER_SOURCE = loadWrapperSource(MODULE_WRAPPER_FILENAME);
 		JSON_WRAPPER_SOURCE = loadWrapperSource(JSON_WRAPPER_FILENAME);
 	}
 	
-	private static String loadWrapperSource(String filename) throws IOException {
+	private String loadWrapperSource(String filename) throws IOException {
 		InputStream url = NodejsRequiredSourceModule.class.getClassLoader().getResourceAsStream(filename);
 	  return new String(Streams.inputStream2ByteArray(url));
 	}

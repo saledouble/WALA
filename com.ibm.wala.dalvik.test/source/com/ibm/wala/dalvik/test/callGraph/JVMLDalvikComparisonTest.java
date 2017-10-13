@@ -39,7 +39,6 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
-import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -59,16 +58,12 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 		return Pair.make(CG, builder.getPointerAnalysis());
 	}
 	
-	private static Set<Pair<CGNode,CGNode>> edgeDiff(CallGraph from, CallGraph to, boolean userOnly) {
+	private static Set<Pair<CGNode,CGNode>> edgeDiff(CallGraph from, CallGraph to) {
 		Set<Pair<CGNode,CGNode>> result = HashSetFactory.make();
 		for(CGNode f : from) {
 			if (! f.getMethod().isSynthetic()) {
 			outer: for(CGNode t : from) {
-				if (!t.getMethod().isSynthetic() && 
-				    from.hasEdge(f, t) && 
-				    (!userOnly || 
-				     !t.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Primordial))) 
-				{
+				if (!t.getMethod().isSynthetic() && from.hasEdge(f, t)) {
 					Set<CGNode> fts = to.getNodes(f.getMethod().getReference());
 					Set<CGNode> tts = to.getNodes(t.getMethod().getReference());
 					for(CGNode x : fts) {
@@ -86,7 +81,7 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 		return result;
 	}
 	
-	private static void test(String mainClass, String javaScopeFile) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
+	private static void test(String mainClass, String javaScopeFile) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
 		Pair<CallGraph, PointerAnalysis<InstanceKey>> java = makeJavaBuilder(javaScopeFile, mainClass);
 
 		AnalysisScope javaScope = java.fst.getClassHierarchy().getScope();
@@ -96,18 +91,10 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 	
 		Set<MethodReference> androidMethods = applicationMethods(android.fst);
 		Set<MethodReference> javaMethods = applicationMethods(java.fst);
-				
-    Iterator<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst, false).iterator();
-		Assert.assertFalse(checkEdgeDiff(android, androidMethods, javaMethods, javaExtraEdges));
 		
-		Iterator<Pair<CGNode, CGNode>> androidExtraEdges = edgeDiff(android.fst, java.fst, true).iterator();
-		Assert.assertFalse(checkEdgeDiff(java, javaMethods, androidMethods, androidExtraEdges));
-	}
-
-  private static boolean checkEdgeDiff(Pair<CallGraph, PointerAnalysis<InstanceKey>> android, Set<MethodReference> androidMethods,
-      Set<MethodReference> javaMethods, Iterator<Pair<CGNode, CGNode>> javaExtraEdges) {
-    boolean fail = false;
-    if (javaExtraEdges.hasNext()) {
+		Iterator<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst).iterator();
+		boolean fail = false;
+		if (javaExtraEdges.hasNext()) {
 			fail = true;
 			Set<MethodReference> javaExtraNodes = HashSetFactory.make(javaMethods);
 			javaExtraNodes.removeAll(androidMethods);		
@@ -134,21 +121,22 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 				}
 			}
 		}
-    return fail;
-  }
+		
+		Assert.assertTrue(!fail);		
+	}
 	
 	@Test
-	public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
+	public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
 		test(TestConstants.JLEX_MAIN, TestConstants.JLEX);
 	}
 
 	@Test
-	public void testJavaCup() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
+	public void testJavaCup() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
 		test(TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP);
 	}
 
 	@Test
-	public void testBCEL() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
+	public void testBCEL() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
 		test(TestConstants.BCEL_VERIFIER_MAIN, TestConstants.BCEL);
 	}
 }

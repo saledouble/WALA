@@ -80,7 +80,7 @@ public class ProgressMaster implements IProgressMonitor {
 
   public synchronized void reset() {
     killNanny();
-    setCanceled();
+    setCanceled(false);
     timedOut = false;
     tooMuchMemory = false;
   }
@@ -118,7 +118,7 @@ public class ProgressMaster implements IProgressMonitor {
     return delegate.isCanceled() || timedOut || tooMuchMemory;
   }
 
-  public void setCanceled() {
+  public void setCanceled(boolean value) {
     killNanny();
   }
 
@@ -131,7 +131,7 @@ public class ProgressMaster implements IProgressMonitor {
 
   @Override
   public void cancel() {
-    setCanceled();
+    setCanceled(true);
   }
 /** END Custom change: subtasks and canceling */
   @Override
@@ -146,8 +146,6 @@ public class ProgressMaster implements IProgressMonitor {
   }
 
   public static class TooMuchMemoryUsed extends Exception {
-
-    private static final long serialVersionUID = -7174940833610292692L;
 
   }
 
@@ -186,7 +184,7 @@ public class ProgressMaster implements IProgressMonitor {
           try {
             ManagementFactory.getPlatformMBeanServer().addNotificationListener(gcbean.getObjectName(), listener, null, null);
           } catch (InstanceNotFoundException e) {
-            throw new Error("cannot find existing bean", e);
+            throw new Error("cannot find existing bean");
           }
         }
 
@@ -196,7 +194,7 @@ public class ProgressMaster implements IProgressMonitor {
           try {
           ManagementFactory.getPlatformMBeanServer().removeNotificationListener(gcbean.getObjectName(), listener);
           } catch (InstanceNotFoundException | ListenerNotFoundException e) {
-            throw new Error("cannot find existing bean", e);
+            throw new Error("cannot find existing bean");
           }
         }
         

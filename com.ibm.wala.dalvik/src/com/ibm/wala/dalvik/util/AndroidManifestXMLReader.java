@@ -97,7 +97,7 @@ public class AndroidManifestXMLReader {
      */
     private static final Logger logger = LoggerFactory.getLogger(AndroidSettingFactory.class);
 
-    public AndroidManifestXMLReader(File xmlFile) {
+    public AndroidManifestXMLReader(File xmlFile) throws IOException {
         if (xmlFile == null) {
             throw new IllegalArgumentException("xmlFile may not be null");
         }
@@ -134,67 +134,68 @@ public class AndroidManifestXMLReader {
         public Set<Tag> getSubTags();
     }
 
-    private interface HistoryKey {}
+    private interface HistoryKey {} ;
     /**
      *  Only includes relevant tags.
      */
+    @SuppressWarnings("unchecked")
     private enum Tag implements HistoryKey {
         /**
          *  This tag is nat an actual part of the document.
          */
         ROOT("ROOT",
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.MANIFEST); }},
                 null,
                 NoOpItem.class),
         MANIFEST("manifest",
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.APPLICATION); }},
                 EnumSet.of(Attr.PACKAGE),
                 ManifestItem.class),
         APPLICATION("application", 
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.ACTIVITY, Tag.SERVICE, Tag.RECEIVER, Tag.PROVIDER, Tag.ALIAS); }},    // Allowed children..
                 Collections.EMPTY_SET,              // Interesting Attributes
                 NoOpItem.class),                    // Handler
         ACTIVITY("activity", 
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() { 
                     return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.NAME, Attr.ENABLED, Attr.PROCESS),
                 ComponentItem.class),
         ALIAS("activity-alias", 
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.ENABLED, Attr.TARGET, Attr.NAME),
                 ComponentItem.class),
         SERVICE("service", 
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.ENABLED, Attr.NAME, Attr.PROCESS),
                 ComponentItem.class),
         RECEIVER("receiver", 
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() {
                       return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.ENABLED, Attr.NAME, Attr.PROCESS),
                 ComponentItem.class),
         PROVIDER("provider", 
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.ENABLED, Attr.ORDER, Attr.NAME, Attr.PROCESS),
                 ComponentItem.class),
         INTENT("intent-filter",
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.ACTION, Tag.DATA); }},
                 Collections.EMPTY_SET,
                 IntentItem.class),
         ACTION("action", 
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() {
                     return Collections.EMPTY_SET; }},
                 EnumSet.of(Attr.NAME),
                 FinalItem.class), //(new ITagDweller() {
                     //public Tag getTag() { return Tag.ACTION; }})),
         DATA("data", 
-                new ISubTags() { @Override public Set<Tag> getSubTags() {
+                new ISubTags() { public Set<Tag> getSubTags() {
                     return Collections.EMPTY_SET; }},
                 EnumSet.of(Attr.SCHEME, Attr.HOST, Attr.PATH, Attr.MIME),
                 FinalItem.class), //(new ITagDweller() {
@@ -289,7 +290,6 @@ public class AndroidManifestXMLReader {
         /**
          *  All Tags in this Enum but UNIMPORTANT are relevant.
          */
-        @SuppressWarnings("unused")
         public boolean isRelevant() {
             return (this != Tag.UNIMPORTANT);
         }
@@ -315,7 +315,6 @@ public class AndroidManifestXMLReader {
         /**
          *  The Tag appears in the XML File using this name.
          */
-        @SuppressWarnings("unused")
         public String getName() {
             return this.tagName;
         }
@@ -346,7 +345,6 @@ public class AndroidManifestXMLReader {
             this.attrName = attrName;
         }
 
-        @SuppressWarnings("unused")
         public boolean isRelevantIn(Tag tag) {
             return tag.isRelevant(this);
         }
@@ -485,6 +483,9 @@ public class AndroidManifestXMLReader {
      *  Attributes.
      */
     private static class FinalItem extends ParserItem {
+        public FinalItem() {
+            super();
+        }
         @Override
         public void leave() {
             final Set<Tag> subs = self.getAllowedSubTags();
@@ -506,12 +507,18 @@ public class AndroidManifestXMLReader {
      *  It's like FinalItem but may contain sub-tags.
      */
     private static class NoOpItem extends ParserItem {
+        public NoOpItem() {
+            super();
+        }
     }
 
     /**
      *  The root-element of an AndroidManifest contains the package.
      */
     private static class ManifestItem extends ParserItem {
+        public ManifestItem() {
+            super();
+        }
         @Override
         public void enter(Attributes saxAttrs) {
             super.enter(saxAttrs);
@@ -525,6 +532,9 @@ public class AndroidManifestXMLReader {
      *  @todo   Handle the URI
      */
     private static class IntentItem extends ParserItem {
+        public IntentItem() {
+            super();
+        }
         @Override
         public void leave() {
             Set<Tag> allowedTags = EnumSet.copyOf(self.getAllowedSubTags());
@@ -562,7 +572,6 @@ public class AndroidManifestXMLReader {
                 }
             }
 
-            /*
             // Pushing intent...
             final String pack;
             if ((attributesHistory.get(Attr.PACKAGE) != null ) && (!(attributesHistory.get(Attr.PACKAGE).isEmpty()))) {
@@ -571,7 +580,6 @@ public class AndroidManifestXMLReader {
                 logger.warn("Empty Package {}", attributesHistory.get(Attr.PACKAGE).peek());
                 pack = null;
             }
-            */
 
             if (!names.isEmpty()) {
                 for (String name : names) {
@@ -596,6 +604,9 @@ public class AndroidManifestXMLReader {
     }
 
     private static class ComponentItem extends ParserItem {
+        public ComponentItem() {
+            super();
+        }
         @Override
          public void leave() {
             final Set<Tag> allowedTags = self.getAllowedSubTags();

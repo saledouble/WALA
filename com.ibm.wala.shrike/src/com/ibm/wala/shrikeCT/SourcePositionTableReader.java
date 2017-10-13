@@ -38,7 +38,6 @@ public final class SourcePositionTableReader extends AttributeReader {
       this.lastCol = lastCol;
     }
     
-    @Override
     public int compareTo(Object o) {
       if (o instanceof Position) {
         Position p = (Position) o;

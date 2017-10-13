@@ -68,8 +68,7 @@ public final class LineNumberTableReader extends AttributeReader {
         }
 
         // check length
-        @SuppressWarnings("unused")
-        LineNumberTableReader lineNumberTableReader = new LineNumberTableReader(iter);
+        new LineNumberTableReader(iter);
         int attr = iter.getRawOffset();
         int count = cr.getUShort(attr + 6);
         int offset = attr + 8;

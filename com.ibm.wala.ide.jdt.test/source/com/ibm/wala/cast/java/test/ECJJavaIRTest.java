@@ -17,7 +17,6 @@ import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class ECJJavaIRTest extends JavaIRTests {
@@ -27,8 +26,8 @@ public class ECJJavaIRTest extends JavaIRTests {
   }
 
   @Override
-  protected <I extends InstanceKey> AbstractAnalysisEngine<I> getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
-    JavaSourceAnalysisEngine<I> engine = new ECJJavaSourceAnalysisEngine<I>() {
+  protected AbstractAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+    JavaSourceAnalysisEngine engine = new ECJJavaSourceAnalysisEngine() {
       @Override
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);

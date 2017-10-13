@@ -15,6 +15,7 @@ import static com.ibm.wala.dalvik.test.util.Util.getJavaJar;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -34,7 +35,7 @@ import com.ibm.wala.util.io.TemporaryFile;
 
 public abstract class DynamicDalvikComparisonTest extends DalvikCallGraphTestBase {
 
-	protected void test(URI[] androidLibs, String mainClass, String javaScopeFile, String... args) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, InvalidClassFileException, FailureException {
+	protected void test(URI[] androidLibs, String mainClass, String javaScopeFile, String... args) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
 		AnalysisScope javaScope = CallGraphTestUtil.makeJ2SEAnalysisScope(javaScopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 		String javaJarPath = getJavaJar(javaScope);
 		File androidDex = convertJarToDex(javaJarPath);

@@ -42,6 +42,7 @@ import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ide.client.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.ide.util.JavaScriptEclipseProjectPath;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -61,11 +62,11 @@ import com.ibm.wala.util.functions.Function;
 
 public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends EclipseProjectSourceAnalysisEngine<IJavaScriptProject, I> {
 
-  public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE }
+  public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE };
   
   private final BuilderType builderType;
   
-  public EclipseJavaScriptAnalysisEngine(IJavaScriptProject project, BuilderType builderType) {
+  public EclipseJavaScriptAnalysisEngine(IJavaScriptProject project, BuilderType builderType) throws IOException, CoreException {
     super(project, "js");
     this.builderType = builderType;
   }
@@ -113,9 +114,9 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
   }
 
   @Override
-  protected CallGraphBuilder<I> getCallGraphBuilder(IClassHierarchy cha,
+  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha,
 		AnalysisOptions options, IAnalysisCacheView cache) {
-	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha);
+	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha, scope, false);
   }
 
   public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> getFieldBasedCallGraph() throws CancelException {
@@ -129,7 +130,7 @@ public class EclipseJavaScriptAnalysisEngine<I extends InstanceKey> extends Ecli
     return getFieldBasedCallGraph(eps);
   }
   
-  private static String getScriptName(AstMethod m) {
+  private String getScriptName(AstMethod m) {
     
     // we want the original including file, since that will be the "script"
     Position p = m.getSourcePosition();

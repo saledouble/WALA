@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.ipa.callgraph;
 
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;

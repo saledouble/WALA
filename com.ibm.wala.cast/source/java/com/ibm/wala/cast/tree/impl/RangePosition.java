@@ -17,7 +17,7 @@ import java.net.URL;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
-public class RangePosition extends AbstractSourcePosition {
+public class RangePosition extends AbstractSourcePosition implements Position {
   private final URL url;
   private final int startLine;
   private final int endLine;

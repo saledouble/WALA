@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.slicer;
 import java.util.Iterator;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.util.graph.NumberedGraph;
@@ -32,7 +31,7 @@ public interface ISDG extends NumberedGraph<Statement>, IClassHierarchyDweller {
   /**
    * Get the program dependence graph constructed for a particular node.
    */
-  PDG<? extends InstanceKey> getPDG(CGNode node);
+  PDG getPDG(CGNode node);
 
   /**
    * Iterate over the nodes which have been discovered so far, but do <em>NOT</em> eagerly construct the entire graph.

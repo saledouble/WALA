@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %Bundle-Name
+Bundle-Name: Testdata Plug-in
 Bundle-SymbolicName: com.ibm.wala.core.testdata
-Bundle-Version: 1.4.4.qualifier
-Bundle-Vendor: %Bundle-Vendor
+Bundle-Version: 1.3.10.qualifier
+Bundle-Vendor: IBM
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Eclipse-BuddyPolicy: registered

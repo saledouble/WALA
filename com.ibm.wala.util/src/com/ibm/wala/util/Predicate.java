@@ -57,10 +57,12 @@ public abstract class Predicate<T> {
   @SuppressWarnings("rawtypes")
   public static final Predicate TRUE = FALSE.not();
 
+  @SuppressWarnings("unchecked")
   public static <T> Predicate<T> truePred() {
     return TRUE;
   }
 
+  @SuppressWarnings("unchecked")
   public static <T> Predicate<T> falsePred() {
     return FALSE;
   }

@@ -74,7 +74,7 @@ public abstract class EclipseProjectPath<E, P> {
 
   public interface ILoader {
     ClassLoaderReference ref();
-  }
+  };
   
   /**
    * Eclipse projects are modeled with 3 loaders, as described above.
@@ -93,7 +93,7 @@ public abstract class EclipseProjectPath<E, P> {
     public ClassLoaderReference ref() {
       return ref;
     }
-  }
+  };
 
   public enum AnalysisScopeType {
     NO_SOURCE, SOURCE_FOR_PROJ, SOURCE_FOR_PROJ_AND_LINKED_PROJS
@@ -118,7 +118,7 @@ public abstract class EclipseProjectPath<E, P> {
    */
   private final AnalysisScopeType scopeType;
 
-  protected EclipseProjectPath(AnalysisScopeType scopeType) {
+  protected EclipseProjectPath(AnalysisScopeType scopeType) throws IOException, CoreException {
     this.scopeType = scopeType;
     for (ILoader loader : Loader.values()) {
       MapUtil.findOrCreateList(modules, loader);
@@ -126,6 +126,7 @@ public abstract class EclipseProjectPath<E, P> {
   }
     
   public EclipseProjectPath create(IProject project) throws CoreException, IOException {
+    assert project != null;
     if (project == null) {
       throw new IllegalArgumentException("null project");
     }
@@ -153,7 +154,7 @@ public abstract class EclipseProjectPath<E, P> {
       // should ignore directories as well..
       return;
     }
-    if (isPrimordialJarFile()) {
+    if (isPrimordialJarFile(j)) {
       List<Module> s = MapUtil.findOrCreateList(modules, loader);
       s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
     }
@@ -170,7 +171,7 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
 
-  protected void resolveProjectPathEntry(boolean includeSource, IPath p) {
+  protected void resolveProjectPathEntry(ILoader loader, boolean includeSource, IPath p) {
     IPath projectPath = makeAbsolute(p);
     IWorkspace ws = ResourcesPlugin.getWorkspace();
     IWorkspaceRoot root = ws.getRoot();
@@ -266,7 +267,7 @@ public abstract class EclipseProjectPath<E, P> {
   /**
    * Is javaProject a plugin project?
    */
-  private static boolean isPluginProject(IProject project) {
+  private boolean isPluginProject(IProject project) {
     IPluginModelBase model = findModel(project);
     if (model == null) {
       return false;
@@ -281,7 +282,7 @@ public abstract class EclipseProjectPath<E, P> {
    * @return true if the given jar file should be handled by the Primordial loader. If false, other provisions should be made to add
    *         the jar file to the appropriate component of the AnalysisScope. Subclasses can override this method.
    */
-  protected boolean isPrimordialJarFile() {
+  protected boolean isPrimordialJarFile(JarFile j) {
     return true;
   }
 
@@ -335,7 +336,7 @@ public abstract class EclipseProjectPath<E, P> {
     return toAnalysisScope(getClass().getClassLoader(), null);
   }
 
-  public Collection<Module> getModules(ILoader loader) {
+  public Collection<Module> getModules(ILoader loader, boolean binary) {
     return Collections.unmodifiableCollection(modules.get(loader));
   }
 
@@ -349,13 +350,13 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
 
-  private static IPluginModelBase findModel(IProject p) {
+  private IPluginModelBase findModel(IProject p) {
     // PluginRegistry is specific to Eclipse 3.3+. Use PDECore for compatibility with 3.2
     // return PluginRegistry.findModel(p);
     return PDECore.getDefault().getModelManager().findModel(p);
   }
 
-  private static IPluginModelBase findModel(BundleDescription bd) {
+  private IPluginModelBase findModel(BundleDescription bd) {
     // PluginRegistry is specific to Eclipse 3.3+. Use PDECore for compatibility with 3.2
     // return PluginRegistry.findModel(bd);
     return PDECore.getDefault().getModelManager().findModel(bd);

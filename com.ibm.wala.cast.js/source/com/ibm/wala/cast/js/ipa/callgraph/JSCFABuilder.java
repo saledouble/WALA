@@ -17,6 +17,7 @@ import com.ibm.wala.cast.ipa.callgraph.ReflectedFieldPointerKey;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
@@ -87,7 +88,7 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
       }
 
       @Override
-      protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey<?> F) {
+      protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey F) {
         Object v = F.getValue();
         String strVal = JSCallGraphUtil.simulateToStringForPropertyNames(v);
         // if we know the string representation of the constant, use it...

@@ -11,6 +11,7 @@
 
 package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
@@ -28,11 +29,11 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 public class CorrelatedPairExtractorFactory implements CAstRewriterFactory<NodePos, NoKey> {
   private final Map<IMethod, CorrelationSummary> summaries;
 
-  public CorrelatedPairExtractorFactory(JavaScriptTranslatorFactory translatorFactory, URL entryPoint) throws ClassHierarchyException {
+  public CorrelatedPairExtractorFactory(JavaScriptTranslatorFactory translatorFactory, URL entryPoint) throws ClassHierarchyException, IOException {
     this(new CorrelationFinder(translatorFactory).findCorrelatedAccesses(entryPoint));
   }
   
-  public CorrelatedPairExtractorFactory(JavaScriptTranslatorFactory translatorFactory, SourceModule[] scripts) throws ClassHierarchyException {
+  public CorrelatedPairExtractorFactory(JavaScriptTranslatorFactory translatorFactory, SourceModule[] scripts) throws ClassHierarchyException, IOException {
     this(new CorrelationFinder(translatorFactory).findCorrelatedAccesses(scripts));
   }
   

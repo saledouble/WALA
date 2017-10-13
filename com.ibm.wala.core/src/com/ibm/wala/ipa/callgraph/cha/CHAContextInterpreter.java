@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.callgraph.cha;
 import java.util.Iterator;
 
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 public interface CHAContextInterpreter {
@@ -28,5 +27,4 @@ public interface CHAContextInterpreter {
    */
   public abstract Iterator<CallSiteReference> iterateCallSites(CGNode node);
 
-  Iterator<NewSiteReference> iterateNewSites(CGNode node);
 }

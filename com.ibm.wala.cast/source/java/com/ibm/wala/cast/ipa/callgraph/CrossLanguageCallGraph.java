@@ -165,7 +165,7 @@ public class CrossLanguageCallGraph extends AstCallGraph {
     }
   }
 
-  Iterator<CGNode> getLanguageRoots() {
+  Iterator getLanguageRoots() {
     return languageRootNodes.iterator();
   }
 

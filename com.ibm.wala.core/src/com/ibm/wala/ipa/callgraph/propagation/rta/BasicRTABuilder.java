@@ -19,6 +19,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -116,7 +117,6 @@ public class BasicRTABuilder extends AbstractRTABuilder {
      */
     final private MutableIntSet previousReceivers = IntSetUtil.getDefaultIntSetFactory().make();
 
-    @SuppressWarnings("unused")
     @Override
     public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
       IntSetVariable receivers = rhs;

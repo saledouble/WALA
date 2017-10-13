@@ -316,7 +316,7 @@ public class ReflectionTest extends WalaTestCase {
     Assert.assertTrue(filePermToStringNode != null);
   }
 
-  private static Collection<CGNode> getSuccNodes(CallGraph cg, Collection<CGNode> nodes) {
+  private Collection<CGNode> getSuccNodes(CallGraph cg, Collection<CGNode> nodes) {
     Set<CGNode> succNodes = HashSetFactory.make();
     for (CGNode newInstanceNode : nodes) {
       Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);
@@ -585,7 +585,7 @@ public class ReflectionTest extends WalaTestCase {
 
   /**
    * Test that when analyzing Reflect21, the call graph includes a node for the
-   * constructor of {@code Helper} that takes two {@link Object} parameters.
+   * constructor of {@link Helper} that takes two {@link Object} parameters.
    * This is to test the support for Class.getDeclaredConstructor.
    */
   @Test
@@ -604,7 +604,7 @@ public class ReflectionTest extends WalaTestCase {
 
   /**
    * Test that when analyzing Reflect22, the call graph includes a node for the
-   * constructor of {@code Helper} that takes one {@link Integer} parameters.
+   * constructor of {@link Helper} that takes one {@link Integer} parameters.
    * This is to test the support for Class.getDeclaredConstructors.
    */
   @Test
@@ -623,7 +623,7 @@ public class ReflectionTest extends WalaTestCase {
 
   /**
    * Test that when analyzing Reflect22, the call graph includes a node for the
-   * constructor of {@code Helper} that takes one {@link Integer} parameters.
+   * constructor of {@link Helper} that takes one {@link Integer} parameters.
    * This is to test the support for Class.getDeclaredConstructors.
    */
   @Test

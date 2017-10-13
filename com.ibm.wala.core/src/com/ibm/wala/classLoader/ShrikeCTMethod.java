@@ -348,7 +348,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     ClassReader.AttrIterator iter = new AttrIterator();
     getClassReader().initMethodAttributeIterator(shrikeMethodIndex, iter);
 
-    return ShrikeClass.getReader(iter, attrName, reader);
+    return ((ShrikeClass)getDeclaringClass()).getReader(iter, attrName, reader);    
   }
 
   private CodeReader getCodeReader() {
@@ -469,7 +469,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     final ClassLoaderReference clRef = getDeclaringClass().getClassLoader().getReference();
     return TypeAnnotation.getTypeAnnotationsFromReader(
         r,
-        TypeAnnotation.targetConverterAtMethodInfo(clRef),
+        TypeAnnotation.targetConverterAtMethodInfo(clRef, this),
         clRef
     );
   }
@@ -504,7 +504,6 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
    * element gives the annotations on the corresponding parameter. Note that the
    * 'this' parameter for an instance method cannot have annotations.
    */
-  @Override
   public Collection<Annotation>[] getParameterAnnotations() {
     int numAnnotatedParams = isStatic() ? getNumberOfParameters() : getNumberOfParameters() - 1;
     @SuppressWarnings("unchecked")

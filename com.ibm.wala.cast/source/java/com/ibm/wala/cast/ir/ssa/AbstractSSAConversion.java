@@ -155,10 +155,11 @@ public abstract class AbstractSSAConversion {
   @SuppressWarnings("unchecked")
   private void makeAssignmentMap() {
     this.assignmentMap = new Set[getMaxValueNumber() + 1];
-    for (ISSABasicBlock issaBasicBlock : CFG) {
-      SSACFG.BasicBlock BB = (SSACFG.BasicBlock) issaBasicBlock;
+    for (Iterator BBs = CFG.iterator(); BBs.hasNext();) {
+      SSACFG.BasicBlock BB = (SSACFG.BasicBlock) BBs.next();
       if (BB.getFirstInstructionIndex() >= 0) {
-        for (SSAInstruction inst : BB) {
+        for (Iterator IS = BB.iterator(); IS.hasNext();) {
+          SSAInstruction inst = (SSAInstruction) IS.next();
           if (inst != null) {
             for (int j = 0; j < getNumberOfDefs(inst); j++) {
               addDefiningBlock(assignmentMap, BB, getDef(inst, j));
@@ -184,8 +185,8 @@ public abstract class AbstractSSAConversion {
   protected void placePhiNodes() {
     int IterCount = 0;
 
-    for (ISSABasicBlock issaBasicBlock : CFG) {
-      SSACFG.BasicBlock X = (SSACFG.BasicBlock) issaBasicBlock;
+    for (Iterator Xs = CFG.iterator(); Xs.hasNext();) {
+      SSACFG.BasicBlock X = (SSACFG.BasicBlock) Xs.next();
       setHasAlready(X, 0);
       setWork(X, 0);
     }
@@ -203,7 +204,8 @@ public abstract class AbstractSSAConversion {
 
       IterCount++;
 
-      for (BasicBlock X : assignmentMap[V]) {
+      for (Iterator XS = assignmentMap[V].iterator(); XS.hasNext();) {
+        SSACFG.BasicBlock X = (SSACFG.BasicBlock) XS.next();
         setWork(X, IterCount);
         W.add(X);
       }
@@ -211,7 +213,7 @@ public abstract class AbstractSSAConversion {
       while (!W.isEmpty()) {
         SSACFG.BasicBlock X = W.iterator().next();
         W.remove(X);
-        for (Iterator<ISSABasicBlock> YS = DF.getDominanceFrontier(X); YS.hasNext();) {
+        for (Iterator YS = DF.getDominanceFrontier(X); YS.hasNext();) {
           SSACFG.BasicBlock Y = (SSACFG.BasicBlock) YS.next();
           if (getHasAlready(Y) < IterCount) {
             if (isLive(Y, V)) {
@@ -304,15 +306,15 @@ public abstract class AbstractSSAConversion {
     }
   }
 
-   private static <T> void push(ArrayList<T> stack, T elt) {
+   private <T> void push(ArrayList<T> stack, T elt) {
     stack.add(elt);
   }
   
-  private static <T> T peek(ArrayList<T> stack) {
+  private <T> T peek(ArrayList<T> stack) {
     return stack.get(stack.size()-1); 
   }
   
-  private static <T> T pop(ArrayList<T> stack) {
+  private <T> T pop(ArrayList<T> stack) {
     T e = stack.get(stack.size()-1);
     stack.remove(stack.size()-1);
     return e;
@@ -353,7 +355,7 @@ public abstract class AbstractSSAConversion {
       repairExit();
     }
 
-    for (Iterator<ISSABasicBlock> YS = CFG.getSuccNodes(X); YS.hasNext();) {
+    for (Iterator YS = CFG.getSuccNodes(X); YS.hasNext();) {
       SSACFG.BasicBlock Y = (SSACFG.BasicBlock) YS.next();
       int Y_id = Y.getGraphNodeId();
       int j = com.ibm.wala.cast.ir.cfg.Util.whichPred(CFG, Y, X);
@@ -426,7 +428,7 @@ public abstract class AbstractSSAConversion {
     return newDefs;
   }
 
-  protected boolean skipRepair(SSAInstruction inst, @SuppressWarnings("unused") int index) {
+  protected boolean skipRepair(SSAInstruction inst, int index) {
     if (inst == null)
       return true;
     for (int i = 0; i < getNumberOfDefs(inst); i++)

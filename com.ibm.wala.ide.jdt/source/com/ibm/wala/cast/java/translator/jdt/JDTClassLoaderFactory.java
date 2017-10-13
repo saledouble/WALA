@@ -73,7 +73,8 @@ public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
     }
   }
 
-  protected JavaSourceLoaderImpl makeSourceLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent) {
-    return new JDTSourceLoaderImpl(classLoaderReference, parent, cha, dump);
+  protected JavaSourceLoaderImpl makeSourceLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent)
+      throws IOException {
+    return new JDTSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, dump);
   }
 }

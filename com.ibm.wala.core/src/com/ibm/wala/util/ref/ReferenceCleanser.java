@@ -17,8 +17,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
-import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
-import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
@@ -34,7 +33,7 @@ public class ReferenceCleanser {
 
   private static WeakReference<IClassHierarchy> cha;
 
-  private static WeakReference<AnalysisCacheImpl> cache;
+  private static WeakReference<AnalysisCache> cache;
 
   public static void registerClassHierarchy(IClassHierarchy cha) {
     ReferenceCleanser.cha = new WeakReference<IClassHierarchy>(cha);
@@ -48,14 +47,12 @@ public class ReferenceCleanser {
     return result;
   }
 
-  public static void registerCache(IAnalysisCacheView cache) {
-    if (cache instanceof AnalysisCacheImpl) {
-      ReferenceCleanser.cache = new WeakReference<AnalysisCacheImpl>((AnalysisCacheImpl) cache);
-    }
+  public static void registerCache(AnalysisCache cache) {
+    ReferenceCleanser.cache = new WeakReference<AnalysisCache>(cache);
   }
 
-  private static AnalysisCacheImpl getAnalysisCache() {
-    AnalysisCacheImpl result = null;
+  private static AnalysisCache getAnalysisCache() {
+    AnalysisCache result = null;
     if (cache != null) {
       result = cache.get();
     }
@@ -70,7 +67,7 @@ public class ReferenceCleanser {
     if (occupancy < OCCUPANCY_TRIGGER) {
       return;
     }
-    AnalysisCacheImpl cache = getAnalysisCache();
+    AnalysisCache cache = getAnalysisCache();
     if (cache != null) {
       cache.getSSACache().wipe();
     }

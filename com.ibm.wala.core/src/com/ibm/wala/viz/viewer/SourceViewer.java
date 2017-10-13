@@ -23,16 +23,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 public class SourceViewer extends JPanel{
-  private static final long serialVersionUID = -1688405955293925453L;
   private URL sourceURL;
   private JTextField sourceCodeLocation;
-  private DefaultListModel<String> sourceCodeLinesList = new DefaultListModel<>();
-  private JList<String> sourceCodeLines;
+  private DefaultListModel sourceCodeLinesList = new DefaultListModel();
+  private JList sourceCodeLines;
 
   public SourceViewer() {
     super(new BorderLayout());
     sourceURL = null;
-    sourceCodeLines = new JList<String>(sourceCodeLinesList);
+    sourceCodeLines = new JList(sourceCodeLinesList);
     sourceCodeLocation = new JTextField("Source code");
     this.add(sourceCodeLocation, BorderLayout.PAGE_START);
     this.add(new JScrollPane(sourceCodeLines), BorderLayout.CENTER);

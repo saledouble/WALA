@@ -23,6 +23,7 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.fixpoint.UnaryOperator;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -57,7 +58,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * TODO: This implementation currently keeps all points to sets live ... even those for local variables that do not span
  * interprocedural boundaries. This may be too space-inefficient .. we can consider recomputing local sets on demand.
  */
-public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<InstanceKey> {
+public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   private final static boolean DEBUG_ALL = false;
 
   final static boolean DEBUG_ASSIGN = DEBUG_ALL | false;
@@ -138,7 +139,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   /**
    * Singleton operator for assignments
    */
-  public final static AssignOperator assignOperator = new AssignOperator();
+  protected final static AssignOperator assignOperator = new AssignOperator();
 
   /**
    * singleton operator for filter
@@ -281,7 +282,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     return callGraph;
   }
 
-  protected PropagationSystem makeSystem(@SuppressWarnings("unused") AnalysisOptions options) {
+  protected PropagationSystem makeSystem(AnalysisOptions options) {
     return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory);
   }
 
@@ -656,7 +657,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
   }
 
-  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
@@ -834,6 +834,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
+      final PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable def = getFixedSet();
       final PointerKey dVal = def.getPointerKey();
@@ -858,7 +859,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
           if (DEBUG_ARRAY_LOAD) {
             System.err.println("ArrayLoad add assign: " + dVal + " " + p);
           }
-          sideEffect.b |= system.newFieldRead(dVal, assignOperator, p);
+          sideEffect.b |= system.newFieldRead(dVal, assignOperator, p, object);
         }
       };
       if (priorInstances != null) {
@@ -921,6 +922,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
+      PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable val = getFixedSet();
       PointerKey pVal = val.getPointerKey();
@@ -950,9 +952,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
         // note that the following is idempotent
         if (isJavaLangObject(contents)) {
-          sideEffect |= system.newFieldWrite(p, assignOperator, pVal);
+          sideEffect |= system.newFieldWrite(p, assignOperator, pVal, object);
         } else {
-          sideEffect |= system.newFieldWrite(p, filterOperator, pVal);
+          sideEffect |= system.newFieldWrite(p, filterOperator, pVal, object);
         }
       }
       byte sideEffectMask = sideEffect ? (byte) SIDE_EFFECT_MASK : 0;
@@ -1011,6 +1013,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (ref.size() == 0) {
         return NOT_CHANGED;
       }
+      final PointerKey object = ref.getPointerKey();
       PointsToSetVariable def = getFixedSet();
       final PointerKey dVal = def.getPointerKey();
 
@@ -1034,7 +1037,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
                 String S = "Getfield add constraint " + dVal + " " + p;
                 System.err.println(S);
               }
-              sideEffect.b |= system.newFieldRead(dVal, assignOperator, p);
+              sideEffect.b |= system.newFieldRead(dVal, assignOperator, p, object);
             }
           }
         }
@@ -1127,6 +1130,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
+      final PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable val = getFixedSet();
       final PointerKey pVal = val.getPointerKey();
@@ -1152,7 +1156,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
                 String S = "Putfield add constraint " + p + " " + pVal;
                 System.err.println(S);
               }
-              sideEffect.b |= system.newFieldWrite(p, assign, pVal);
+              sideEffect.b |= system.newFieldWrite(p, assign, pVal, object);
             }
           }
         }
@@ -1390,7 +1394,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
    * @param klass a class
    * @return an int set which represents the subset of S that correspond to subtypes of klass
    */
-  @SuppressWarnings("unused")
   protected IntSet filterForClass(IntSet S, IClass klass) {
     MutableIntSet filter = null;
     if (klass.getReference().equals(TypeReference.JavaLangObject)) {
@@ -1486,6 +1489,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   @Override
   public IAnalysisCacheView getAnalysisCache() {
     return analysisCache;
-  }
+  };
 
 }

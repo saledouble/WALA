@@ -71,6 +71,8 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  The incorporated loop is wrapped around user-interaction methods. These are in the section
  *  MULTIPLE_TIMES_IN_LOOP.
  *
+ *  {@inheritDoc}
+ *
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopAndroidModel
  *  @see        com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopKillAndroidModel
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
@@ -102,7 +104,6 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
      *
      * {@inheritDoc}
      */
-    @Override
     protected int enterMULTIPLE_TIMES_IN_LOOP (int PC) {
         logger.info("PC {} is the jump target of START_OF_LOOP", PC);
         this.outerLoopPC = PC;
@@ -136,7 +137,6 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
      *
      *  {@inheritDoc}
      */
-    @Override
     protected int enterEND_OF_LOOP (int PC) {
         assert(outerLoopPC > 0) : "Somehow you managed to get the loop-target negative. This is wierd!";
 

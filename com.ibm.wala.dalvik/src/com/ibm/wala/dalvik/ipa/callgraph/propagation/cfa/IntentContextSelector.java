@@ -40,6 +40,8 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +58,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
@@ -79,6 +82,7 @@ public class IntentContextSelector implements ContextSelector {
     private final IntentMap intents = new IntentMap();
     private final ContextSelector parent;
     private final IntentStarters intentStarters;
+    private final Map<InstanceKey, AndroidContext> seenContext;
 
     public IntentContextSelector(final IClassHierarchy cha) {
         this(null, cha);
@@ -89,6 +93,7 @@ public class IntentContextSelector implements ContextSelector {
      */
     public IntentContextSelector(final ContextSelector parent, final IClassHierarchy cha) {
         this.parent = parent;
+        this.seenContext = HashMapFactory.make();
         this.intentStarters = new IntentStarters(cha);
     }
 
@@ -164,7 +169,7 @@ public class IntentContextSelector implements ContextSelector {
             final Intent intent;
             { // Extract target-Service as intent
                 if (param instanceof ConstantKey) {
-					final String target = (String) ((ConstantKey<?>)param).getValue();
+                    final String target = (String) ((ConstantKey)param).getValue();
                     intent = new Intent(target) {
                         @Override
                         public Intent.IntentType getType() {
@@ -198,12 +203,14 @@ public class IntentContextSelector implements ContextSelector {
             final Selector calleeSel = callee.getSelector();
 
             boolean isExplicit = false;
+            final InstanceKey uriKey;
             final InstanceKey actionKey;
             { // fetch actionKey, uriKey
                 switch (callee.getNumberOfParameters()) {
                     case 1:
                         logger.debug("Handling Intent()");
                         actionKey = null;
+                        uriKey = null;
                         break;
                     case 2:
                         if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;)V"))) {
@@ -224,34 +231,41 @@ public class IntentContextSelector implements ContextSelector {
                             logger.error("No handling implemented for: {}", callee);
                             actionKey = null;
                         }
+                        uriKey = null;
                         break;
                     case 3:
                         if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;Landroid/net/Uri;)V"))) {
                             logger.debug("Handling Intent(String action, Uri uri)");
                             // TODO: Use Information of the URI...
                             actionKey = actualParameters[1];
+                            uriKey = actualParameters[2];
                         } else if (calleeSel.equals(Selector.make("<init>(Landroid/content/Context;Ljava/lang/Class;)V"))) {
                             logger.debug("Handling Intent(Context, Class)");
                             actionKey = actualParameters[2];
+                            uriKey = null;
                             isExplicit = true;
                         } else {
                             logger.error("No handling implemented for: {}",  callee);
                             actionKey = null;
+                            uriKey = null;
                         }
                         break;
                     case 5:
                         if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;Landroid/net/Uri;Landroid/content/Context;Ljava/lang/Class;)V"))) {
                             logger.debug("Handling Intent(String action, Uri uri, Context, Class)");
                             actionKey = actualParameters[4];
+                            uriKey = actualParameters[2];
                             isExplicit = true;
                         } else {
                             logger.error("No handling implemented for: {}", callee);
                             actionKey = null;
+                            uriKey = null;
                         }
                         break;
                     default:
                         logger.error("Can't extract Info from Intent-Constructor: {} (not implemented)", site);
                         actionKey = null;
+                        uriKey = null;
                 }
             } // of fetch actionKey
 

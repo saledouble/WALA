@@ -18,8 +18,6 @@ import java.util.Arrays;
  */
 public class SimpleIntVector implements IntVector, Serializable {
   
-  private static final long serialVersionUID = -7909547846468543777L;
-
   private final static int MAX_SIZE = Integer.MAX_VALUE / 4;
 
   private final static float GROWTH_FACTOR = 1.5f;

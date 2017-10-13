@@ -38,7 +38,7 @@ implements EdgeFilter<Block> {
 				.contains(dst);
 		final SSAInstruction relevantInstruction = src.getLastInstruction();
 		if (hasExceptionalEdge && relevantInstruction != null) {
-			if (weKnowAllExceptions(relevantInstruction)) {
+			if (this.weKnowAllExceptions(relevantInstruction)) {
 
 				final Collection<TypeReference> thrownExceptions = relevantInstruction
 						.getExceptionTypes();
@@ -79,7 +79,7 @@ implements EdgeFilter<Block> {
 	 * @return if we know all exceptions, that can occur at this address from
 	 *         getExceptionTypes()
 	 */
-	private static boolean weKnowAllExceptions(SSAInstruction instruction) {
+	private boolean weKnowAllExceptions(SSAInstruction instruction) {
 		return !((instruction instanceof SSAAbstractInvokeInstruction) || (instruction instanceof SSAAbstractThrowInstruction));
 	}
 }

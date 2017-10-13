@@ -89,7 +89,7 @@ public class EntryPoints {
 
     private LinkedList<Entrypoint> entries;
 
-    public void listenerEntryPoints(ClassHierarchy cha) {
+    public void listenerEntryPoints(ClassHierarchy cha, AndroidAnalysisContext loader) {
         ArrayList<MethodReference> entryPointMRs = new ArrayList<>();
 
         // onLocation
@@ -124,7 +124,7 @@ public class EntryPoints {
     	return entries;
     }
     
-    public void activityModelEntry(ClassHierarchy cha) {
+    public void activityModelEntry(ClassHierarchy cha, AndroidAnalysisContext loader) {
         String[] methodReferences = {
             "android.app.Activity.ActivityModel()V",
             // find all onActivityResult functions and add them as entry points
@@ -154,7 +154,37 @@ public class EntryPoints {
         }
     }
     
-	public void addTestEntry(ClassHierarchy cha) {
+    @SuppressWarnings("unused")
+	private void systemEntry(ClassHierarchy cha, AndroidAnalysisContext loader) {
+        String[] systemEntyPoints = { 
+//              "android.app.ActivityThread.main([Ljava/lang/String;)V"
+//              , "com.android.server.ServerThread.run()V"
+           	//"android.location.LocationManager$ListenerTransport._handleMessage(Landroid/os/Message;)V"
+//           		"android.location.LocationManager$ListenerTransport$1.handleMessage(Landroid/os/Message;)V"
+//           		"android.os.Handler.handleMessage(Landroid/os/Message;)V",
+//           		"android.os.Handler$Callback.handleMessage(Landroid/os/Message;)Z",
+//           		"com.android.internal.os.HandlerCaller$Callback.executeMessage(Landroid/os/Message;)V"
+//           		"android.os.Handler.dispatchMessage(Landroid/os/Message;)V",
+//           		"android.view.View.dispatchTouchEvent(Landroid/view/MotionEvent;)Z",
+//           		"android.view.View.onTouchEvent(Landroid/view/MotionEvent;)Z",
+//           		"android.view.View.setOnClickListener(Landroid/view/View$OnClickListener;)V",
+           		"com.android.server.ServerThread.run()V"
+           		//"android.app.ActivityThread.main([Ljava/lang/String;)V"
+           };
+
+           for (int i = 0; i < systemEntyPoints.length; i++) {
+               MethodReference methodRef =
+                       StringStuff.makeMethodReference(systemEntyPoints[i]);
+
+               for (IMethod im : cha.getPossibleTargets(methodRef)) {
+                   
+                   entries.add(new DefaultEntrypoint(im, cha));
+               }
+           }
+    }
+    
+    
+    public void addTestEntry(ClassHierarchy cha, AndroidAnalysisContext loader) {
     	String[] methodReferences = {
 //    			"Test.Apps.Outer$PrivateInnerClass.printNum()V",
     			//"Test.Apps.Outer$PublicInnerClass.printNum()V"
@@ -258,7 +288,7 @@ public class EntryPoints {
 	private static String getTagValue(String sTag, Element eElement) {
         NodeList nlList = eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 
-        Node nValue = nlList.item(0);
+        Node nValue = (Node) nlList.item(0);
 
         return nValue.getNodeValue();
     }
@@ -327,7 +357,7 @@ public class EntryPoints {
     }
 
     @SuppressWarnings("unused")
-	private static String IntentToMethod(String intent) {
+	private String IntentToMethod(String intent) {
         if (intent.contentEquals("android.intent.action.MAIN") ||
                 intent.contentEquals("android.media.action.IMAGE_CAPTURE") ||
                 intent.contentEquals("android.media.action.VIDEO_CAPTURE") ||

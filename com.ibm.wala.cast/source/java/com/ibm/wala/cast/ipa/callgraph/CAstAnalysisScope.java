@@ -10,6 +10,7 @@
 package com.ibm.wala.cast.ipa.callgraph;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -30,7 +31,8 @@ public class CAstAnalysisScope extends AnalysisScope {
     this.theLoader = loaders.getTheReference();
   }
 
-  public CAstAnalysisScope(String[] sourceFileNames, SingleClassLoaderFactory loaders, Collection<Language> languages) {
+  public CAstAnalysisScope(String[] sourceFileNames, SingleClassLoaderFactory loaders, Collection<Language> languages)
+      throws IOException {
     this(loaders, languages);
     for (int i = 0; i < sourceFileNames.length; i++) {
       File F = new File(sourceFileNames[i]);
@@ -38,7 +40,8 @@ public class CAstAnalysisScope extends AnalysisScope {
     }
   }
 
-  public CAstAnalysisScope(Module[] sources, SingleClassLoaderFactory loaders, Collection<Language> languages) {
+  public CAstAnalysisScope(Module[] sources, SingleClassLoaderFactory loaders, Collection<Language> languages)
+      throws IOException {
     this(loaders, languages);
     for (int i = 0; i < sources.length; i++) {
       addToScope(theLoader, sources[i]);

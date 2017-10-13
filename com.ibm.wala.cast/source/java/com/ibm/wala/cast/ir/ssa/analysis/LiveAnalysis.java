@@ -297,10 +297,11 @@ public class LiveAnalysis {
       }
 
       /**
-       * Calculate set of variables live before instruction {@code instr}.
+       * Calculate set of variables live before instruction
+       * @param instr
        *
        * @see <a href="http://en.wikipedia.org/wiki/Data_flow_analysis#Backward_Analysis">
-       * how the "in" and "out" variable sets work</a>
+       * how the 'in' and 'out' variable sets work</a>
        */
       @Override
       public BitVector getLiveBefore(int instr) {

@@ -23,7 +23,6 @@ import com.ibm.wala.shrikeBT.shrikeCT.CTCompiler;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
-import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.shrikeCT.ClassWriter;
@@ -94,7 +93,7 @@ public class CopyWriter {
 
     final ArrayList<ZipEntry> entries = new ArrayList<>();
 
-    instrumenter = new OfflineInstrumenter();
+    instrumenter = new OfflineInstrumenter(true);
     instrumenter.setManifestBuilder(new OfflineInstrumenter.ManifestBuilder() {
       @Override
       public void addEntry(ZipEntry ze) {
@@ -237,30 +236,30 @@ public class CopyWriter {
     return elems;
   }
 
-  private static int copyEntry(ConstantPoolParser cp, ClassWriter w, int i) throws InvalidClassFileException {
+  private int copyEntry(ConstantPoolParser cp, ClassWriter w, int i) throws InvalidClassFileException {
     byte t = cp.getItemType(i);
     switch (t) {
-    case ClassConstants.CONSTANT_String:
+    case ClassReader.CONSTANT_String:
       return w.addCPString(cp.getCPString(i));
-    case ClassConstants.CONSTANT_Class:
+    case ClassReader.CONSTANT_Class:
       return w.addCPClass(cp.getCPClass(i));
-    case ClassConstants.CONSTANT_FieldRef:
+    case ClassReader.CONSTANT_FieldRef:
       return w.addCPFieldRef(cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i));
-    case ClassConstants.CONSTANT_InterfaceMethodRef:
+    case ClassReader.CONSTANT_InterfaceMethodRef:
       return w.addCPInterfaceMethodRef(cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i));
-    case ClassConstants.CONSTANT_MethodRef:
+    case ClassReader.CONSTANT_MethodRef:
       return w.addCPMethodRef(cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i));
-    case ClassConstants.CONSTANT_NameAndType:
+    case ClassReader.CONSTANT_NameAndType:
       return w.addCPNAT(cp.getCPNATName(i), cp.getCPNATType(i));
-    case ClassConstants.CONSTANT_Integer:
+    case ClassReader.CONSTANT_Integer:
       return w.addCPInt(cp.getCPInt(i));
-    case ClassConstants.CONSTANT_Float:
+    case ClassReader.CONSTANT_Float:
       return w.addCPFloat(cp.getCPFloat(i));
-    case ClassConstants.CONSTANT_Long:
+    case ClassReader.CONSTANT_Long:
       return w.addCPLong(cp.getCPLong(i));
-    case ClassConstants.CONSTANT_Double:
+    case ClassReader.CONSTANT_Double:
       return w.addCPDouble(cp.getCPDouble(i));
-    case ClassConstants.CONSTANT_Utf8:
+    case ClassReader.CONSTANT_Utf8:
       return w.addCPUtf8(cp.getCPUtf8(i));
     }
     return -1;
@@ -293,8 +292,8 @@ public class CopyWriter {
 
     if (1 < CPCount) {
       switch (cp.getItemType(1)) {
-      case ClassConstants.CONSTANT_Long:
-      case ClassConstants.CONSTANT_Double:
+      case ClassReader.CONSTANT_Long:
+      case ClassReader.CONSTANT_Double:
         // item 1 is a double-word item, so the next real item is at 3
         // to make sure item 3 is allocated at index 3, we'll need to
         // insert a dummy entry at index 2

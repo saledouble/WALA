@@ -26,8 +26,6 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.slicer.HeapStatement;
@@ -100,7 +98,7 @@ public class PDFSlice {
    *      -dir argument tells whether to compute a forwards or backwards slice. </ul>
    * 
    */
-  public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
+  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
     run(args);
   }
 
@@ -111,7 +109,7 @@ public class PDFSlice {
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public static Process run(String[] args) throws IllegalArgumentException, CancelException, IOException {
+  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
     // parse the command-line into a Properties object
     Properties p = CommandLine.parse(args);
     // validate that the command-line has the expected format
@@ -155,11 +153,11 @@ public class PDFSlice {
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-      CallGraphBuilder<InstanceKey> builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+      CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
       // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
       // AnalysisCache(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options, null);
-      SDG<InstanceKey> sdg = new SDG<>(cg, builder.getPointerAnalysis(), dOptions, cOptions);
+      SDG sdg = new SDG(cg, builder.getPointerAnalysis(), dOptions, cOptions);
 
       // find the call statement of interest
       CGNode callerNode = SlicerTest.findMethod(cg, srcCaller);
@@ -169,14 +167,12 @@ public class PDFSlice {
       // compute the slice as a collection of statements
       Collection<Statement> slice = null;
       if (goBackward) {
-        final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-        slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, dOptions, cOptions);
+        slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), dOptions, cOptions);
       } else {
         // for forward slices ... we actually slice from the return value of
         // calls.
         s = getReturnStatementForCall(s);
-        final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-        slice = Slicer.computeForwardSlice(s, cg, pointerAnalysis, dOptions, cOptions);
+        slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), dOptions, cOptions);
       }
       SlicerTest.dumpSlice(slice);
 
@@ -248,7 +244,7 @@ public class PDFSlice {
   /**
    * return a view of the sdg restricted to the statements in the slice
    */
-  public static Graph<Statement> pruneSDG(SDG<InstanceKey> sdg, final Collection<Statement> slice) {
+  public static Graph<Statement> pruneSDG(SDG sdg, final Collection<Statement> slice) {
     Predicate<Statement> f = new Predicate<Statement>() {
       @Override public boolean test(Statement o) {
         return slice.contains(o);
