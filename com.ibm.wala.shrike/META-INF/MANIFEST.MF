@@ -17,4 +17,4 @@ Export-Package: com.ibm.wala.shrike.bench,
  com.ibm.wala.shrikeBT.tools,
  com.ibm.wala.shrikeCT
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: com.ibm.wala.util
+Require-Bundle: com.ibm.wala.util;bundle-version="[1.3.10.qualifier,1.3.10.qualifier]"
