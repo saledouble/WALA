@@ -23,6 +23,10 @@ public class CallStringContext implements Context {
     }
     this.cs = cs;
   }
+  
+  public CallString getCallString() {
+    return this.cs;
+  }
 
   @Override
   public boolean equals(Object o) {
