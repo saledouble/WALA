@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Future.html">
+<link rel="next" href="MapReduce.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>Lock</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Future.html" title="Future">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="MapReduce.html" title="MapReduce">Next</a>
+</div>
+<h1>Module <a href="type_Lock.html">Lock</a></h1>
+
+<pre><span class="keyword">module</span> Lock: <code class="code">sig</code> <a href="Lock.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Reentrant locks.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The type of (reentrant) locks.<br>
+</div>
+
+
+<pre><span id="VALmake_reentrant"><span class="keyword">val</span> make_reentrant</span> : <code class="type">bool -> <a href="Lock.html#TYPEt">t</a></code></pre><div class="info ">
+Returns a new reentrant lock, the parameter indicates whether a
+    <i>fair</i> ordering policy is requested.<br>
+</div>
+
+<pre><span id="VALlock"><span class="keyword">val</span> lock</span> : <code class="type"><a href="Lock.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Acquires the lock. Returns immediately if the lock is either not held
+    by another thread, or already held by the current thread. Otherwise,
+    the current thread is blocked until the holding thread releases the
+    lock.<br>
+</div>
+
+<pre><span id="VALlock_interruptibly"><span class="keyword">val</span> lock_interruptibly</span> : <code class="type"><a href="Lock.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Similar to <code class="code">lock</code>, except that some other thread may interrupt the
+    current thread while blocked.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALnew_condition"><span class="keyword">val</span> new_condition</span> : <code class="type"><a href="Lock.html#TYPEt">t</a> -> <a href="Condition.html#TYPEt">Condition.t</a></code></pre><div class="info ">
+Returns a new condition associated with the passed lock.<br>
+</div>
+
+<pre><span id="VALtry_lock"><span class="keyword">val</span> try_lock</span> : <code class="type"><a href="Lock.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Acquires the lock if available, returning <code class="code">true</code>. Otherwise,
+    immediately returns <code class="code">false</code>.<br>
+</div>
+
+<pre><span id="VALtry_lock_time"><span class="keyword">val</span> try_lock_time</span> : <code class="type"><a href="Lock.html#TYPEt">t</a> -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> bool</code></pre><div class="info ">
+<code class="code">try_lock_time l t u</code> is similar to <code class="code">lock_interruptibly l</code>, except
+    that the current thread will at most wait for <code class="code">t</code> (time value whose
+    unit is <code class="code">u</code>). Returns whether the lock was acquired.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALunlock"><span class="keyword">val</span> unlock</span> : <code class="type"><a href="Lock.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Releases the lock.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the current thread does not hold the
+    lock.<br>
+</div>
+</body></html>

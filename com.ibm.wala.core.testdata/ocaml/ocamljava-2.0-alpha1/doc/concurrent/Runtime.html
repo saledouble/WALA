@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="RejectedExecutionHandler.html">
+<link rel="next" href="STM.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><link title="Time" rel="Section" href="#6_Time">
+<link title="Processors" rel="Section" href="#6_Processors">
+<link title="Memory" rel="Section" href="#6_Memory">
+<link title="Exceptions" rel="Section" href="#6_Exceptions">
+<title>Runtime</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="RejectedExecutionHandler.html" title="RejectedExecutionHandler">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="STM.html" title="STM">Next</a>
+</div>
+<h1>Module <a href="type_Runtime.html">Runtime</a></h1>
+
+<pre><span class="keyword">module</span> Runtime: <code class="code">sig</code> <a href="Runtime.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Access to miscellaneous runtime values.<br>
+</div>
+<hr width="100%">
+<br>
+<h6 id="6_Time">Time</h6><br>
+
+<pre><span id="VALcurrent_time_millis"><span class="keyword">val</span> current_time_millis</span> : <code class="type">unit -> int64</code></pre><div class="info ">
+Returns the current time in milliseconds.<br>
+</div>
+
+<pre><span id="VALnano_time"><span class="keyword">val</span> nano_time</span> : <code class="type">unit -> int64</code></pre><div class="info ">
+Similar to <code class="code">current_time_millis</code>, with greater resolution.<br>
+</div>
+<br>
+<h6 id="6_Processors">Processors</h6><br>
+
+<pre><span id="VALavailable_processors"><span class="keyword">val</span> available_processors</span> : <code class="type">unit -> int32</code></pre><div class="info ">
+Returns the number of (logical) available processors.<br>
+</div>
+<br>
+<h6 id="6_Memory">Memory</h6><br>
+
+<pre><span id="VALfree_memory"><span class="keyword">val</span> free_memory</span> : <code class="type">unit -> int64</code></pre><div class="info ">
+Returns the amount of free memory in the JVM (in bytes).<br>
+</div>
+
+<pre><span id="VALmax_memory"><span class="keyword">val</span> max_memory</span> : <code class="type">unit -> int64</code></pre><div class="info ">
+Returns the maximum amount of memory to be used by the JVM (in bytes).<br>
+</div>
+
+<pre><span id="VALtotal_memory"><span class="keyword">val</span> total_memory</span> : <code class="type">unit -> int64</code></pre><div class="info ">
+Returns the total amount of memory used by the JVM (in bytes).<br>
+</div>
+<br>
+<h6 id="6_Exceptions">Exceptions</h6><br>
+
+<pre><span id="EXCEPTIONInterrupted"><span class="keyword">exception</span> Interrupted</span> <span class="keyword">of</span> <code class="type">string</code></pre>
+<div class="info ">
+Raised when a function is interrupted, using the string parameter to
+    indicate the name of the function.<br>
+</div>
+
+<pre><span id="EXCEPTIONTimeout"><span class="keyword">exception</span> Timeout</span> <span class="keyword">of</span> <code class="type">string</code></pre>
+<div class="info ">
+Raised when a function has been waiting for the allocated amount of
+    time, using the string parameter to indicate the name of the
+    function.<br>
+</div>
+
+<pre><span id="EXCEPTIONRaised"><span class="keyword">exception</span> Raised</span> <span class="keyword">of</span> <code class="type">exn</code></pre>
+<div class="info ">
+Raised when a passed function raised an exception, using the
+    parameter to store the originally raised exception.<br>
+</div>
+</body></html>

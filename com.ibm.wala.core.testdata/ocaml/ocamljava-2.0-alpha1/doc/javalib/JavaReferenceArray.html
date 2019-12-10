@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="JavaLongArray.html">
+<link rel="next" href="JavaServlet.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Java" rel="Chapter" href="Java.html">
+<link title="JavaApplet" rel="Chapter" href="JavaApplet.html">
+<link title="JavaArray" rel="Chapter" href="JavaArray.html">
+<link title="JavaArraySignature" rel="Chapter" href="JavaArraySignature.html">
+<link title="JavaBooleanArray" rel="Chapter" href="JavaBooleanArray.html">
+<link title="JavaByteArray" rel="Chapter" href="JavaByteArray.html">
+<link title="JavaCharArray" rel="Chapter" href="JavaCharArray.html">
+<link title="JavaDoubleArray" rel="Chapter" href="JavaDoubleArray.html">
+<link title="JavaFloatArray" rel="Chapter" href="JavaFloatArray.html">
+<link title="JavaIOStreams" rel="Chapter" href="JavaIOStreams.html">
+<link title="JavaIntArray" rel="Chapter" href="JavaIntArray.html">
+<link title="JavaLongArray" rel="Chapter" href="JavaLongArray.html">
+<link title="JavaReferenceArray" rel="Chapter" href="JavaReferenceArray.html">
+<link title="JavaServlet" rel="Chapter" href="JavaServlet.html">
+<link title="JavaShortArray" rel="Chapter" href="JavaShortArray.html">
+<link title="JavaString" rel="Chapter" href="JavaString.html"><link title="Usual operations" rel="Section" href="#6_Usualoperations">
+<link title="Java operations" rel="Section" href="#6_Javaoperations">
+<title>JavaReferenceArray</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="JavaLongArray.html" title="JavaLongArray">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="JavaServlet.html" title="JavaServlet">Next</a>
+</div>
+<h1>Module <a href="type_JavaReferenceArray.html">JavaReferenceArray</a></h1>
+
+<pre><span class="keyword">module</span> JavaReferenceArray: <code class="code">sig</code> <a href="JavaReferenceArray.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Support for <i>pack.Class[]</i> and <i>e[][]</i> types.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> = <code class="type">'a java_reference_array</code> </pre>
+<div class="info ">
+The type of arrays.<br>
+</div>
+
+<br>
+<h6 id="6_Usualoperations">Usual operations</h6><br>
+
+<pre><span id="VALlength"><span class="keyword">val</span> length</span> : <code class="type">'a java_reference_array -> int32</code></pre><div class="info ">
+<code class="code">length a</code> returns the length of <code class="code">a</code>.
+<p>
+
+    Raises <code class="code">Java_exception</code> if <code class="code">a</code> is null.<br>
+</div>
+
+<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type">'a java_reference_array -> int32 -> 'a</code></pre><div class="info ">
+<code class="code">get a i</code> returns the element at index <code class="code">i</code> in <code class="code">a</code>.
+<p>
+
+    Raises <code class="code">Java_exception</code> if <code class="code">a</code> is null, or <code class="code">i</code> is out of bounds.<br>
+</div>
+
+<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type">'a java_reference_array -> int32 -> 'a -> unit</code></pre><div class="info ">
+<code class="code">set a i x</code> changes the element at index <code class="code">i</code> in <code class="code">a</code> to <code class="code">x</code>.
+<p>
+
+    Raises <code class="code">Java_exception</code> if <code class="code">a</code> is null, or <code class="code">i</code> is out of bounds.<br>
+</div>
+
+<pre><span id="VALblit"><span class="keyword">val</span> blit</span> : <code class="type">'a java_reference_array -><br>       int32 -> 'a java_reference_array -> int32 -> int32 -> unit</code></pre><div class="info ">
+<code class="code">blit src srcofs dst dstofs len</code> copies <code class="code">len</code> elements from <code class="code">src</code> at
+    offset <code class="code">srcofs</code> to <code class="code">dst</code> at offset <code class="code">dstofs</code>.
+<p>
+
+    Raises <code class="code">Java_exception</code> if either <code class="code">src</code> or <code class="code">ofs</code> is null.<br>
+</div>
+
+<pre><span id="VALiter"><span class="keyword">val</span> iter</span> : <code class="type">('a -> unit) -> 'a java_reference_array -> unit</code></pre><div class="info ">
+<code class="code">iter f a</code> applies <code class="code">f</code> to each element of <code class="code">a</code>.
+<p>
+
+    Raises <code class="code">Java_exception</code> if <code class="code">a</code> is null.<br>
+</div>
+
+<pre><span id="VALiteri"><span class="keyword">val</span> iteri</span> : <code class="type">(int32 -> 'a -> unit) -> 'a java_reference_array -> unit</code></pre><div class="info ">
+<code class="code">iter f a</code> applies <code class="code">f</code> to each element of <code class="code">a</code> (also passing element index).
+<p>
+
+    Raises <code class="code">Java_exception</code> if <code class="code">a</code> is null.<br>
+</div>
+
+<pre><span id="VALfold_left"><span class="keyword">val</span> fold_left</span> : <code class="type">('a -> 'b -> 'a) -> 'a -> 'b java_reference_array -> 'a</code></pre><div class="info ">
+<code class="code">fold_left f z a</code> returns <code class="code">f (... (f (f z a_0) a_1))</code> where <code class="code">a_i</code> is
+    the element of <code class="code">a</code> at index <code class="code">i</code>.
+<p>
+
+    Raises <code class="code">Java_exception</code> if <code class="code">a</code> is null.<br>
+</div>
+
+<pre><span id="VALfold_right"><span class="keyword">val</span> fold_right</span> : <code class="type">('a -> 'b -> 'b) -> 'a java_reference_array -> 'b -> 'b</code></pre><div class="info ">
+<code class="code">fold_right f a z</code> returns <code class="code">f a_0 (f a_1 (f ... z))</code> where <code class="code">a_i</code> is
+    the element of <code class="code">a</code> at index <code class="code">i</code>.
+<p>
+
+    Raises <code class="code">Java_exception</code> if <code class="code">a</code> is null.<br>
+</div>
+<br>
+<h6 id="6_Javaoperations">Java operations</h6><br>
+
+<pre><span id="VALto_object"><span class="keyword">val</span> to_object</span> : <code class="type">'a java_reference_array -> java'lang'Object java_instance</code></pre><div class="info ">
+<code class="code">to_object a</code> casts <code class="code">a</code> to a bare object.<br>
+</div>
+
+<pre><span id="VALof_object"><span class="keyword">val</span> of_object</span> : <code class="type">java'lang'Object java_instance -> 'a java_reference_array</code></pre><div class="info ">
+<code class="code">of_object o</code> casts object <code class="code">o</code> to array.
+<p>
+
+    Raises <code class="code">Java_exception</code> if cast fails.<br>
+</div>
+
+<pre><span id="VALnull"><span class="keyword">val</span> null</span> : <code class="type">'a java_reference_array</code></pre><div class="info ">
+The <i>null</i> value.<br>
+</div>
+
+<pre><span id="VALis_null"><span class="keyword">val</span> is_null</span> : <code class="type">'a java_reference_array -> bool</code></pre><div class="info ">
+<code class="code">is_null x</code> returns <code class="code">true</code> iff <code class="code">x</code> is equal to <i>null</i>.<br>
+</div>
+
+<pre><span id="VALis_not_null"><span class="keyword">val</span> is_not_null</span> : <code class="type">'a java_reference_array -> bool</code></pre><div class="info ">
+<code class="code">is_not_null x</code> returns <code class="code">false</code> iff <code class="code">x</code> is equal to <i>null</i>.<br>
+</div>
+
+<pre><span id="VALwrap"><span class="keyword">val</span> wrap</span> : <code class="type">'a java_reference_array -> 'a java_reference_array option</code></pre><div class="info ">
+<code class="code">wrap x</code> wraps the array <code class="code">x</code> into an option type:<ul>
+<li><code class="code">Some x</code> if <code class="code">x</code> is not null;</li>
+<li><code class="code">None</code> if <code class="code">x</code> is null.</li>
+</ul>
+<br>
+</div>
+</body></html>

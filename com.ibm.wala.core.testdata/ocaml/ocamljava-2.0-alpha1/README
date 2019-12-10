@@ -1,0 +1,24 @@
+OCaml-Java is an extension of the original OCaml implementation that
+allows compilation of OCaml sources to Java bytecode. It is thus
+possible to run compiled code on any Java Virtual Machine.
+
+To install OCaml-Java, you only have to add the "bin" subdirectory of
+the uncompressed archive to your path. Then, the following executables
+are available:
+  - compilers: ocamlc, and ocamljava;
+  - tools: ocaml, ocamlbuild, ocamldebug, ocamldep, ocamldoc, ocamlj,
+    ocamljar, ocamllex, ocamlrun, and ocamltop;
+  - camlp4 preprocessors: camlp4o, camlp4of, camlp4oof, camlp4orf,
+    camlp4r, and camlp4rf.
+
+The "ocamljava" compiler behaves like the "ocamlc" and "ocamlopt" ones,
+except that file extensions differ:
+  - .cmo/.cmx files are replaced by .cmj files;
+  - .cma/.cmxa files are replaced by .cmja files;
+  - .o files are replaced by .jo files;
+  - generated executable files have the .jar extension, if not specified
+    the executable name is "camlprog.jar".
+
+Bugs reports and/or feedback can be sent via two channels:
+  - by mail to "ocamljava@x9c.fr";
+  - by web pages through "http://bugs.x9c.fr".

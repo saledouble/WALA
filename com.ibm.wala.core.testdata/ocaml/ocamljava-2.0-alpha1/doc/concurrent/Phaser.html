@@ -1,0 +1,194 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="ParallelArray.html">
+<link rel="next" href="ReadWriteLock.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>Phaser</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="ParallelArray.html" title="ParallelArray">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="ReadWriteLock.html" title="ReadWriteLock">Next</a>
+</div>
+<h1>Module <a href="type_Phaser.html">Phaser</a></h1>
+
+<pre><span class="keyword">module</span> Phaser: <code class="code">sig</code> <a href="Phaser.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Flexible synchronization abstractions, subsuming countdown latches
+    and cyclic barriers.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The type of phasers, differing from coutdown latches and cyclic
+    barriers by the fact that parties explicitly register.
+<p>
+
+    Phasers are also organized in a tree-like structure, to reduce
+    contention: a phaser is automatically registered/deregistered with
+    its parent when the number of parties becomes respectively
+    non-zero/zero.
+<p>
+
+    The phase number of a phaser starts at zero, and advances when all
+    parties arrive at the phaser.<br>
+</div>
+
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> option -> int32 -> <a href="Phaser.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">make p n</code> returns a new phaser with parent <code class="code">p</code>, and number of
+    parties <code class="code">n</code>.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if <code class="code">n</code> is negative.<br>
+</div>
+
+<pre><span id="VALarrive"><span class="keyword">val</span> arrive</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Records that a party has arrived to the phaser without waiting for
+    others, returns the phase number (negative if the phaser is
+    terminated).
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the phase number would be negative while
+    the phaser is not terminated.<br>
+</div>
+
+<pre><span id="VALarrive_and_await_advance"><span class="keyword">val</span> arrive_and_await_advance</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Records that a party has arrived to the phaser and waits for others,
+    returns the phase number (negative if the phaser is terminated).
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the phase number would be negative while
+    the phaser is not terminated.<br>
+</div>
+
+<pre><span id="VALarrive_and_deregister"><span class="keyword">val</span> arrive_and_deregister</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Records that a party has arrived to the phaser without waiting for
+    others, deregisters a party, returns the phase number (negative if
+    the phaser is terminated).
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the phase number would be negative while
+    the phaser is not terminated.<br>
+</div>
+
+<pre><span id="VALawait_advance"><span class="keyword">val</span> await_advance</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32 -> int32</code></pre><div class="info ">
+Waits for the phase number of the phaser to reach the passed value.<br>
+</div>
+
+<pre><span id="VALawait_advance_interruptibly"><span class="keyword">val</span> await_advance_interruptibly</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32 -> int32</code></pre><div class="info ">
+Similar to <code class="code">await_advance</code> except that the thread can be interrupted.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALawait_advance_interruptibly_time"><span class="keyword">val</span> await_advance_interruptibly_time</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32 -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> int32</code></pre><div class="info ">
+<code class="code">await_advance_interruptibly_time p pn t u</code> is similar to
+    <code class="code">await_advance_interruptibly p pn</code>, except that the current
+    thread will at most wait for <code class="code">t</code> (time value whose unit is <code class="code">u</code>).
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.
+<p>
+
+    Raises <code class="code">Runtime.Timeout</code> if time has elapsed without reaching the
+    given phase number.<br>
+</div>
+
+<pre><span id="VALbulk_register"><span class="keyword">val</span> bulk_register</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32 -> int32</code></pre><div class="info ">
+<code class="code">bulk_register p n</code> adds <code class="code">n</code> unarrived parties to phaser <code class="code">p</code>.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if <code class="code">n</code> is negative.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the maximum number of parties has
+    already been reached.<br>
+</div>
+
+<pre><span id="VALforce_termination"><span class="keyword">val</span> force_termination</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Forces termination of the phaser, includind children phasers.<br>
+</div>
+
+<pre><span id="VALget_arrived_parties"><span class="keyword">val</span> get_arrived_parties</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Returns the number of registered parties that have arrived to the
+    phaser.<br>
+</div>
+
+<pre><span id="VALget_parent"><span class="keyword">val</span> get_parent</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> <a href="Phaser.html#TYPEt">t</a> option</code></pre><div class="info ">
+Returns the parent of the phaser.<br>
+</div>
+
+<pre><span id="VALget_phase"><span class="keyword">val</span> get_phase</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Returns the phase number.<br>
+</div>
+
+<pre><span id="VALget_registered_parties"><span class="keyword">val</span> get_registered_parties</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Returns the number of registered parties.<br>
+</div>
+
+<pre><span id="VALget_root"><span class="keyword">val</span> get_root</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> <a href="Phaser.html#TYPEt">t</a></code></pre><div class="info ">
+Returns the root that can be reached from the phaser by recursively
+    visiting parents. Returns the passed phaser if it has no parent.<br>
+</div>
+
+<pre><span id="VALget_unarrived_parties"><span class="keyword">val</span> get_unarrived_parties</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Returns the number of registered parties that have not yet arrived to
+    the phaser.<br>
+</div>
+
+<pre><span id="VALis_terminated"><span class="keyword">val</span> is_terminated</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Tests whether the phaser has been terminated.<br>
+</div>
+
+<pre><span id="VALregister"><span class="keyword">val</span> register</span> : <code class="type"><a href="Phaser.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Adds a new unarrived party to the phaser, and returns the current
+    phase number
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the maximum number of parties has
+    already been reached.<br>
+</div>
+</body></html>

@@ -1,0 +1,90 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Java" rel="Chapter" href="Java.html">
+<link title="JavaApplet" rel="Chapter" href="JavaApplet.html">
+<link title="JavaArray" rel="Chapter" href="JavaArray.html">
+<link title="JavaArraySignature" rel="Chapter" href="JavaArraySignature.html">
+<link title="JavaBooleanArray" rel="Chapter" href="JavaBooleanArray.html">
+<link title="JavaByteArray" rel="Chapter" href="JavaByteArray.html">
+<link title="JavaCharArray" rel="Chapter" href="JavaCharArray.html">
+<link title="JavaDoubleArray" rel="Chapter" href="JavaDoubleArray.html">
+<link title="JavaFloatArray" rel="Chapter" href="JavaFloatArray.html">
+<link title="JavaIOStreams" rel="Chapter" href="JavaIOStreams.html">
+<link title="JavaIntArray" rel="Chapter" href="JavaIntArray.html">
+<link title="JavaLongArray" rel="Chapter" href="JavaLongArray.html">
+<link title="JavaReferenceArray" rel="Chapter" href="JavaReferenceArray.html">
+<link title="JavaServlet" rel="Chapter" href="JavaServlet.html">
+<link title="JavaShortArray" rel="Chapter" href="JavaShortArray.html">
+<link title="JavaString" rel="Chapter" href="JavaString.html"><title>JavaString</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span><br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;length&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;make&nbsp;:&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;copy&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sub&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;concat&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'String&nbsp;java_instance&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;iter&nbsp;:&nbsp;(int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;iteri&nbsp;:&nbsp;(int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;map&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;trim&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;escaped&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;index&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;rindex&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;index_from&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;rindex_from&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;contains&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;contains_from&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;rcontains_from&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;uppercase&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;lowercase&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;capitalize&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;uncapitalize&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t&nbsp;=&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;compare&nbsp;:&nbsp;<span class="constructor">JavaString</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaString</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;compare_ignore_case&nbsp;:&nbsp;<span class="constructor">JavaString</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaString</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;of_string&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_javastring_of_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;to_string&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_javastring_to_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;null&nbsp;:&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;is_null&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;=&nbsp;<span class="string">"java&nbsp;is_null"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;is_not_null&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"java&nbsp;is_not_null"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;print_string&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_javastring_print_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;print_endline&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_javastring_print_endline"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;prerr_string&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_javastring_prerr_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;prerr_endline&nbsp;:&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_javastring_prerr_endline"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;output_string&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Pervasives</span>.out_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_javastring_output_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;read_line&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_javastring_read_line"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;input_line&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Pervasives</span>.in_channel&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_javastring_input_line"</span><br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;wrap&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'String&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'String&nbsp;java_instance&nbsp;option<br>
+<span class="keyword">end</span></code></body></html>

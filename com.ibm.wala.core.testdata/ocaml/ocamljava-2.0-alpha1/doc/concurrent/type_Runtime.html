@@ -1,0 +1,57 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>Runtime</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;current_time_millis&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int64<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_runtime_current_time_millis"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;nano_time&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int64&nbsp;=&nbsp;<span class="string">"ocamljava_runtime_nano_time"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;available_processors&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int32<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"ocamljava_runtime_available_processors"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;free_memory&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int64&nbsp;=&nbsp;<span class="string">"ocamljava_runtime_free_memory"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;max_memory&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int64&nbsp;=&nbsp;<span class="string">"ocamljava_runtime_max_memory"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;total_memory&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int64&nbsp;=&nbsp;<span class="string">"ocamljava_runtime_total_memory"</span><br>
+&nbsp;&nbsp;<span class="keyword">exception</span>&nbsp;<span class="constructor">Interrupted</span>&nbsp;<span class="keyword">of</span>&nbsp;string<br>
+&nbsp;&nbsp;<span class="keyword">exception</span>&nbsp;<span class="constructor">Timeout</span>&nbsp;<span class="keyword">of</span>&nbsp;string<br>
+&nbsp;&nbsp;<span class="keyword">exception</span>&nbsp;<span class="constructor">Raised</span>&nbsp;<span class="keyword">of</span>&nbsp;exn<br>
+<span class="keyword">end</span></code></body></html>

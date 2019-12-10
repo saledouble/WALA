@@ -1,0 +1,93 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Java" rel="Chapter" href="Java.html">
+<link title="JavaApplet" rel="Chapter" href="JavaApplet.html">
+<link title="JavaArray" rel="Chapter" href="JavaArray.html">
+<link title="JavaArraySignature" rel="Chapter" href="JavaArraySignature.html">
+<link title="JavaBooleanArray" rel="Chapter" href="JavaBooleanArray.html">
+<link title="JavaByteArray" rel="Chapter" href="JavaByteArray.html">
+<link title="JavaCharArray" rel="Chapter" href="JavaCharArray.html">
+<link title="JavaDoubleArray" rel="Chapter" href="JavaDoubleArray.html">
+<link title="JavaFloatArray" rel="Chapter" href="JavaFloatArray.html">
+<link title="JavaIOStreams" rel="Chapter" href="JavaIOStreams.html">
+<link title="JavaIntArray" rel="Chapter" href="JavaIntArray.html">
+<link title="JavaLongArray" rel="Chapter" href="JavaLongArray.html">
+<link title="JavaReferenceArray" rel="Chapter" href="JavaReferenceArray.html">
+<link title="JavaServlet" rel="Chapter" href="JavaServlet.html">
+<link title="JavaShortArray" rel="Chapter" href="JavaShortArray.html">
+<link title="JavaString" rel="Chapter" href="JavaString.html"><title>JavaByteArray</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;e&nbsp;=&nbsp;int<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;t&nbsp;=&nbsp;<span class="keywordsign">'</span>a&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;make&nbsp;:&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;init&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;(int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;length&nbsp;:&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int32<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"java&nbsp;array&nbsp;length&nbsp;byte"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get&nbsp;:&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"java&nbsp;array&nbsp;get&nbsp;byte"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;set&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"java&nbsp;array&nbsp;set&nbsp;byte"</span><br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;append&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;concat&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sub&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;copy&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fill&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;blit&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;to_list&nbsp;:&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;list<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;of_list&nbsp;:&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;iter&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">JavaByteArray</span>.e&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;map&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">JavaByteArray</span>.e&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;iteri&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;mapi&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(int32&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fold_left&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fold_right&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">JavaByteArray</span>.e&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;of_ocaml&nbsp;:&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;to_ocaml&nbsp;:&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;to_object&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;java'lang'Object&nbsp;java_instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"java&nbsp;array&nbsp;to_object&nbsp;byte"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;of_object&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;java'lang'Object&nbsp;java_instance&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"java&nbsp;array&nbsp;of_object&nbsp;byte"</span><br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;null&nbsp;:&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;is_null&nbsp;:&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;=&nbsp;<span class="string">"java&nbsp;is_null"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;is_not_null&nbsp;:&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"java&nbsp;is_not_null"</span><br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;wrap&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;option<br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;to_string&nbsp;:&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"string_of_byte_array"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;of_string&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">JavaByteArray</span>.e&nbsp;java_byte_array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"byte_array_of_string"</span><br>
+<span class="keyword">end</span></code></body></html>

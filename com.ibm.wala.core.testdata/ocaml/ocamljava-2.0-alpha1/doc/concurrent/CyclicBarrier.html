@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="CountDownLatch.html">
+<link rel="next" href="Exchanger.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>CyclicBarrier</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="CountDownLatch.html" title="CountDownLatch">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Exchanger.html" title="Exchanger">Next</a>
+</div>
+<h1>Module <a href="type_CyclicBarrier.html">CyclicBarrier</a></h1>
+
+<pre><span class="keyword">module</span> CyclicBarrier: <code class="code">sig</code> <a href="CyclicBarrier.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Reusable barriers.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The type of cyclic barriers, that are barriers possibly re-used once
+    all waiting threads have restarted.<br>
+</div>
+
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">int32 -> <a href="CyclicBarrier.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">make n</code> returns a barrier waiting for <code class="code">n</code> threads.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if <code class="code">n</code> is negative.<br>
+</div>
+
+<pre><span id="VALawait"><span class="keyword">val</span> await</span> : <code class="type"><a href="CyclicBarrier.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Waits until all threads have reached the barrier.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the barrier is broken.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALawait_time"><span class="keyword">val</span> await_time</span> : <code class="type"><a href="CyclicBarrier.html#TYPEt">t</a> -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> int32</code></pre><div class="info ">
+<code class="code">await_time b t u</code> is similar to <code class="code">await b</code>, except that the current
+    thread will at most wait for <code class="code">t</code> (time value whose unit is <code class="code">u</code>).
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the barrier is broken.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.
+<p>
+
+    Raises <code class="code">Runtime.Timeout</code> if time has elapsed without gathering all
+    threads.<br>
+</div>
+
+<pre><span id="VALget_number_waiting"><span class="keyword">val</span> get_number_waiting</span> : <code class="type"><a href="CyclicBarrier.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Returns the number of threads currently waiting on the barrier.<br>
+</div>
+
+<pre><span id="VALget_parties"><span class="keyword">val</span> get_parties</span> : <code class="type"><a href="CyclicBarrier.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Returns the number of threads to be waited on the barrier.<br>
+</div>
+
+<pre><span id="VALis_broken"><span class="keyword">val</span> is_broken</span> : <code class="type"><a href="CyclicBarrier.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Tests whether the barrier is broken. A barrier is broken if <code class="code">reset</code>
+    when threads are waiting on it.<br>
+</div>
+
+<pre><span id="VALreset"><span class="keyword">val</span> reset</span> : <code class="type"><a href="CyclicBarrier.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Resets the barrier to its original state. The barrier will be broken
+    if there are threads currently waiting on it.<br>
+</div>
+</body></html>

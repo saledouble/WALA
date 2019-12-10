@@ -5,7 +5,6 @@
    <extension id="HeadlessWALA"
          point="org.eclipse.core.runtime.applications">
       <application> 
-         <run class="com.ibm.wala.eclipse.headless.Main"/>
       </application>
    </extension>
 </plugin>

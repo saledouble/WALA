@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Thread.html">
+<link rel="next" href="ThreadLocal.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>ThreadGroup</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Thread.html" title="Thread">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="ThreadLocal.html" title="ThreadLocal">Next</a>
+</div>
+<h1>Module <a href="type_ThreadGroup.html">ThreadGroup</a></h1>
+
+<pre><span class="keyword">module</span> ThreadGroup: <code class="code">sig</code> <a href="ThreadGroup.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Thread groups.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The type of thread groups, that are sets of threads organized into a
+    hierarchy (every group except the initial one has a parent).
+<p>
+
+    Threads are added to a group at creation time and cannot change group
+    afterwards.<br>
+</div>
+
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> option -> string -> <a href="ThreadGroup.html#TYPEt">t</a></code></pre><div class="info ">
+Returns a new group with optional parent, and name.<br>
+</div>
+
+<pre><span id="VALactive_count"><span class="keyword">val</span> active_count</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Returns the number of active threads in this group (including
+    children groups).<br>
+</div>
+
+<pre><span id="VALactive_group_count"><span class="keyword">val</span> active_group_count</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Returns the number of active groups in this group (including children
+    groups).<br>
+</div>
+
+<pre><span id="VALdestroy"><span class="keyword">val</span> destroy</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Destroys the passed group and all its children groups.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the thread group is not empty, or has
+    already been destroyed.<br>
+</div>
+
+<pre><span id="VALget_max_priority"><span class="keyword">val</span> get_max_priority</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Returns the maximum priority of the group.<br>
+</div>
+
+<pre><span id="VALget_name"><span class="keyword">val</span> get_name</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+Returns the name of the group.<br>
+</div>
+
+<pre><span id="VALget_parent"><span class="keyword">val</span> get_parent</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> <a href="ThreadGroup.html#TYPEt">t</a> option</code></pre><div class="info ">
+Returns the parent of the group, <code class="code">None</code> if no such group exists.<br>
+</div>
+
+<pre><span id="VALinterrupt"><span class="keyword">val</span> interrupt</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Interrupts all thread in the group (including children groups).<br>
+</div>
+
+<pre><span id="VALis_daemon"><span class="keyword">val</span> is_daemon</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Tests whether the group is a daemon one.<br>
+</div>
+
+<pre><span id="VALis_destroyed"><span class="keyword">val</span> is_destroyed</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Tests whether the group has been destroyed.<br>
+</div>
+
+<pre><span id="VALparent_of"><span class="keyword">val</span> parent_of</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> <a href="ThreadGroup.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">parent_of p c</code> tests whether <code class="code">p</code> is an ancestor of <code class="code">c</code>.<br>
+</div>
+
+<pre><span id="VALset_daemon"><span class="keyword">val</span> set_daemon</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> bool -> unit</code></pre><div class="info ">
+Sets the daemon status of the group. Daemon groups are automatically
+    destroyed when they have neither child group, nor running thread.<br>
+</div>
+
+<pre><span id="VALset_max_priority"><span class="keyword">val</span> set_max_priority</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">t</a> -> int32 -> unit</code></pre><div class="info ">
+Sets the maximum priority of the group.<br>
+</div>
+</body></html>

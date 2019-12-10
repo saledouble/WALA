@@ -27,12 +27,9 @@ Export-Package: com.ibm.wala.core.tests.arraybounds,
  com.ibm.wala.core.tests.slicer,
  com.ibm.wala.core.tests.typeInference,
  com.ibm.wala.core.tests.typeargument,
- com.ibm.wala.core.tests.util,
  com.ibm.wala.demandpa.driver,
  com.ibm.wala.examples.analysis,
  com.ibm.wala.examples.analysis.dataflow,
- com.ibm.wala.examples.drivers,
- com.ibm.wala.examples.properties,
  com.ibm.wala.util.io
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Eclipse-RegisterBuddy: com.ibm.wala.core, com.ibm.wala.core.testdata

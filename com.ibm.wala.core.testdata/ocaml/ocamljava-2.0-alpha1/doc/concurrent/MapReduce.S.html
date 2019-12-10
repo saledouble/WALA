@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="MapReduce.Computation.html">
+<link rel="Up" href="MapReduce.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>MapReduce.S</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="MapReduce.Computation.html" title="MapReduce.Computation">Previous</a>
+&nbsp;<a class="up" href="MapReduce.html" title="MapReduce">Up</a>
+&nbsp;</div>
+<h1>Module type <a href="type_MapReduce.S.html">MapReduce.S</a></h1>
+
+<pre><span class="keyword">module type</span> S = <code class="code">sig</code> <a href="MapReduce.S.html">..</a> <code class="code">end</code></pre><div class="info modtype top">
+Signature of a map/reduce computation.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEinput"><span class="keyword">type</span> <code class="type"></code>input</span> </pre>
+<div class="info ">
+The type of input values.<br>
+</div>
+
+
+<pre><span id="TYPEoutput"><span class="keyword">type</span> <code class="type"></code>output</span> </pre>
+<div class="info ">
+The type of output values.<br>
+</div>
+
+
+<pre><span id="VALcompute"><span class="keyword">val</span> compute</span> : <code class="type"><a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       <a href="MapReduce.S.html#TYPEinput">input</a> Stream.t -> <a href="MapReduce.S.html#TYPEoutput">output</a> -> <a href="MapReduce.S.html#TYPEoutput">output</a></code></pre><div class="info ">
+Iterates over the passed stream using pool threads to execute
+      <i>map</i> operations over the various input values, and applies
+      <i>combine</i> operation over values having identical keys as soon as
+      they are available.
+<p>
+
+      Then, folds over key/value couple through the <i>reduce</i> operation,
+      using the third parameter as the inital value.
+<p>
+
+      Raises <code class="code">Runtime.Raise</code> if a <i>map</i>, <i>reduce</i>, <i>combine</i>
+      operation, or comparison raises and exception.<br>
+</div>
+</body></html>

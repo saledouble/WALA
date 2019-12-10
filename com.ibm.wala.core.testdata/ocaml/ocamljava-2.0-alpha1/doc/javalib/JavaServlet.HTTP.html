@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="JavaServlet.Generic.html">
+<link rel="next" href="JavaServlet.ServletContextListener.html">
+<link rel="Up" href="JavaServlet.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Java" rel="Chapter" href="Java.html">
+<link title="JavaApplet" rel="Chapter" href="JavaApplet.html">
+<link title="JavaArray" rel="Chapter" href="JavaArray.html">
+<link title="JavaArraySignature" rel="Chapter" href="JavaArraySignature.html">
+<link title="JavaBooleanArray" rel="Chapter" href="JavaBooleanArray.html">
+<link title="JavaByteArray" rel="Chapter" href="JavaByteArray.html">
+<link title="JavaCharArray" rel="Chapter" href="JavaCharArray.html">
+<link title="JavaDoubleArray" rel="Chapter" href="JavaDoubleArray.html">
+<link title="JavaFloatArray" rel="Chapter" href="JavaFloatArray.html">
+<link title="JavaIOStreams" rel="Chapter" href="JavaIOStreams.html">
+<link title="JavaIntArray" rel="Chapter" href="JavaIntArray.html">
+<link title="JavaLongArray" rel="Chapter" href="JavaLongArray.html">
+<link title="JavaReferenceArray" rel="Chapter" href="JavaReferenceArray.html">
+<link title="JavaServlet" rel="Chapter" href="JavaServlet.html">
+<link title="JavaShortArray" rel="Chapter" href="JavaShortArray.html">
+<link title="JavaString" rel="Chapter" href="JavaString.html"><title>JavaServlet.HTTP</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="JavaServlet.Generic.html" title="JavaServlet.Generic">Previous</a>
+&nbsp;<a class="up" href="JavaServlet.html" title="JavaServlet">Up</a>
+&nbsp;<a class="post" href="JavaServlet.ServletContextListener.html" title="JavaServlet.ServletContextListener">Next</a>
+</div>
+<h1>Module type <a href="type_JavaServlet.HTTP.html">JavaServlet.HTTP</a></h1>
+
+<pre><span class="keyword">module type</span> HTTP = <code class="code">sig</code> <a href="JavaServlet.HTTP.html">..</a> <code class="code">end</code></pre><div class="info modtype top">
+The module type for servlets compiled with <i>-servlet http</i>.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The type of values stored by servlets.<br>
+</div>
+
+
+<pre><span id="VALinit"><span class="keyword">val</span> init</span> : <code class="type"><a href="JavaServlet.html#TYPEhttp">JavaServlet.http</a> -> <a href="JavaServlet.HTTP.html#TYPEt">t</a></code></pre><div class="info ">
+Initializes a new servlet by returning its value (the function is
+      executed by <i>javax.servlet.http.HttpServlet.init()</i>).<br>
+</div>
+
+<pre><span id="VALdo_delete"><span class="keyword">val</span> do_delete</span> : <code class="type"><a href="JavaServlet.HTTP.html#TYPEt">t</a> -><br>       <a href="JavaServlet.html#TYPEhttp">JavaServlet.http</a> -><br>       <a href="JavaServlet.html#TYPEhttp_request">JavaServlet.http_request</a> -> <a href="JavaServlet.html#TYPEhttp_response">JavaServlet.http_response</a> -> unit</code></pre><div class="info ">
+<code class="code">do_delete v inst req resp</code> handles the <i>DELETE</i> request <code class="code">req</code>
+      through the servlet instance <code class="code">inst</code> (associated to value <code class="code">v</code>). The
+      parameter <code class="code">resp</code> is used to send the response.<br>
+</div>
+
+<pre><span id="VALdo_get"><span class="keyword">val</span> do_get</span> : <code class="type"><a href="JavaServlet.HTTP.html#TYPEt">t</a> -><br>       <a href="JavaServlet.html#TYPEhttp">JavaServlet.http</a> -><br>       <a href="JavaServlet.html#TYPEhttp_request">JavaServlet.http_request</a> -> <a href="JavaServlet.html#TYPEhttp_response">JavaServlet.http_response</a> -> unit</code></pre><div class="info ">
+<code class="code">do_get v inst req resp</code> handles the <i>GET</i> request <code class="code">req</code> through
+      the servlet instance <code class="code">inst</code> (associated to value <code class="code">v</code>). The
+      parameter <code class="code">resp</code> is used to send the response.<br>
+</div>
+
+<pre><span id="VALdo_head"><span class="keyword">val</span> do_head</span> : <code class="type"><a href="JavaServlet.HTTP.html#TYPEt">t</a> -><br>       <a href="JavaServlet.html#TYPEhttp">JavaServlet.http</a> -><br>       <a href="JavaServlet.html#TYPEhttp_request">JavaServlet.http_request</a> -> <a href="JavaServlet.html#TYPEhttp_response">JavaServlet.http_response</a> -> unit</code></pre><div class="info ">
+<code class="code">do_head v inst req resp</code> handles the <i>HEAD</i> request <code class="code">req</code>
+      through the servlet instance <code class="code">inst</code> (associated to value <code class="code">v</code>). The
+      parameter <code class="code">resp</code> is used to send the response.<br>
+</div>
+
+<pre><span id="VALdo_options"><span class="keyword">val</span> do_options</span> : <code class="type"><a href="JavaServlet.HTTP.html#TYPEt">t</a> -><br>       <a href="JavaServlet.html#TYPEhttp">JavaServlet.http</a> -><br>       <a href="JavaServlet.html#TYPEhttp_request">JavaServlet.http_request</a> -> <a href="JavaServlet.html#TYPEhttp_response">JavaServlet.http_response</a> -> unit</code></pre><div class="info ">
+<code class="code">do_options v inst req resp</code> handles the <i>OPTIONS</i> request <code class="code">req</code>
+      through the servlet instance <code class="code">inst</code> (associated to value <code class="code">v</code>). The
+      parameter <code class="code">resp</code> is used to send the response.<br>
+</div>
+
+<pre><span id="VALdo_post"><span class="keyword">val</span> do_post</span> : <code class="type"><a href="JavaServlet.HTTP.html#TYPEt">t</a> -><br>       <a href="JavaServlet.html#TYPEhttp">JavaServlet.http</a> -><br>       <a href="JavaServlet.html#TYPEhttp_request">JavaServlet.http_request</a> -> <a href="JavaServlet.html#TYPEhttp_response">JavaServlet.http_response</a> -> unit</code></pre><div class="info ">
+<code class="code">do_post v inst req resp</code> handles the <i>POST</i> request <code class="code">req</code>
+      through the servlet instance <code class="code">inst</code> (associated to value <code class="code">v</code>). The
+      parameter <code class="code">resp</code> is used to send the response.<br>
+</div>
+
+<pre><span id="VALdo_put"><span class="keyword">val</span> do_put</span> : <code class="type"><a href="JavaServlet.HTTP.html#TYPEt">t</a> -><br>       <a href="JavaServlet.html#TYPEhttp">JavaServlet.http</a> -><br>       <a href="JavaServlet.html#TYPEhttp_request">JavaServlet.http_request</a> -> <a href="JavaServlet.html#TYPEhttp_response">JavaServlet.http_response</a> -> unit</code></pre><div class="info ">
+<code class="code">do_put v inst req resp</code> handles the <i>PUT</i> request <code class="code">req</code> through
+      the servlet instance <code class="code">inst</code> (associated to value <code class="code">v</code>). The
+      parameter <code class="code">resp</code> is used to send the response.<br>
+</div>
+
+<pre><span id="VALdo_trace"><span class="keyword">val</span> do_trace</span> : <code class="type"><a href="JavaServlet.HTTP.html#TYPEt">t</a> -><br>       <a href="JavaServlet.html#TYPEhttp">JavaServlet.http</a> -><br>       <a href="JavaServlet.html#TYPEhttp_request">JavaServlet.http_request</a> -> <a href="JavaServlet.html#TYPEhttp_response">JavaServlet.http_response</a> -> unit</code></pre><div class="info ">
+<code class="code">do_trace v inst req resp</code> handles the <i>TRACE</i> request <code class="code">req</code>
+      through the servlet instance <code class="code">inst</code> (associated to value <code class="code">v</code>). The
+      parameter <code class="code">resp</code> is used to send the response.<br>
+</div>
+
+<pre><span id="VALget_last_modified"><span class="keyword">val</span> get_last_modified</span> : <code class="type"><a href="JavaServlet.HTTP.html#TYPEt">t</a> -> <a href="JavaServlet.html#TYPEhttp">JavaServlet.http</a> -> <a href="JavaServlet.html#TYPEhttp_request">JavaServlet.http_request</a> -> int64</code></pre><div class="info ">
+<code class="code">get_last_modified v inst req</code> handles the request <code class="code">req</code> through
+      the servlet instance <code class="code">inst</code> (associated to value <code class="code">v</code>), returning
+      the time the underlying information was last modified (in
+      milliseconds since <i>1970-01-01</i>), or a negative value if the time
+      is unknown.<br>
+</div>
+
+<pre><span id="VALdestroy"><span class="keyword">val</span> destroy</span> : <code class="type"><a href="JavaServlet.HTTP.html#TYPEt">t</a> -> <a href="JavaServlet.html#TYPEhttp">JavaServlet.http</a> -> unit</code></pre><div class="info ">
+Called by the servlet container when the servlet is being taken out
+      of service.<br>
+</div>
+</body></html>

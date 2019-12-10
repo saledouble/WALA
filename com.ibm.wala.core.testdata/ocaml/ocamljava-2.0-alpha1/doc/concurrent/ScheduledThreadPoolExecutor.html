@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="ScheduledFuture.html">
+<link rel="next" href="Semaphore.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>ScheduledThreadPoolExecutor</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="ScheduledFuture.html" title="ScheduledFuture">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Semaphore.html" title="Semaphore">Next</a>
+</div>
+<h1>Module <a href="type_ScheduledThreadPoolExecutor.html">ScheduledThreadPoolExecutor</a></h1>
+
+<pre><span class="keyword">module</span> ScheduledThreadPoolExecutor: <code class="code">sig</code> <a href="ScheduledThreadPoolExecutor.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Thread pools for scheduled futures.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The type of thread pools to be used for scheduled futures.<br>
+</div>
+
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">int32 -> <a href="RejectedExecutionHandler.html#TYPEt">RejectedExecutionHandler.t</a> -> <a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">make cps reh</code> returns a new thread pool with:<ul>
+<li><code class="code">cps</code> as its core pool size (number of threads kept in the pool,
+      even if idle);</li>
+<li><code class="code">reh</code> policy for blocked computations.</li>
+</ul>
+
+    Raises <code class="code">Invalid_argument</code> if <code class="code">cps</code> is negative.<br>
+</div>
+
+<pre><span id="VALawait_termination"><span class="keyword">val</span> await_termination</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> bool</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALawait_termination"><code class="code">ThreadPoolExecutor.await_termination</code></a>.<br>
+</div>
+
+<pre><span id="VALget_active_count"><span class="keyword">val</span> get_active_count</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALget_active_count"><code class="code">ThreadPoolExecutor.get_active_count</code></a>.<br>
+</div>
+
+<pre><span id="VALget_completed_task_count"><span class="keyword">val</span> get_completed_task_count</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int64</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALget_completed_task_count"><code class="code">ThreadPoolExecutor.get_completed_task_count</code></a>.<br>
+</div>
+
+<pre><span id="VALget_continue_existing_periodic_tasks_after_shutdown_policy"><span class="keyword">val</span> get_continue_existing_periodic_tasks_after_shutdown_policy</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Tests whether periodic tasks should continue execution after
+    shutdown.<br>
+</div>
+
+<pre><span id="VALget_core_pool_size"><span class="keyword">val</span> get_core_pool_size</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALget_core_pool_size"><code class="code">ThreadPoolExecutor.get_core_pool_size</code></a>.<br>
+</div>
+
+<pre><span id="VALget_execute_existing_delayed_tasks_after_shutdown_policy"><span class="keyword">val</span> get_execute_existing_delayed_tasks_after_shutdown_policy</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Tests whether delayed tasks should continue execution after
+    shutdown.<br>
+</div>
+
+<pre><span id="VALget_keep_alive_time"><span class="keyword">val</span> get_keep_alive_time</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> int64</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALget_keep_alive_time"><code class="code">ThreadPoolExecutor.get_keep_alive_time</code></a>.<br>
+</div>
+
+<pre><span id="VALget_largest_pool_size"><span class="keyword">val</span> get_largest_pool_size</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALget_largest_pool_size"><code class="code">ThreadPoolExecutor.get_largest_pool_size</code></a>.<br>
+</div>
+
+<pre><span id="VALget_maximum_pool_size"><span class="keyword">val</span> get_maximum_pool_size</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALget_maximum_pool_size"><code class="code">ThreadPoolExecutor.get_maximum_pool_size</code></a>.<br>
+</div>
+
+<pre><span id="VALget_pool_size"><span class="keyword">val</span> get_pool_size</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALget_pool_size"><code class="code">ThreadPoolExecutor.get_pool_size</code></a>.<br>
+</div>
+
+<pre><span id="VALget_rejected_execution_handler"><span class="keyword">val</span> get_rejected_execution_handler</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> <a href="RejectedExecutionHandler.html#TYPEt">RejectedExecutionHandler.t</a></code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALget_rejected_execution_handler"><code class="code">ThreadPoolExecutor.get_rejected_execution_handler</code></a>.<br>
+</div>
+
+<pre><span id="VALget_remove_on_cancel_policy"><span class="keyword">val</span> get_remove_on_cancel_policy</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Tests whether tasks should be removed when cancelled.<br>
+</div>
+
+<pre><span id="VALget_task_count"><span class="keyword">val</span> get_task_count</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int64</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALget_task_count"><code class="code">ThreadPoolExecutor.get_task_count</code></a>.<br>
+</div>
+
+<pre><span id="VALinvoke_all"><span class="keyword">val</span> invoke_all</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> (unit -> 'a) list -> 'a <a href="Future.html#TYPEt">Future.t</a> list</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALinvoke_all"><code class="code">ThreadPoolExecutor.invoke_all</code></a>.<br>
+</div>
+
+<pre><span id="VALinvoke_all_time"><span class="keyword">val</span> invoke_all_time</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -><br>       (unit -> 'a) list -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> 'a <a href="Future.html#TYPEt">Future.t</a> list</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALinvoke_all_time"><code class="code">ThreadPoolExecutor.invoke_all_time</code></a>.<br>
+</div>
+
+<pre><span id="VALinvoke_any"><span class="keyword">val</span> invoke_any</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> (unit -> 'a) list -> 'a</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALinvoke_any"><code class="code">ThreadPoolExecutor.invoke_any</code></a>.<br>
+</div>
+
+<pre><span id="VALinvoke_any_time"><span class="keyword">val</span> invoke_any_time</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -><br>       (unit -> 'a) list -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> 'a</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALinvoke_any_time"><code class="code">ThreadPoolExecutor.invoke_any_time</code></a>.<br>
+</div>
+
+<pre><span id="VALis_shutdown"><span class="keyword">val</span> is_shutdown</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALis_shutdown"><code class="code">ThreadPoolExecutor.is_shutdown</code></a>.<br>
+</div>
+
+<pre><span id="VALis_terminated"><span class="keyword">val</span> is_terminated</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALis_terminated"><code class="code">ThreadPoolExecutor.is_terminated</code></a>.<br>
+</div>
+
+<pre><span id="VALis_terminating"><span class="keyword">val</span> is_terminating</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALis_terminating"><code class="code">ThreadPoolExecutor.is_terminating</code></a>.<br>
+</div>
+
+<pre><span id="VALschedule"><span class="keyword">val</span> schedule</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -><br>       ('a -> 'b) -> 'a -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> 'b <a href="ScheduledFuture.html#TYPEt">ScheduledFuture.t</a></code></pre><div class="info ">
+<code class="code">schedule p f x t u</code> is similar to <code class="code">submit p f x</code>, except that the
+    evaluation of <code class="code">f x</code> with start after <code class="code">t</code> (time value whose unit is
+    <code class="code">u</code>).
+<p>
+
+    Raises <code class="code">Failure</code> if pool limits are reached.<br>
+</div>
+
+<pre><span id="VALschedule_at_fixed_rate"><span class="keyword">val</span> schedule_at_fixed_rate</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -><br>       ('a -> unit) -> 'a -> int64 -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> unit <a href="ScheduledFuture.html#TYPEt">ScheduledFuture.t</a></code></pre><div class="info ">
+<code class="code">schedule_at_fixed_rate p f x t d u</code> is similar to <code class="code">schedule p f x t u</code>,
+    except that <code class="code">f x</code> will be re-evaluated at <code class="code">t + d</code>, <code class="code">t + 2 * d</code>, <i>etc.</i>
+<p>
+
+    Raises <code class="code">Failure</code> if pool limits are reached.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if <code class="code">d</code> is negative.<br>
+</div>
+
+<pre><span id="VALschedule_with_fixed_delay"><span class="keyword">val</span> schedule_with_fixed_delay</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -><br>       ('a -> unit) -> 'a -> int64 -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> unit <a href="ScheduledFuture.html#TYPEt">ScheduledFuture.t</a></code></pre><div class="info ">
+<code class="code">schedule_with_fixed_delay p f x t d u</code> is similar to <code class="code">schedule p f x t u</code>,
+    except that <code class="code">f x</code> will be repeatedly re-evaluated, respecting a delay
+    of <code class="code">d</code> between the end of one execution and the beginning of the next
+    one.
+<p>
+
+    Raises <code class="code">Failure</code> if pool limits are reached.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if <code class="code">d</code> is negative.<br>
+</div>
+
+<pre><span id="VALset_continue_existing_periodic_tasks_after_shutdown_policy"><span class="keyword">val</span> set_continue_existing_periodic_tasks_after_shutdown_policy</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> bool -> unit</code></pre><div class="info ">
+Changes whether periodic tasks should continue execution after
+    shutdown.<br>
+</div>
+
+<pre><span id="VALset_core_pool_size"><span class="keyword">val</span> set_core_pool_size</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int32 -> unit</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALset_core_pool_size"><code class="code">ThreadPoolExecutor.set_core_pool_size</code></a>.<br>
+</div>
+
+<pre><span id="VALset_execute_existing_delayed_tasks_after_shutdown_policy"><span class="keyword">val</span> set_execute_existing_delayed_tasks_after_shutdown_policy</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> bool -> unit</code></pre><div class="info ">
+changes whether delayed tasks should continue execution after
+    shutdown.<br>
+</div>
+
+<pre><span id="VALset_keep_alive_time"><span class="keyword">val</span> set_keep_alive_time</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> unit</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALset_keep_alive_time"><code class="code">ThreadPoolExecutor.set_keep_alive_time</code></a>.<br>
+</div>
+
+<pre><span id="VALset_maximum_pool_size"><span class="keyword">val</span> set_maximum_pool_size</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> int32 -> unit</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALset_maximum_pool_size"><code class="code">ThreadPoolExecutor.set_maximum_pool_size</code></a>.<br>
+</div>
+
+<pre><span id="VALset_rejected_execution_handler"><span class="keyword">val</span> set_rejected_execution_handler</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> <a href="RejectedExecutionHandler.html#TYPEt">RejectedExecutionHandler.t</a> -> unit</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALset_rejected_execution_handler"><code class="code">ThreadPoolExecutor.set_rejected_execution_handler</code></a>.<br>
+</div>
+
+<pre><span id="VALset_remove_on_cancel_policy"><span class="keyword">val</span> set_remove_on_cancel_policy</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> bool -> unit</code></pre><div class="info ">
+Changes whether tasks should be removed when cancelled.<br>
+</div>
+
+<pre><span id="VALshutdown"><span class="keyword">val</span> shutdown</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALshutdown"><code class="code">ThreadPoolExecutor.shutdown</code></a>.<br>
+</div>
+
+<pre><span id="VALshutdown_now"><span class="keyword">val</span> shutdown_now</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> 'a <a href="Future.html#TYPEt">Future.t</a> list</code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALshutdown_now"><code class="code">ThreadPoolExecutor.shutdown_now</code></a>.<br>
+</div>
+
+<pre><span id="VALsubmit"><span class="keyword">val</span> submit</span> : <code class="type"><a href="ScheduledThreadPoolExecutor.html#TYPEt">t</a> -> ('a -> 'b) -> 'a -> 'b <a href="Future.html#TYPEt">Future.t</a></code></pre><div class="info ">
+Same as <a href="ThreadPoolExecutor.html#VALsubmit"><code class="code">ThreadPoolExecutor.submit</code></a>.<br>
+</div>
+</body></html>

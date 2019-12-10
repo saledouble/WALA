@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="AtomicReferenceArray.html">
+<link rel="next" href="Condition.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>AtomicStampedReference</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="AtomicReferenceArray.html" title="AtomicReferenceArray">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Condition.html" title="Condition">Next</a>
+</div>
+<h1>Module <a href="type_AtomicStampedReference.html">AtomicStampedReference</a></h1>
+
+<pre><span class="keyword">module</span> AtomicStampedReference: <code class="code">sig</code> <a href="AtomicStampedReference.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Atomic containers for stamped values.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> </pre>
+<div class="info ">
+The type of atomic containers for stamped values.
+<p>
+
+    <b>WARNING:</b> physical comparison is used by the container.
+<p>
+
+    <b>CONSEQUENCE 1:</b> should be used with caution to store <code class="code">int32</code>,
+    <code class="code">int64</code>, <code class="code">nativeint</code>, or <code class="code">double</code> values as they are wrapped into
+    blocks. Hence, comparisons are done on block addresses rather than
+    on wrapped values.
+<p>
+
+    <b>CONSEQUENCE 2:</b> as OCaml-Java uses boxed values for <code class="code">int</code> values,
+    the container should not be used to store <code class="code">int</code> values.
+<p>
+
+    Any other type can be safely stored (caching of <i>some</i> <code class="code">int</code> values
+    ensure that sum types are correctly handled).<br>
+</div>
+
+
+<pre><span id="TYPEstamp"><span class="keyword">type</span> <code class="type"></code>stamp</span> = <code class="type">int32</code> </pre>
+<div class="info ">
+The type of stamps.<br>
+</div>
+
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">'a -> <a href="AtomicStampedReference.html#TYPEstamp">stamp</a> -> 'a <a href="AtomicStampedReference.html#TYPEt">t</a></code></pre><div class="info ">
+Returns a new container holding the passed value, with the passed
+    stamp.<br>
+</div>
+
+<pre><span id="VALattempt_stamp"><span class="keyword">val</span> attempt_stamp</span> : <code class="type">'a <a href="AtomicStampedReference.html#TYPEt">t</a> -> 'a -> <a href="AtomicStampedReference.html#TYPEstamp">stamp</a> -> bool</code></pre><div class="info ">
+<code class="code">attempt_stamp a e s</code> sets the stamp to <code class="code">s</code> if the current value is
+    <code class="code">e</code>. Returns whether the value of <code class="code">a</code> was equal to <code class="code">e</code>.<br>
+</div>
+
+<pre><span id="VALcompare_and_set"><span class="keyword">val</span> compare_and_set</span> : <code class="type">'a <a href="AtomicStampedReference.html#TYPEt">t</a> -><br>       'a -><br>       'a -> <a href="AtomicStampedReference.html#TYPEstamp">stamp</a> -> <a href="AtomicStampedReference.html#TYPEstamp">stamp</a> -> bool</code></pre><div class="info ">
+<code class="code">compare_and_set a er ur es us</code> atomically sets the value of <code class="code">a</code> to
+    <code class="code">ur</code> and stamp to <code class="code">us</code> if the current value is <code class="code">er</code> and the current
+    stamp is <code class="code">es</code>. Returns whether the value of <code class="code">a</code> was equal to <code class="code">er</code> and
+    the stamp was equal to <code class="code">es</code>.<br>
+</div>
+
+<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type">'a <a href="AtomicStampedReference.html#TYPEt">t</a> -> 'a * <a href="AtomicStampedReference.html#TYPEstamp">stamp</a></code></pre><div class="info ">
+Returns the current value and stamp.<br>
+</div>
+
+<pre><span id="VALget_reference"><span class="keyword">val</span> get_reference</span> : <code class="type">'a <a href="AtomicStampedReference.html#TYPEt">t</a> -> 'a</code></pre><div class="info ">
+Returns the current value.<br>
+</div>
+
+<pre><span id="VALget_stamp"><span class="keyword">val</span> get_stamp</span> : <code class="type">'a <a href="AtomicStampedReference.html#TYPEt">t</a> -> <a href="AtomicStampedReference.html#TYPEstamp">stamp</a></code></pre><div class="info ">
+Returns the current stamp.<br>
+</div>
+
+<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type">'a <a href="AtomicStampedReference.html#TYPEt">t</a> -> 'a -> <a href="AtomicStampedReference.html#TYPEstamp">stamp</a> -> unit</code></pre><div class="info ">
+<code class="code">set a x s</code> sets the value of <code class="code">a</code> to <code class="code">x</code>, and the stamp to <code class="code">s</code>.<br>
+</div>
+
+<pre><span id="VALweak_compare_and_set"><span class="keyword">val</span> weak_compare_and_set</span> : <code class="type">'a <a href="AtomicStampedReference.html#TYPEt">t</a> -><br>       'a -><br>       'a -> <a href="AtomicStampedReference.html#TYPEstamp">stamp</a> -> <a href="AtomicStampedReference.html#TYPEstamp">stamp</a> -> bool</code></pre><div class="info ">
+Similar to <code class="code">compare_and_set</code>, with a <i>weak</i> semantics: may be
+    faster on some platforms, but does not provide ordering guarantees.<br>
+</div>
+</body></html>

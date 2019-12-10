@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Runtime.html">
+<link rel="next" href="ScheduledFuture.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>STM</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Runtime.html" title="Runtime">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="ScheduledFuture.html" title="ScheduledFuture">Next</a>
+</div>
+<h1>Module <a href="type_STM.html">STM</a></h1>
+
+<pre><span class="keyword">module</span> STM: <code class="code">sig</code> <a href="STM.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Minimalistic implementation of a Software Transactional Memory.
+<p>
+
+    <b>WARNING:</b> the current implementation has only been lightly tested.
+<p>
+
+    This module provides support for a <i>partial</i> STM, that protects
+    only values of type <code class="code">STM.ref</code>.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEref"><span class="keyword">type</span> <code class="type">'a</code> ref</span> </pre>
+<div class="info ">
+The type of values protected by transactions, should store only
+    immutable values.<br>
+</div>
+
+
+<pre><span id="VALref"><span class="keyword">val</span> ref</span> : <code class="type">'a -> 'a <a href="STM.html#TYPEref">ref</a></code></pre><div class="info ">
+Builds a value of type <code class="code">ref</code>, that can then only be accessed during
+    a transaction.<br>
+</div>
+
+<pre><span id="EXCEPTIONRetry"><span class="keyword">exception</span> Retry</span></pre>
+<div class="info ">
+The exception used to request the current transaction to restart.<br>
+</div>
+
+<pre><span id="EXCEPTIONAbort"><span class="keyword">exception</span> Abort</span></pre>
+<div class="info ">
+The exception used to request the current transaction to be
+    cancelled. Any exception can be used to abort a transaction, but this
+    one makes programs more readable.<br>
+</div>
+
+<pre><span id="EXCEPTIONCancelled"><span class="keyword">exception</span> Cancelled</span></pre>
+<div class="info ">
+The exception used to indicate that the transaction is cancelled,
+    because it has failed and retries have been exhausted.<br>
+</div>
+
+<pre><span id="VALrun"><span class="keyword">val</span> run</span> : <code class="type">?retries:int -><br>       (('a <a href="STM.html#TYPEref">ref</a> -> 'a) -> ('a <a href="STM.html#TYPEref">ref</a> -> 'a -> unit) -> 'b) -> 'b</code></pre><div class="info ">
+<code class="code">run ~retries f</code> executes the function <code class="code">f</code> inside a newly-created
+    transaction. Function <code class="code">f</code> is passed two functions <code class="code">g</code> and <code class="code">s</code> that
+    are to be used as respectively read and write accessors to <code class="code">ref</code>
+    values. The <code class="code">retries</code> parameter (defaulting to <code class="code">64</code>) indicates how
+    many time a transaction should be retried. <code class="code">g</code> and <code class="code">s</code> will raise
+    <code class="code">Failure</code> is they are called from another thread, or outside the
+    lifetime  of the transaction.
+<p>
+
+    The <code class="code">Retry</code> exception can be raised to requested the current
+    transaction to be re-executed from the beginning, while any other
+    exception will cause the transaction to be aborted.
+<p>
+
+    Raises <code class="code">Cancelled</code> if the transaction cannot be committed, and
+    retries have been exhausted.
+<p>
+
+    Raises the exception raised by the transaction, if different from
+    <code class="code">Retry</code>.<br>
+</div>
+
+<pre><span id="VALrun_read_only"><span class="keyword">val</span> run_read_only</span> : <code class="type">?retries:int -> (('a <a href="STM.html#TYPEref">ref</a> -> 'a) -> 'b) -> 'b</code></pre><div class="info ">
+Akin to <code class="code">run</code>, but with a smaller overhead due to the fact that the
+    transaction is guaranteed to only read values.<br>
+</div>
+</body></html>

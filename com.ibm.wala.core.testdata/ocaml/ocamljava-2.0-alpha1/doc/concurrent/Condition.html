@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="AtomicStampedReference.html">
+<link rel="next" href="CountDownLatch.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>Condition</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="AtomicStampedReference.html" title="AtomicStampedReference">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="CountDownLatch.html" title="CountDownLatch">Next</a>
+</div>
+<h1>Module <a href="type_Condition.html">Condition</a></h1>
+
+<pre><span class="keyword">module</span> Condition: <code class="code">sig</code> <a href="Condition.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Lock-base condition.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The type of conditions, constructed from <code class="code">Lock</code> values. 
+<p>
+
+    Operations on conditions should be called only when the lock the
+    condition was constructed from is held by the current thread.<br>
+</div>
+
+
+<pre><span id="VALawait"><span class="keyword">val</span> await</span> : <code class="type"><a href="Condition.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Waits until either the condition is signal, or the current thread is
+    interrupted.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the current thread does not hold the
+    associated lock.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALawait_time"><span class="keyword">val</span> await_time</span> : <code class="type"><a href="Condition.html#TYPEt">t</a> -> int64 -> <a href="TimeUnit.html#TYPEt">TimeUnit.t</a> -> bool</code></pre><div class="info ">
+<code class="code">await_time c t u</code> is similar to <code class="code">await c</code>, except that the current
+    thread will at most wait for <code class="code">t</code> (time value whose unit is <code class="code">u</code>).
+    Returns whether the condition was signaled.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the current thread does not hold the
+    associated lock.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALawait_nanos"><span class="keyword">val</span> await_nanos</span> : <code class="type"><a href="Condition.html#TYPEt">t</a> -> int64 -> int64</code></pre><div class="info ">
+<code class="code">await_nanos c n</code> is similar to <code class="code">await c</code>, except that the current
+    thread will at most wait for <code class="code">n</code> nanoseconds. Returns the duration of
+    the wait, a negative value if the condition was not signaled.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the current thread does not hold the
+    associated lock.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALawait_uninterruptibly"><span class="keyword">val</span> await_uninterruptibly</span> : <code class="type"><a href="Condition.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Similar to <code class="code">await</code> except that the thread cannot be interrupted.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the current thread does not hold the
+    associated lock.<br>
+</div>
+
+<pre><span id="VALsignal"><span class="keyword">val</span> signal</span> : <code class="type"><a href="Condition.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Signals the condition, unblocking one waiting thread.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the current thread does not hold the
+    associated lock.<br>
+</div>
+
+<pre><span id="VALsignal_all"><span class="keyword">val</span> signal_all</span> : <code class="type"><a href="Condition.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Signals the condition, unblocking all waiting threads.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the current thread does not hold the
+    associated lock.<br>
+</div>
+</body></html>

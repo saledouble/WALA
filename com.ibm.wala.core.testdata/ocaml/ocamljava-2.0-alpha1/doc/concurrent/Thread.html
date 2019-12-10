@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Semaphore.html">
+<link rel="next" href="ThreadGroup.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>Thread</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Semaphore.html" title="Semaphore">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="ThreadGroup.html" title="ThreadGroup">Next</a>
+</div>
+<h1>Module <a href="type_Thread.html">Thread</a></h1>
+
+<pre><span class="keyword">module</span> Thread: <code class="code">sig</code> <a href="Thread.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Threads.<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEstate"><span class="keyword">type</span> <code class="type"></code>state</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.New"><span class="constructor">New</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The thread has not been started.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.Runnable"><span class="constructor">Runnable</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The thread is executing.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.Blocked"><span class="constructor">Blocked</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The thread is blocked on a lock.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.Waiting"><span class="constructor">Waiting</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The thread is waiting for another thread (with no timeout).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.Timed_waiting"><span class="constructor">Timed_waiting</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The thread is waiting for another thread (with a timeout).</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstate.Terminated"><span class="constructor">Terminated</span></span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The thread has terminated execution.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+<div class="info ">
+The type of thread states.<br>
+</div>
+
+
+<pre><span id="VALmax_priority"><span class="keyword">val</span> max_priority</span> : <code class="type">int32</code></pre><div class="info ">
+The maximum priority for a thread.<br>
+</div>
+
+<pre><span id="VALmin_priority"><span class="keyword">val</span> min_priority</span> : <code class="type">int32</code></pre><div class="info ">
+The minimum priority for a thread.<br>
+</div>
+
+<pre><span id="VALnorm_priority"><span class="keyword">val</span> norm_priority</span> : <code class="type">int32</code></pre><div class="info ">
+The normal (<i>i. e. default</i>) priority for a thread.<br>
+</div>
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+The type of threads. If a thread raises an exception escapes, it is
+    written to the standard output and then discarded.<br>
+</div>
+
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type"><a href="ThreadGroup.html#TYPEt">ThreadGroup.t</a> option -> string option -> ('a -> unit) -> 'a -> <a href="Thread.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">make g n f x</code> returns a new thread in group <code class="code">g</code> with name <code class="code">n</code>. The
+    thread will execute <code class="code">f x</code> when started.<br>
+</div>
+
+<pre><span id="VALcurrent_thread"><span class="keyword">val</span> current_thread</span> : <code class="type">unit -> <a href="Thread.html#TYPEt">t</a></code></pre><div class="info ">
+Returns the thread that is currently executing.<br>
+</div>
+
+<pre><span id="VALget_id"><span class="keyword">val</span> get_id</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> int64</code></pre><div class="info ">
+Returns the thread identifier. The identifier is positive, and
+    guaranteed to be unique while the thread is executing. The identifier
+    can be recycled when the thread has terminated its execution.<br>
+</div>
+
+<pre><span id="VALget_name"><span class="keyword">val</span> get_name</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+Returns the name of the thread.<br>
+</div>
+
+<pre><span id="VALget_priority"><span class="keyword">val</span> get_priority</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+Returns the priority of the thread.<br>
+</div>
+
+<pre><span id="VALget_state"><span class="keyword">val</span> get_state</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> <a href="Thread.html#TYPEstate">state</a></code></pre><div class="info ">
+Returns the state of the thread.<br>
+</div>
+
+<pre><span id="VALget_thread_group"><span class="keyword">val</span> get_thread_group</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> <a href="ThreadGroup.html#TYPEt">ThreadGroup.t</a> option</code></pre><div class="info ">
+Returns the group of the thread, <code class="code">None</code> if the thread has terminated
+    its execution.<br>
+</div>
+
+<pre><span id="VALinterrupt"><span class="keyword">val</span> interrupt</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Interrupts the thread.<br>
+</div>
+
+<pre><span id="VALinterrupted"><span class="keyword">val</span> interrupted</span> : <code class="type">unit -> bool</code></pre><div class="info ">
+Tests whether the current thread has been interrupted, and sets its
+    interrupted status to <code class="code">false</code>.<br>
+</div>
+
+<pre><span id="VALis_alive"><span class="keyword">val</span> is_alive</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Tests whether the thread has started and not terminated.<br>
+</div>
+
+<pre><span id="VALis_daemon"><span class="keyword">val</span> is_daemon</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Tests whether the thread is a daemon one.<br>
+</div>
+
+<pre><span id="VALis_interrupted"><span class="keyword">val</span> is_interrupted</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Tests whether the thread has been interrupted.<br>
+</div>
+
+<pre><span id="VALjoin"><span class="keyword">val</span> join</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Waits for the termination of the passed thread.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALjoin_time"><span class="keyword">val</span> join_time</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> int64 -> unit</code></pre><div class="info ">
+<code class="code">join_time t m</code> is similar to <code class="code">join t</code>, except that the current
+    thread will at most wait for <code class="code">m</code> milliseconds.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if <code class="code">m</code> is invalid.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALjoin_time_nanos"><span class="keyword">val</span> join_time_nanos</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> int64 -> int32 -> unit</code></pre><div class="info ">
+<code class="code">join_time t m n</code> is similar to <code class="code">join t</code>, except that the current
+    thread will at most wait for <code class="code">m</code> milliseconds plus <code class="code">n</code> nanoseconds.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if <code class="code">m</code> or <code class="code">n</code> is invalid.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALset_daemon"><span class="keyword">val</span> set_daemon</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> bool -> unit</code></pre><div class="info ">
+Changes the daemon status of the thread.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the thread has already been started.<br>
+</div>
+
+<pre><span id="VALset_name"><span class="keyword">val</span> set_name</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> string -> unit</code></pre><div class="info ">
+Changes the name of the thread.<br>
+</div>
+
+<pre><span id="VALset_priority"><span class="keyword">val</span> set_priority</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> int32 -> unit</code></pre><div class="info ">
+Changes the priority of the thread.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the priority is invalid.<br>
+</div>
+
+<pre><span id="VALsleep"><span class="keyword">val</span> sleep</span> : <code class="type">int64 -> unit</code></pre><div class="info ">
+<code class="code">sleep m</code> waits for <code class="code">m</code> milliseconds.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if <code class="code">m</code> is invalid.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALsleep_nanos"><span class="keyword">val</span> sleep_nanos</span> : <code class="type">int64 -> int32 -> unit</code></pre><div class="info ">
+<code class="code">sleep m n</code> waits for <code class="code">m</code> milliseconds plus <code class="code">n</code> nanoseconds.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if <code class="code">m</code> or <code class="code">n</code> is invalid.
+<p>
+
+    Raises <code class="code">Runtime.Interrupted</code> if the thread is interrupted.<br>
+</div>
+
+<pre><span id="VALstart"><span class="keyword">val</span> start</span> : <code class="type"><a href="Thread.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Starts the execution of the thread.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the thread has already been started.<br>
+</div>
+
+<pre><span id="VALyield"><span class="keyword">val</span> yield</span> : <code class="type">unit -> unit</code></pre><div class="info ">
+Indicates that the current thread wants to yield its use of a
+    processor.<br>
+</div>
+</body></html>

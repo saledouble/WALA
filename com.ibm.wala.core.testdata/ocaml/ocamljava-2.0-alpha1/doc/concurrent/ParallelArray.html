@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="MapReduce.html">
+<link rel="next" href="Phaser.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><link title="Thread pool" rel="Section" href="#6_Threadpool">
+<link title="Synonyms for sequential operations" rel="Section" href="#6_Synonymsforsequentialoperations">
+<link title="Parallel operations" rel="Section" href="#6_Paralleloperations">
+<link title="Additional parallel operations" rel="Section" href="#6_Additionalparalleloperations">
+<link title="Functor" rel="Section" href="#6_Functor">
+<title>ParallelArray</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="MapReduce.html" title="MapReduce">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Phaser.html" title="Phaser">Next</a>
+</div>
+<h1>Module <a href="type_ParallelArray.html">ParallelArray</a></h1>
+
+<pre><span class="keyword">module</span> ParallelArray: <code class="code">sig</code> <a href="ParallelArray.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Parallel operations over arrays.
+<p>
+
+    Most operations have the same signature as their original
+    counterparts, but <i>fold</i> operations need an additional function
+    in order to be able to "merge" the computations done on sub arrays.
+<p>
+
+    Operations doing computations in parallel can be passed two optional
+    parameters to set thread pool, and chunk size. It is possible to get
+    rid of these optional parameters through the use of the <code class="code">Make</code>
+    functor.
+<p>
+
+    If any parallel operation is used with a given pool, it is necessary
+    to shutdown the pool. This applies in particular to <code class="code">default_pool</code>,
+    that can be shutdown through the <code class="code">shutdown_now</code> function.<br>
+</div>
+<hr width="100%">
+<br>
+<h6 id="6_Threadpool">Thread pool</h6><br>
+
+<pre><span id="VALdefault_pool"><span class="keyword">val</span> default_pool</span> : <code class="type"><a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a></code></pre><div class="info ">
+The default pool used for parallel computations, initialized with a
+    size of <code class="code">Runtime.available_processors</code>.<br>
+</div>
+
+<pre><span id="VALshutdown_now"><span class="keyword">val</span> shutdown_now</span> : <code class="type">unit -> unit</code></pre><div class="info ">
+Shutdowns <code class="code">default_pool</code>.<br>
+</div>
+<br>
+<h6 id="6_Synonymsforsequentialoperations">Synonyms for sequential operations</h6><br>
+
+<pre><span id="VALlength"><span class="keyword">val</span> length</span> : <code class="type">'a array -> int</code></pre><div class="info ">
+Synonym for <code class="code">Array.length</code>.<br>
+</div>
+
+<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type">'a array -> int -> 'a</code></pre><div class="info ">
+Synonym for <code class="code">Array.get</code>.<br>
+</div>
+
+<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type">'a array -> int -> 'a -> unit</code></pre><div class="info ">
+Synonym for <code class="code">Array.set</code>.<br>
+</div>
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">int -> 'a -> 'a array</code></pre><div class="info ">
+Synonym for <code class="code">Array.make</code>.<br>
+</div>
+
+<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">int -> 'a -> 'a array</code></pre><div class="info ">
+Synonym for <code class="code">Array.create</code>.<br>
+</div>
+
+<pre><span id="VALmake_matrix"><span class="keyword">val</span> make_matrix</span> : <code class="type">int -> int -> 'a -> 'a array array</code></pre><div class="info ">
+Synonym for <code class="code">Array.make_matrix</code>.<br>
+</div>
+
+<pre><span id="VALcreate_matrix"><span class="keyword">val</span> create_matrix</span> : <code class="type">int -> int -> 'a -> 'a array array</code></pre><div class="info ">
+Synonym for <code class="code">Array.create_matrix</code>.<br>
+</div>
+
+<pre><span id="VALappend"><span class="keyword">val</span> append</span> : <code class="type">'a array -> 'a array -> 'a array</code></pre><div class="info ">
+Synonym for <code class="code">Array.append</code>.<br>
+</div>
+
+<pre><span id="VALconcat"><span class="keyword">val</span> concat</span> : <code class="type">'a array list -> 'a array</code></pre><div class="info ">
+Synonym for <code class="code">Array.concat</code>.<br>
+</div>
+
+<pre><span id="VALsub"><span class="keyword">val</span> sub</span> : <code class="type">'a array -> int -> int -> 'a array</code></pre><div class="info ">
+Synonym for <code class="code">Array.sub</code>.<br>
+</div>
+
+<pre><span id="VALcopy"><span class="keyword">val</span> copy</span> : <code class="type">'a array -> 'a array</code></pre><div class="info ">
+Synonym for <code class="code">Array.copy</code>.<br>
+</div>
+
+<pre><span id="VALfill"><span class="keyword">val</span> fill</span> : <code class="type">'a array -> int -> int -> 'a -> unit</code></pre><div class="info ">
+Synonym for <code class="code">Array.fill</code>.<br>
+</div>
+
+<pre><span id="VALblit"><span class="keyword">val</span> blit</span> : <code class="type">'a array -> int -> 'a array -> int -> int -> unit</code></pre><div class="info ">
+Synonym for <code class="code">Array.blit</code>.<br>
+</div>
+
+<pre><span id="VALto_list"><span class="keyword">val</span> to_list</span> : <code class="type">'a array -> 'a list</code></pre><div class="info ">
+Synonym for <code class="code">Array.to_list</code>.<br>
+</div>
+
+<pre><span id="VALof_list"><span class="keyword">val</span> of_list</span> : <code class="type">'a list -> 'a array</code></pre><div class="info ">
+Synonym for <code class="code">Array.of_list</code>.<br>
+</div>
+<br>
+<h6 id="6_Paralleloperations">Parallel operations</h6><br>
+
+<pre><span id="VALinit"><span class="keyword">val</span> init</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> int -> (int -> 'a) -> 'a array</code></pre><div class="info ">
+Similar to <code class="code">Array.init</code>, except that computations are done in
+    parallel; <code class="code">pool</code> indicates the thread pool to use (defaulting to
+    <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size of each chunk
+    to be allocated to a thread.
+<p>
+
+    Raise <code class="code">Invalid_argument</code> if passed size is negative or above
+    <code class="code">Sys.max_array_length</code>.
+<p>
+
+    Raises <code class="code">Runtime.Raised</code> if the passed function raises an exception.<br>
+</div>
+
+<pre><span id="VALiter"><span class="keyword">val</span> iter</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> ('a -> unit) -> 'a array -> unit</code></pre><div class="info ">
+Similar to <code class="code">Array.iter</code>, except that computations are done in
+    parallel; <code class="code">pool</code> indicates the thread pool to use (defaulting to
+    <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size of each chunk
+    to be allocated to a thread.
+<p>
+
+    Raises <code class="code">Runtime.Raised</code> if the passed function raises an exception.<br>
+</div>
+
+<pre><span id="VALmap"><span class="keyword">val</span> map</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> ('a -> 'b) -> 'a array -> 'b array</code></pre><div class="info ">
+Similar to <code class="code">Array.map</code>, except that computations are done in
+    parallel; <code class="code">pool</code> indicates the thread pool to use (defaulting to
+    <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size of each chunk
+    to be allocated to a thread. 
+<p>
+
+    Raises <code class="code">Runtime.Raised</code> if the passed function raises an exception.<br>
+</div>
+
+<pre><span id="VALiteri"><span class="keyword">val</span> iteri</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> (int -> 'a -> unit) -> 'a array -> unit</code></pre><div class="info ">
+Similar to <code class="code">Array.iteri</code>, except that computations are done in
+    parallel; <code class="code">pool</code> indicates the thread pool to use (defaulting to
+    <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size of each chunk
+    to be allocated to a thread. 
+<p>
+
+    Raises <code class="code">Runtime.Raised</code> if the passed function raises an exception.<br>
+</div>
+
+<pre><span id="VALmapi"><span class="keyword">val</span> mapi</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> (int -> 'a -> 'b) -> 'a array -> 'b array</code></pre><div class="info ">
+Similar to <code class="code">Array.mapi</code>, except that computations are done in
+    parallel; <code class="code">pool</code> indicates the thread pool to use (defaulting to
+    <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size of each chunk
+    to be allocated to a thread. 
+<p>
+
+    Raises <code class="code">Runtime.Raised</code> if the passed function raises an exception.<br>
+</div>
+
+<pre><span id="VALfold_left"><span class="keyword">val</span> fold_left</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -><br>       ('a -> 'b -> 'a) -> ('a -> 'a -> 'a) -> 'a -> 'b array -> 'a</code></pre><div class="info ">
+Similar to <code class="code">Array.fold_left</code>, except that computations are done in
+    parallel; <code class="code">pool</code> indicates the thread pool to use (defaulting to
+    <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size of each chunk
+    to be allocated to a thread.
+<p>
+
+    <i>This version uses an additional function in order to be able to
+    "merge" the computations done on sub arrrays.</i> 
+<p>
+
+    Raises <code class="code">Runtime.Raised</code> if any of the passed functions raises an exception.<br>
+</div>
+
+<pre><span id="VALfold_right"><span class="keyword">val</span> fold_right</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -><br>       ('b -> 'a -> 'a) -> ('a -> 'a -> 'a) -> 'b array -> 'a -> 'a</code></pre><div class="info ">
+Similar to <code class="code">Array.fold_right</code>, except that computations are done in
+    parallel; <code class="code">pool</code> indicates the thread pool to use (defaulting to
+    <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size of each chunk
+    to be allocated to a thread.
+<p>
+
+    <i>This version uses an additional function in order to be able to
+    "merge" the computations done on sub arrrays.</i>
+<p>
+
+    Raises <code class="code">Runtime.Raised</code> if any of the passed functions raises an exception.<br>
+</div>
+
+<pre><span id="VALsort"><span class="keyword">val</span> sort</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> ('a -> 'a -> int) -> 'a array -> unit</code></pre><div class="info ">
+Similar to <code class="code">Array.sort</code>, except that computations are done in
+    parallel; <code class="code">pool</code> indicates the thread pool to use (defaulting to
+    <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size of each chunk
+    to be allocated to a thread.
+<p>
+
+    The current implementation has a <i>O(n)</i> space complexity. 
+<p>
+
+    Raises <code class="code">Runtime.Raised</code> if the passed function raises an exception.<br>
+</div>
+
+<pre><span id="VALstable_sort"><span class="keyword">val</span> stable_sort</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> ('a -> 'a -> int) -> 'a array -> unit</code></pre><div class="info ">
+Synonym for <a href="ParallelArray.html#VALsort"><code class="code">ParallelArray.sort</code></a>.<br>
+</div>
+
+<pre><span id="VALfast_sort"><span class="keyword">val</span> fast_sort</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> ('a -> 'a -> int) -> 'a array -> unit</code></pre><div class="info ">
+Synonym for <a href="ParallelArray.html#VALsort"><code class="code">ParallelArray.sort</code></a>.<br>
+</div>
+<br>
+<h6 id="6_Additionalparalleloperations">Additional parallel operations</h6><br>
+
+<pre><span id="VALmem"><span class="keyword">val</span> mem</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -> ?chunk_size:int -> 'a -> 'a array -> bool</code></pre><div class="info ">
+<code class="code">mem ~pool ~chunk_size x a</code> returns <code class="code">true</code> iff there is an element
+    <code class="code">e</code> of <code class="code">a</code> such that <code class="code">e = x</code>. <code class="code">pool</code> indicates the thread pool to use
+    (defaulting to <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size
+    of each chunk to be allocated to a thread.<br>
+</div>
+
+<pre><span id="VALmemq"><span class="keyword">val</span> memq</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -> ?chunk_size:int -> 'a -> 'a array -> bool</code></pre><div class="info ">
+<code class="code">memq ~pool ~chunk_size x a</code> returns <code class="code">true</code> iff there is an element
+    <code class="code">e</code> of <code class="code">a</code> such that <code class="code">e == x</code>. <code class="code">pool</code> indicates the thread pool to use
+    (defaulting to <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size
+    of each chunk to be allocated to a thread.<br>
+</div>
+
+<pre><span id="VALexists"><span class="keyword">val</span> exists</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> ('a -> bool) -> 'a array -> bool</code></pre><div class="info ">
+<code class="code">exists ~pool ~chunk_size f a</code> returns <code class="code">true</code> iff there is an element
+    <code class="code">e</code> of <code class="code">a</code> such that <code class="code">f e = true</code>. <code class="code">pool</code> indicates the thread pool
+    to use (defaulting to <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates
+    the size of each chunk to be allocated to a thread.<br>
+</div>
+
+<pre><span id="VALfor_all"><span class="keyword">val</span> for_all</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> ('a -> bool) -> 'a array -> bool</code></pre><div class="info ">
+<code class="code">for_all ~pool ~chunk_size f a</code> returns <code class="code">true</code> iff there is no element
+    <code class="code">e</code> of <code class="code">a</code> such that <code class="code">f e = false</code>. <code class="code">pool</code> indicates the thread pool
+    to use (defaulting to <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates
+    the size of each chunk to be allocated to a thread.<br>
+</div>
+
+<pre><span id="VALfind"><span class="keyword">val</span> find</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> ('a -> bool) -> 'a array -> 'a</code></pre><div class="info ">
+<code class="code">find ~pool ~chunk_size f a</code> returns an element <code class="code">e</code> of <code class="code">a</code> such that
+    <code class="code">f e = true</code>, raising <code class="code">Not_found</code> if there is no such element in <code class="code">a</code>.
+    <code class="code">pool</code> indicates the thread pool to use (defaulting to
+    <code class="code">default_pool</code>), while <code class="code">chunk_size</code> indicates the size of each chunk
+    to be allocated to a thread.
+<p>
+
+    <i>Returns any element matching the condition, not guaranteeing that
+    the one with the lowest index is returned.</i><br>
+</div>
+
+<pre><span id="VALfind_index"><span class="keyword">val</span> find_index</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> ('a -> bool) -> 'a array -> int</code></pre><div class="info ">
+Similar to <code class="code">find</code>, except that the index is returned.<br>
+</div>
+
+<pre><span id="VALfind_all"><span class="keyword">val</span> find_all</span> : <code class="type">?pool:<a href="ThreadPoolExecutor.html#TYPEt">ThreadPoolExecutor.t</a> -><br>       ?chunk_size:int -> ('a -> bool) -> 'a array -> 'a list</code></pre><div class="info ">
+<code class="code">find_all ~pool ~chunk_size f a</code> returns all the elements of <code class="code">a</code> that
+    return <code class="code">true</code> when applied to <code class="code">f</code>, preserving the order of the
+    elements in <code class="code">a</code>.<br>
+</div>
+<br>
+<h6 id="6_Functor">Functor</h6><br>
+
+<pre><span class="keyword">module type</span> <a href="ParallelArray.OptionalParameters.html">OptionalParameters</a> = <code class="code">sig</code> <a href="ParallelArray.OptionalParameters.html">..</a> <code class="code">end</code></pre><div class="info">
+Signature of <a href="ParallelArray.Make.html"><code class="code">ParallelArray.Make</code></a> parameter.
+</div>
+
+<pre><span class="keyword">module type</span> <a href="ParallelArray.S.html">S</a> = <code class="code">sig</code> <a href="ParallelArray.S.html">..</a> <code class="code">end</code></pre><div class="info">
+Similar to <code class="code">module type of Array</code>, except for <i>fold</i> operations.
+</div>
+
+<pre><span class="keyword">module</span> <a href="ParallelArray.Make.html">Make</a>: <div class="sig_block"><code class="code">functor (</code><code class="code">OP</code><code class="code"> : </code><code class="type"><a href="ParallelArray.OptionalParameters.html">OptionalParameters</a></code><code class="code">) -&gt; </code><code class="type"><a href="ParallelArray.S.html">S</a></code><code class="type"> </code></div></pre><div class="info">
+Functor building an implementation with no optional parameter,
+    thus compatible with the <code class="code">Array</code> module (except for <i>fold</i>
+    operations).
+</div>
+</body></html>

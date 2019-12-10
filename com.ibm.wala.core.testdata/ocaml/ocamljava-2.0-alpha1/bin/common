@@ -1,0 +1,47 @@
+#!/bin/sh
+
+#
+# This file is part of OCaml-Java.
+# Copyright (C) 2007-2014 Xavier Clerc.
+#
+# OCaml-Java is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# OCaml-Java is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+case "`uname`" in
+  CYGWIN*)
+    if [ ! -z "$JAVA_HOME" ]; then
+      JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+    fi
+    ;;
+  Darwin*)
+    if [ -z "$JAVA_HOME" ]; then
+      JAVA_HOME=`/usr/libexec/java_home -F -v 1.7`
+      if [ $? != 0 ]; then
+        echo 'error: unable to find a Java 1.7 installation.'
+        exit 1
+      fi
+    fi
+    ;;
+  *) ;;
+esac
+
+if [ -z "$JAVA_HOME" ]; then
+  OCJ_JAVA=`which java 2> /dev/null`
+  if [ -z "$OCJ_JAVA" ]; then
+    echo 'error: unable to find Java home.'
+    exit 1
+  fi
+else
+  OCJ_JAVA=$JAVA_HOME/bin/java
+fi

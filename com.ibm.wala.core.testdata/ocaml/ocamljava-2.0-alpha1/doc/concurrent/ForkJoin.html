@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="ExecutorCompletionService.html">
+<link rel="next" href="ForkJoinPool.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="AtomicBool" rel="Chapter" href="AtomicBool.html">
+<link title="AtomicInt32" rel="Chapter" href="AtomicInt32.html">
+<link title="AtomicInt32Array" rel="Chapter" href="AtomicInt32Array.html">
+<link title="AtomicInt64" rel="Chapter" href="AtomicInt64.html">
+<link title="AtomicInt64Array" rel="Chapter" href="AtomicInt64Array.html">
+<link title="AtomicMarkableReference" rel="Chapter" href="AtomicMarkableReference.html">
+<link title="AtomicReference" rel="Chapter" href="AtomicReference.html">
+<link title="AtomicReferenceArray" rel="Chapter" href="AtomicReferenceArray.html">
+<link title="AtomicStampedReference" rel="Chapter" href="AtomicStampedReference.html">
+<link title="Condition" rel="Chapter" href="Condition.html">
+<link title="CountDownLatch" rel="Chapter" href="CountDownLatch.html">
+<link title="CyclicBarrier" rel="Chapter" href="CyclicBarrier.html">
+<link title="Exchanger" rel="Chapter" href="Exchanger.html">
+<link title="ExecutorCompletionService" rel="Chapter" href="ExecutorCompletionService.html">
+<link title="ForkJoin" rel="Chapter" href="ForkJoin.html">
+<link title="ForkJoinPool" rel="Chapter" href="ForkJoinPool.html">
+<link title="Future" rel="Chapter" href="Future.html">
+<link title="Lock" rel="Chapter" href="Lock.html">
+<link title="MapReduce" rel="Chapter" href="MapReduce.html">
+<link title="ParallelArray" rel="Chapter" href="ParallelArray.html">
+<link title="Phaser" rel="Chapter" href="Phaser.html">
+<link title="ReadWriteLock" rel="Chapter" href="ReadWriteLock.html">
+<link title="RejectedExecutionHandler" rel="Chapter" href="RejectedExecutionHandler.html">
+<link title="Runtime" rel="Chapter" href="Runtime.html">
+<link title="STM" rel="Chapter" href="STM.html">
+<link title="ScheduledFuture" rel="Chapter" href="ScheduledFuture.html">
+<link title="ScheduledThreadPoolExecutor" rel="Chapter" href="ScheduledThreadPoolExecutor.html">
+<link title="Semaphore" rel="Chapter" href="Semaphore.html">
+<link title="Thread" rel="Chapter" href="Thread.html">
+<link title="ThreadGroup" rel="Chapter" href="ThreadGroup.html">
+<link title="ThreadLocal" rel="Chapter" href="ThreadLocal.html">
+<link title="ThreadPoolExecutor" rel="Chapter" href="ThreadPoolExecutor.html">
+<link title="TimeUnit" rel="Chapter" href="TimeUnit.html"><title>ForkJoin</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="ExecutorCompletionService.html" title="ExecutorCompletionService">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="ForkJoinPool.html" title="ForkJoinPool">Next</a>
+</div>
+<h1>Module <a href="type_ForkJoin.html">ForkJoin</a></h1>
+
+<pre><span class="keyword">module</span> ForkJoin: <code class="code">sig</code> <a href="ForkJoin.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Fork/join computations.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="VALsplit"><span class="keyword">val</span> split</span> : <code class="type"><a href="ForkJoinPool.html#TYPEt">ForkJoinPool.t</a> -><br>       ('a -> ('a * 'a) option) -> ('b -> 'b -> 'b) -> ('a -> 'b) -> 'a -> 'b</code></pre><div class="info ">
+<code class="code">split pool fork join f x</code> computes <code class="code">f x</code> by leveraging multiple
+    threads from <code class="code">pool</code>.
+<p>
+
+    The <code class="code">fork</code> function is used to determine for a given input vallue
+    whether the computation should be split (returning <code class="code">Some (x1, x2)</code>
+    will generate two sub-computations with inputs <code class="code">x1</code> and <code class="code">x2</code>) or not
+    (returning <code class="code">None</code>). The <code class="code">fork</code> function is recursively called inside
+    sub-computations.
+<p>
+
+    The <code class="code">join</code> function is used to combine the results of two
+    sub-computations.
+<p>
+
+    Raises <code class="code">Failure</code> if any call of <code class="code">fork</code>, <code class="code">join</code>, or <code class="code">f</code> raises an
+    uncaught exception.
+<p>
+
+    Raises <code class="code">Invalid_argument</code> if the passed pool cannot execute the
+    computation.
+<p>
+
+    As an example, a (very inefficient) way to compute the fibonacci
+    function using several threads is:
+<p>
+
+    <pre class="codepre"><code class="code">    let rec fib n =
+      if n &lt;= 1 then
+        1
+      else
+        (fib (n - 2)) + (fib (n - 1))
+
+    let threshold = 10
+
+    let fork n = if n &lt; threshold then None else Some (n - 1, n - 2)
+
+    let join x y = x + y
+
+    let parallel_fib pool = split pool fork join fib
+    </code></pre>.<br>
+</div>
+
+<pre><span id="VALsplit_list"><span class="keyword">val</span> split_list</span> : <code class="type"><a href="ForkJoinPool.html#TYPEt">ForkJoinPool.t</a> -><br>       ('a -> 'a list) -> ('b -> 'b -> 'b) -> ('a -> 'b) -> 'a -> 'b</code></pre><div class="info ">
+<code class="code">split_list pool fork join f x</code> is similar to <code class="code">split pool fork join f x</code>,
+    except that the <code class="code">fork</code> function can generate more than two
+    sub-computations.<br>
+</div>
+
+<pre><span id="VALsplit_array"><span class="keyword">val</span> split_array</span> : <code class="type"><a href="ForkJoinPool.html#TYPEt">ForkJoinPool.t</a> -><br>       ('a -> 'a array) -> ('b -> 'b -> 'b) -> ('a -> 'b) -> 'a -> 'b</code></pre><div class="info ">
+<code class="code">split_array pool fork join f x</code> is similar to <code class="code">split pool fork join f x</code>,
+    except that the <code class="code">fork</code> function can generate more than two
+    sub-computations.<br>
+</div>
+</body></html>

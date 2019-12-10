@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="JavaShortArray.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Java" rel="Chapter" href="Java.html">
+<link title="JavaApplet" rel="Chapter" href="JavaApplet.html">
+<link title="JavaArray" rel="Chapter" href="JavaArray.html">
+<link title="JavaArraySignature" rel="Chapter" href="JavaArraySignature.html">
+<link title="JavaBooleanArray" rel="Chapter" href="JavaBooleanArray.html">
+<link title="JavaByteArray" rel="Chapter" href="JavaByteArray.html">
+<link title="JavaCharArray" rel="Chapter" href="JavaCharArray.html">
+<link title="JavaDoubleArray" rel="Chapter" href="JavaDoubleArray.html">
+<link title="JavaFloatArray" rel="Chapter" href="JavaFloatArray.html">
+<link title="JavaIOStreams" rel="Chapter" href="JavaIOStreams.html">
+<link title="JavaIntArray" rel="Chapter" href="JavaIntArray.html">
+<link title="JavaLongArray" rel="Chapter" href="JavaLongArray.html">
+<link title="JavaReferenceArray" rel="Chapter" href="JavaReferenceArray.html">
+<link title="JavaServlet" rel="Chapter" href="JavaServlet.html">
+<link title="JavaShortArray" rel="Chapter" href="JavaShortArray.html">
+<link title="JavaString" rel="Chapter" href="JavaString.html"><link title="String operations" rel="Section" href="#6_Stringoperations">
+<link title="Conversion from/to OCaml strings" rel="Section" href="#6_ConversionfromtoOCamlstrings">
+<link title="Null value" rel="Section" href="#6_Nullvalue">
+<link title="Output functions" rel="Section" href="#6_Outputfunctions">
+<link title="Input functions" rel="Section" href="#6_Inputfunctions">
+<link title="Miscellaneous" rel="Section" href="#6_Miscellaneous">
+<title>JavaString</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="JavaShortArray.html" title="JavaShortArray">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_JavaString.html">JavaString</a></h1>
+
+<pre><span class="keyword">module</span> JavaString: <code class="code">sig</code> <a href="JavaString.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Utility functions for Java strings.<br>
+</div>
+<hr width="100%">
+<br>
+<h6 id="6_Stringoperations">String operations</h6><br>
+
+<pre><span id="VALlength"><span class="keyword">val</span> length</span> : <code class="type">java'lang'String java_instance -> int</code></pre><div class="info ">
+Similar to <code class="code">String.length</code>.<br>
+</div>
+
+<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type">java'lang'String java_instance -> int -> int</code></pre><div class="info ">
+Similar to <code class="code">String.get</code>.<br>
+</div>
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">int -> int -> java'lang'String java_instance</code></pre><div class="info ">
+Similar to <code class="code">String.make</code>.<br>
+</div>
+
+<pre><span id="VALcopy"><span class="keyword">val</span> copy</span> : <code class="type">java'lang'String java_instance -> java'lang'String java_instance</code></pre><div class="info ">
+Equivalent to the identity function.<br>
+</div>
+
+<pre><span id="VALsub"><span class="keyword">val</span> sub</span> : <code class="type">java'lang'String java_instance -><br>       int -> int -> java'lang'String java_instance</code></pre><div class="info ">
+Similar to <code class="code">String.sub</code>.<br>
+</div>
+
+<pre><span id="VALconcat"><span class="keyword">val</span> concat</span> : <code class="type">java'lang'String java_instance -><br>       java'lang'String java_instance list -> java'lang'String java_instance</code></pre><div class="info ">
+Similar to <code class="code">String.concat</code>.<br>
+</div>
+
+<pre><span id="VALiter"><span class="keyword">val</span> iter</span> : <code class="type">(int -> unit) -> java'lang'String java_instance -> unit</code></pre><div class="info ">
+Similar to <code class="code">String.iter</code>.<br>
+</div>
+
+<pre><span id="VALiteri"><span class="keyword">val</span> iteri</span> : <code class="type">(int -> int -> unit) -> java'lang'String java_instance -> unit</code></pre><div class="info ">
+Similar to <code class="code">String.iteri</code>.<br>
+</div>
+
+<pre><span id="VALmap"><span class="keyword">val</span> map</span> : <code class="type">(int -> int) -><br>       java'lang'String java_instance -> java'lang'String java_instance</code></pre><div class="info ">
+Similar to <code class="code">String.map</code>.<br>
+</div>
+
+<pre><span id="VALtrim"><span class="keyword">val</span> trim</span> : <code class="type">java'lang'String java_instance -> java'lang'String java_instance</code></pre><div class="info ">
+Similar to <code class="code">String.trim</code>.<br>
+</div>
+
+<pre><span id="VALescaped"><span class="keyword">val</span> escaped</span> : <code class="type">java'lang'String java_instance -> java'lang'String java_instance</code></pre><div class="info ">
+Similar to <code class="code">String.escaped</code>.<br>
+</div>
+
+<pre><span id="VALindex"><span class="keyword">val</span> index</span> : <code class="type">java'lang'String java_instance -> int -> int</code></pre><div class="info ">
+Similar to <code class="code">String.index</code>.<br>
+</div>
+
+<pre><span id="VALrindex"><span class="keyword">val</span> rindex</span> : <code class="type">java'lang'String java_instance -> int -> int</code></pre><div class="info ">
+Similar to <code class="code">String.rindex</code>.<br>
+</div>
+
+<pre><span id="VALindex_from"><span class="keyword">val</span> index_from</span> : <code class="type">java'lang'String java_instance -> int -> int -> int</code></pre><div class="info ">
+Similar to <code class="code">String.index_from</code>.<br>
+</div>
+
+<pre><span id="VALrindex_from"><span class="keyword">val</span> rindex_from</span> : <code class="type">java'lang'String java_instance -> int -> int -> int</code></pre><div class="info ">
+Similar to <code class="code">String.rindex_from</code>.<br>
+</div>
+
+<pre><span id="VALcontains"><span class="keyword">val</span> contains</span> : <code class="type">java'lang'String java_instance -> int -> bool</code></pre><div class="info ">
+Similar to <code class="code">String.contains</code>.<br>
+</div>
+
+<pre><span id="VALcontains_from"><span class="keyword">val</span> contains_from</span> : <code class="type">java'lang'String java_instance -> int -> int -> bool</code></pre><div class="info ">
+Similar to <code class="code">String.contains_from</code>.<br>
+</div>
+
+<pre><span id="VALrcontains_from"><span class="keyword">val</span> rcontains_from</span> : <code class="type">java'lang'String java_instance -> int -> int -> bool</code></pre><div class="info ">
+Similar to <code class="code">String.rcontains_from</code>.<br>
+</div>
+
+<pre><span id="VALuppercase"><span class="keyword">val</span> uppercase</span> : <code class="type">java'lang'String java_instance -> java'lang'String java_instance</code></pre><div class="info ">
+Similar to <code class="code">String.uppercase</code>.<br>
+</div>
+
+<pre><span id="VALlowercase"><span class="keyword">val</span> lowercase</span> : <code class="type">java'lang'String java_instance -> java'lang'String java_instance</code></pre><div class="info ">
+Similar to <code class="code">String.lowercase</code>.<br>
+</div>
+
+<pre><span id="VALcapitalize"><span class="keyword">val</span> capitalize</span> : <code class="type">java'lang'String java_instance -> java'lang'String java_instance</code></pre><div class="info ">
+Similar to <code class="code">String.capitalize</code>.<br>
+</div>
+
+<pre><span id="VALuncapitalize"><span class="keyword">val</span> uncapitalize</span> : <code class="type">java'lang'String java_instance -> java'lang'String java_instance</code></pre><div class="info ">
+Similar to <code class="code">String.uncapitalize</code>.<br>
+</div>
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> = <code class="type">java'lang'String java_instance</code> </pre>
+<div class="info ">
+Similar to <code class="code">String.t</code>.<br>
+</div>
+
+
+<pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="JavaString.html#TYPEt">t</a> -> <a href="JavaString.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Similar to <code class="code">String.compare</code>.<br>
+</div>
+
+<pre><span id="VALcompare_ignore_case"><span class="keyword">val</span> compare_ignore_case</span> : <code class="type"><a href="JavaString.html#TYPEt">t</a> -> <a href="JavaString.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Similar to <code class="code">String.compare</code>, but ignoring case when comparing
+    strings.<br>
+</div>
+<br>
+<h6 id="6_ConversionfromtoOCamlstrings">Conversion from/to OCaml strings</h6><br>
+
+<pre><span id="VALof_string"><span class="keyword">val</span> of_string</span> : <code class="type">string -> java'lang'String java_instance</code></pre><div class="info ">
+<code class="code">of_string s</code> converts the OCaml string <code class="code">s</code> into a Java string.<br>
+</div>
+
+<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type">java'lang'String java_instance -> string</code></pre><div class="info ">
+<code class="code">to_string s</code> converts the Java string <code class="code">s</code> into an OCaml string.
+<p>
+
+    Raises <code class="code">Java_exeption</code> if <code class="code">s</code> is <i>null</i>.<br>
+</div>
+<br>
+<h6 id="6_Nullvalue">Null value</h6><br>
+
+<pre><span id="VALnull"><span class="keyword">val</span> null</span> : <code class="type">java'lang'String java_instance</code></pre><div class="info ">
+The <i>null</i> value.<br>
+</div>
+
+<pre><span id="VALis_null"><span class="keyword">val</span> is_null</span> : <code class="type">java'lang'String java_instance -> bool</code></pre><div class="info ">
+<code class="code">is_null x</code> returns <code class="code">true</code> iff <code class="code">x</code> is equal to <i>null</i>.<br>
+</div>
+
+<pre><span id="VALis_not_null"><span class="keyword">val</span> is_not_null</span> : <code class="type">java'lang'String java_instance -> bool</code></pre><div class="info ">
+<code class="code">is_not_null x</code> returns <code class="code">false</code> iff <code class="code">x</code> is equal to <i>null</i>.<br>
+</div>
+<br>
+<h6 id="6_Outputfunctions">Output functions</h6><br>
+
+<pre><span id="VALprint_string"><span class="keyword">val</span> print_string</span> : <code class="type">java'lang'String java_instance -> unit</code></pre><div class="info ">
+<code class="code">print_string s</code> prints <code class="code">s</code> onto the standard ouput.<br>
+</div>
+
+<pre><span id="VALprint_endline"><span class="keyword">val</span> print_endline</span> : <code class="type">java'lang'String java_instance -> unit</code></pre><div class="info ">
+<code class="code">print_endline s</code> prints <code class="code">s</code> followed by a newline character onto the
+    standard ouput.<br>
+</div>
+
+<pre><span id="VALprerr_string"><span class="keyword">val</span> prerr_string</span> : <code class="type">java'lang'String java_instance -> unit</code></pre><div class="info ">
+<code class="code">prerr_string s</code> prints <code class="code">s</code> onto the error ouput.<br>
+</div>
+
+<pre><span id="VALprerr_endline"><span class="keyword">val</span> prerr_endline</span> : <code class="type">java'lang'String java_instance -> unit</code></pre><div class="info ">
+<code class="code">prerr_endline s</code> prints <code class="code">s</code> followed by a newline character onto the
+    error ouput.<br>
+</div>
+
+<pre><span id="VALoutput_string"><span class="keyword">val</span> output_string</span> : <code class="type">Pervasives.out_channel -> java'lang'String java_instance -> unit</code></pre><div class="info ">
+<code class="code">output_string ch s</code> prints <code class="code">s</code> onto channel <code class="code">ch</code>.<br>
+</div>
+<br>
+<h6 id="6_Inputfunctions">Input functions</h6><br>
+
+<pre><span id="VALread_line"><span class="keyword">val</span> read_line</span> : <code class="type">unit -> java'lang'String java_instance</code></pre><div class="info ">
+<code class="code">read_line ()</code> reads a line from the standard input.
+    Returns <i>null</i> when end of input is reached.<br>
+</div>
+
+<pre><span id="VALinput_line"><span class="keyword">val</span> input_line</span> : <code class="type">Pervasives.in_channel -> java'lang'String java_instance</code></pre><div class="info ">
+<code class="code">input_line ch</code> reads a line from channel <code class="code">ch</code>.
+    Returns <i>null</i> when end of input is reached.<br>
+</div>
+<br>
+<h6 id="6_Miscellaneous">Miscellaneous</h6><br>
+
+<pre><span id="VALwrap"><span class="keyword">val</span> wrap</span> : <code class="type">java'lang'String java_instance -> java'lang'String java_instance option</code></pre><div class="info ">
+<code class="code">wrap x</code> wraps the reference <code class="code">x</code> into an option type:<ul>
+<li><code class="code">Some x</code> if <code class="code">x</code> is not null;</li>
+<li><code class="code">None</code> if <code class="code">x</code> is null.</li>
+</ul>
+<br>
+</div>
+</body></html>

@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="JavaApplet.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Java" rel="Chapter" href="Java.html">
+<link title="JavaApplet" rel="Chapter" href="JavaApplet.html">
+<link title="JavaArray" rel="Chapter" href="JavaArray.html">
+<link title="JavaArraySignature" rel="Chapter" href="JavaArraySignature.html">
+<link title="JavaBooleanArray" rel="Chapter" href="JavaBooleanArray.html">
+<link title="JavaByteArray" rel="Chapter" href="JavaByteArray.html">
+<link title="JavaCharArray" rel="Chapter" href="JavaCharArray.html">
+<link title="JavaDoubleArray" rel="Chapter" href="JavaDoubleArray.html">
+<link title="JavaFloatArray" rel="Chapter" href="JavaFloatArray.html">
+<link title="JavaIOStreams" rel="Chapter" href="JavaIOStreams.html">
+<link title="JavaIntArray" rel="Chapter" href="JavaIntArray.html">
+<link title="JavaLongArray" rel="Chapter" href="JavaLongArray.html">
+<link title="JavaReferenceArray" rel="Chapter" href="JavaReferenceArray.html">
+<link title="JavaServlet" rel="Chapter" href="JavaServlet.html">
+<link title="JavaShortArray" rel="Chapter" href="JavaShortArray.html">
+<link title="JavaString" rel="Chapter" href="JavaString.html"><link title="Instance creation" rel="Section" href="#6_Instancecreation">
+<link title="Method call" rel="Section" href="#6_Methodcall">
+<link title="Field access" rel="Section" href="#6_Fieldaccess">
+<link title="Null value" rel="Section" href="#6_Nullvalue">
+<link title="Equality test" rel="Section" href="#6_Equalitytest">
+<link title="Class test" rel="Section" href="#6_Classtest">
+<link title="Class retrieval" rel="Section" href="#6_Classretrieval">
+<link title="Exception throw" rel="Section" href="#6_Exceptionthrow">
+<link title="Synchronization" rel="Section" href="#6_Synchronization">
+<link title="Interface implementation" rel="Section" href="#6_Interfaceimplementation">
+<link title="Miscellaneous" rel="Section" href="#6_Miscellaneous">
+<title>Java</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="JavaApplet.html" title="JavaApplet">Next</a>
+</div>
+<h1>Module <a href="type_Java.html">Java</a></h1>
+
+<pre><span class="keyword">module</span> Java: <code class="code">sig</code> <a href="Java.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Manipulation of Java references.
+<p>
+
+    The <code class="code">ocamljava</code> compiler allows to manipulate Java references through
+    two types, namely <code class="code">cn java_instance</code> and <code class="code">cn java_extends</code>. The
+    former is used to designate instances of exactly one class, while
+    the latter is used to designate instances of either one class or
+    any of its subclasses. In both cases, the type parameter is used to
+    specify the class. It uses the fully-qualified name of the class,
+    just replacing dots with single quotes. The type of Java strings is
+    thus written <code class="code">java'lang'String java_instance</code>.
+<p>
+
+    This module contains the functions needed to create new instances,
+    call methods, and access fields. Such functions use <i>descriptors</i>
+    to determine the constructor/method/field to use. These descriptors
+    are written as string litterals; for example, parsing a string into
+    an integer can be done by writing:
+    <pre class="codepre"><code class="code">      let integer = call "java.lang.Integer.parseInt(java.lang.String):int" s
+    </code></pre>
+<p>
+
+    However, it is possible to use simple names rather than qualified
+    names for classes if their packages have been opened. Initially, the
+    <i>java.lang</i> package is the only one opened. A package can be opened
+    though a modified <code class="code">open Package'packname</code> directive; for example
+    opening the <i>javax.awt</i> package can be done by writing:
+    <pre class="codepre"><code class="code">      open Package'java'awt
+    </code></pre>
+    It is also possible to take advantage of opened packages in types, by
+    replacing the package name with an underscore. The type of Java
+    strings can thus be written <code class="code">_'String java_instance</code>.
+<p>
+
+    Moreover, types of fields and return types of methods can be elided
+    as long as there is no ambiguity. Types of method/constructor
+    parameters can also be replaced with single underscores, leading to
+    the lighter code to parse an integer:
+    <pre class="codepre"><code class="code">      let integer = call "Integer.parseInt(_)" s
+    </code></pre>
+    Furthermore, it is possible to use dashes to denote any number of
+    parameters, leading to the lightest code to rotate an integer value:
+    <pre class="codepre"><code class="code">      let y = call "Integer.rotateLeft(-)" x bits
+    </code></pre>
+    The compiler will issue an error if there is an ambiguity.
+<p>
+
+    When calling a method with a variable number of arguments, two
+    variants are accepted for the descriptor, impacting how the arguments
+    should be passed:<ul>
+<li>if <code class="code">"C.m(T[])"</code> is used, then the arguments are passed through a
+      Java array;</li>
+<li>if <code class="code">"C.m(T...)"</code> is used, then the arguments are passed through an
+      OCaml literal array.
+    The following code illustrates the alternative:
+    <pre class="codepre"><code class="code">      let a1 = Java.make_array "Object[]" 5l
+      let l1 = Java.call "Arrays.asList(Object[])" a1
+      let l2 =
+        Java.call "Arrays.asList(Object...)"
+          [| Java.null ; Java.make "Object()" () |]
+    </code></pre></li>
+</ul>
+
+    Finally, two exceptions are defined to wrap Java exceptions on the
+    OCaml side:
+    <pre class="codepre"><code class="code">      exception Java_exception of java'lang'Exception java_instance
+      exception Java_error of java'lang'Error java_instance
+    </code></pre>
+<p>
+
+    <b>Warning:</b> to be able to use the functions from this module, java
+    extensions should be enabled by passing the <code class="code">-java-extensions</code> option
+    to the <code class="code">ocamljava</code> compiler.<br>
+</div>
+<hr width="100%">
+<br>
+<h6 id="6_Instancecreation">Instance creation</h6><br>
+
+<pre><span id="VALmake"><span class="keyword">val</span> make</span> : <code class="type">'a java_constructor -> 'a</code></pre><div class="info ">
+<code class="code">make "constructordesc" p0 ... pn</code> calls constructor
+    <code class="code">constructordesc</code> with parameters <code class="code">pi</code> and returns the created
+    instance. For example, the following code creates an object instance:
+    <pre class="codepre"><code class="code">      let inst = make "java.lang.Object()" ()
+    </code></pre>
+<p>
+
+    Raises <code class="code">Java_exception</code> if the constructor throws an exception.<br>
+</div>
+
+<pre><span id="VALmake_array"><span class="keyword">val</span> make_array</span> : <code class="type">'a java_array_shape -> 'a</code></pre><div class="info ">
+<code class="code">make_array "arraydesc" dim1 ... dimn</code> builds and returns an array
+    with <code class="code">n</code> dimensions. Each element is initialized to the default value
+    (that is false for booleans, and zero for other primitive types), and
+    <i>null</i> for reference types).
+<p>
+
+    For example, the following code creates a 2x3 matrix of byte values:
+    <pre class="codepre"><code class="code">      let arr = make_array "byte[][]" 2l 3l
+    </code></pre>
+<p>
+
+    Raises <code class="code">Java_exception</code> if a dimension is negative.<br>
+</div>
+
+<pre><span id="VALmake_array_dims"><span class="keyword">val</span> make_array_dims</span> : <code class="type">'a java_array_shape_dims -> 'a</code></pre><div class="info ">
+<code class="code">make_array_dims "arraydesc" dim1 ... dimn</code> is similar to
+    <code class="code">make_array</code>, except that the array descriptor is made of two kinds
+    of dimension specifiers:<ul>
+<li><i>[_]</i> that indicates that the dimension will be allocated;</li>
+<li><i>[]</i> that indicates that the dimension will not be allocated.</li>
+</ul>
+
+    For example, the following code creates a two-dimensional array, but
+    only the first dimension of the array is allocated and initialized:
+    <pre class="codepre"><code class="code">      let arr = make_array "byte[_][]" 2l
+    </code></pre>
+<p>
+
+    Raises <code class="code">Java_exception</code> if a dimension is negative.<br>
+</div>
+<br>
+<h6 id="6_Methodcall">Method call</h6><br>
+
+<pre><span id="VALcall"><span class="keyword">val</span> call</span> : <code class="type">'a java_method -> 'a</code></pre><div class="info ">
+<code class="code">call "methoddesc" p0 ... pn</code> calls and returns the result of method
+    <code class="code">methoddesc</code> called with parameters <code class="code">pi</code>, where <code class="code">p0</code> is the instance
+    to call method upon if the method is not static. For example, the
+    following code compares strings s1 and s2:
+    <pre class="codepre"><code class="code">      let cmp = call "java.lang.String.compareTo(java.lang.String):int" s1 s2
+    </code></pre>
+<p>
+
+    Raises <code class="code">Java_exception</code> if the method throws an exception.<br>
+</div>
+<br>
+<h6 id="6_Fieldaccess">Field access</h6><br>
+
+<pre><span id="VALget"><span class="keyword">val</span> get</span> : <code class="type">'a java_field_get -> 'a</code></pre><div class="info ">
+<code class="code">get "fielddesc" obj</code> retrieves the value of field <code class="code">fielddesc</code> for
+    instance <code class="code">obj</code>. The <code class="code">obj</code> value should not be replaced by <code class="code">()</code> if
+    <code class="code">fielddesc</code> designates a static field. For example, the following
+    code gets the maximum value of a integer:
+    <pre class="codepre"><code class="code">      let max_int = get "java.lang.Integer.MAX_VALUE:int" ()
+    </code></pre><br>
+</div>
+
+<pre><span id="VALset"><span class="keyword">val</span> set</span> : <code class="type">'a java_field_set -> 'a</code></pre><div class="info ">
+<code class="code">set "fielddesc" obj x</code> changes the value of field <code class="code">fielddesc</code> for
+    instance <code class="code">obj</code> to <code class="code">x</code>. The <code class="code">obj</code> value should not be provided if
+    <code class="code">fielddesc</code> designates a static field. For example, the following
+    code sets the height of a dimension to zero:
+    <pre class="codepre"><code class="code">      let () = set "java.awt.Dimension.height:int" dim 0l
+    </code></pre><br>
+</div>
+<br>
+<h6 id="6_Nullvalue">Null value</h6><br>
+
+<pre><span id="VALnull"><span class="keyword">val</span> null</span> : <code class="type">'a java_instance</code></pre><div class="info ">
+The <i>null</i> value.<br>
+</div>
+
+<pre><span id="VALis_null"><span class="keyword">val</span> is_null</span> : <code class="type">'a java_instance -> bool</code></pre><div class="info ">
+<code class="code">is_null x</code> returns <code class="code">true</code> iff <code class="code">x</code> is equal to <i>null</i>.<br>
+</div>
+
+<pre><span id="VALis_not_null"><span class="keyword">val</span> is_not_null</span> : <code class="type">'a java_instance -> bool</code></pre><div class="info ">
+<code class="code">is_not_null x</code> returns <code class="code">false</code> iff <code class="code">x</code> is equal to <i>null</i>.<br>
+</div>
+<br>
+<h6 id="6_Equalitytest">Equality test</h6><br>
+
+<pre><span id="VALequal"><span class="keyword">val</span> equal</span> : <code class="type">'a java_instance -> 'b java_instance -> bool</code></pre><div class="info ">
+<code class="code">equal x y</code> returns <code class="code">true</code> if <code class="code">x</code> and <code class="code">y</code> designate the very same
+    reference.<br>
+</div>
+
+<pre><span id="VALnot_equal"><span class="keyword">val</span> not_equal</span> : <code class="type">'a java_instance -> 'b java_instance -> bool</code></pre><div class="info ">
+<code class="code">not_equal x y</code> returns <code class="code">false</code> if <code class="code">x</code> and <code class="code">y</code> designate the very
+    same reference.<br>
+</div>
+<br>
+<h6 id="6_Classtest">Class test</h6><br>
+
+<pre><span id="VALinstanceof"><span class="keyword">val</span> instanceof</span> : <code class="type">'a java_reference_type -> 'b java_instance -> bool</code></pre><div class="info ">
+<code class="code">instanceof "classname" x</code> returns <code class="code">true</code> if <code class="code">x</code> is an instance of
+    <code class="code">classname</code> or one of its subclasses, where <code class="code">classname</code> can designate
+    an array type.<br>
+</div>
+
+<pre><span id="VALcast"><span class="keyword">val</span> cast</span> : <code class="type">'a java_reference_type -> 'b java_instance -> 'a</code></pre><div class="info ">
+<code class="code">cast "classname" x</code> casts <code class="code">x</code> to an instance of <code class="code">classname</code>, where
+    <code class="code">classname</code> can designate an array type.
+<p>
+
+    Raises <code class="code">Java_exception</code> if the cast fails.<br>
+</div>
+<br>
+<h6 id="6_Classretrieval">Class retrieval</h6><br>
+
+<pre><span id="VALget_class"><span class="keyword">val</span> get_class</span> : <code class="type">'a java_any_type -> java'lang'Class java_instance</code></pre><div class="info ">
+<code class="code">get_class "class_or_primitive_name"</code> returns the class instance
+    representing the passed type descriptor.<br>
+</div>
+<br>
+<h6 id="6_Exceptionthrow">Exception throw</h6><br>
+
+<pre><span id="VALthrow"><span class="keyword">val</span> throw</span> : <code class="type">java'lang'Throwable java_extends -> 'a</code></pre><div class="info ">
+<code class="code">throw x</code> raises the exception instance <code class="code">x</code>
+    (wrapped into a <code class="code">Java_exception</code> on the OCaml side).<br>
+</div>
+<br>
+<h6 id="6_Synchronization">Synchronization</h6><br>
+
+<pre><span id="VALsynchronized"><span class="keyword">val</span> synchronized</span> : <code class="type">'a java_instance -> (unit -> unit) -> unit</code></pre><div class="info ">
+<code class="code">synchronized obj (fun () -&gt; ...)</code> is equivalent to the Java code
+    <i>synchronized (obj) { ... }</i>.
+<p>
+
+    Raises <code class="code">Java_exception</code> if the <code class="code">obj</code> is <i>null</i>.<br>
+</div>
+<br>
+<h6 id="6_Interfaceimplementation">Interface implementation</h6><br>
+
+<pre><span id="VALproxy"><span class="keyword">val</span> proxy</span> : <code class="type">'a java_proxy -> 'a</code></pre><div class="info ">
+<code class="code">proxy "interfacenames" impl</code> returns an instance that implements
+    <code class="code">interfacenames</code> (a comma-separated list of interface names) using
+    the methods provided by <code class="code">impl</code>. For example, an instance of
+    <i>java.lang.Runnable</i> can be built using the following code:
+    <pre class="codepre"><code class="code">      proxy "java.lang.Runnable" (object
+        method run = ...
+      end)
+    </code></pre>
+<p>
+
+    When only one interface is provided, the instance returned by <code class="code">proxy</code>
+    has this type, otherwise it has type <i>java.lang.Object</i>.
+<p>
+
+    It is also possible to override methods from the <i>java.lang.Object</i>
+    class (independently of their presence/absence in any of the
+    interfaces). To this end, it is possible to use the <i>.methodName</i>
+    notation in the interface list. As of Java 1.7, only three methods
+    can be overridden: <i>toString</i>, <i>equals</i>, and <i>hashCode</i>. For
+    example, an instance of <i>java.lang.Runnable</i> overriding <i>toString</i>
+    can be built using the following code:
+    <pre class="codepre"><code class="code">      proxy "java.lang.Runnable, .toString" (object
+        method run = ...
+        method toString = ...
+      end)
+    </code></pre><br>
+</div>
+<br>
+<h6 id="6_Miscellaneous">Miscellaneous</h6><br>
+
+<pre><span id="VALwrap"><span class="keyword">val</span> wrap</span> : <code class="type">'a java_instance -> 'a java_instance option</code></pre><div class="info ">
+<code class="code">wrap x</code> wraps the reference <code class="code">x</code> into an option type:<ul>
+<li><code class="code">Some x</code> if <code class="code">x</code> is not null;</li>
+<li><code class="code">None</code> if <code class="code">x</code> is null.</li>
+</ul>
+<br>
+</div>
+</body></html>

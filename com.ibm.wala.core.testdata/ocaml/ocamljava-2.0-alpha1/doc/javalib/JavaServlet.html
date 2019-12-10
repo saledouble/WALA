@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="JavaReferenceArray.html">
+<link rel="next" href="JavaShortArray.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Java" rel="Chapter" href="Java.html">
+<link title="JavaApplet" rel="Chapter" href="JavaApplet.html">
+<link title="JavaArray" rel="Chapter" href="JavaArray.html">
+<link title="JavaArraySignature" rel="Chapter" href="JavaArraySignature.html">
+<link title="JavaBooleanArray" rel="Chapter" href="JavaBooleanArray.html">
+<link title="JavaByteArray" rel="Chapter" href="JavaByteArray.html">
+<link title="JavaCharArray" rel="Chapter" href="JavaCharArray.html">
+<link title="JavaDoubleArray" rel="Chapter" href="JavaDoubleArray.html">
+<link title="JavaFloatArray" rel="Chapter" href="JavaFloatArray.html">
+<link title="JavaIOStreams" rel="Chapter" href="JavaIOStreams.html">
+<link title="JavaIntArray" rel="Chapter" href="JavaIntArray.html">
+<link title="JavaLongArray" rel="Chapter" href="JavaLongArray.html">
+<link title="JavaReferenceArray" rel="Chapter" href="JavaReferenceArray.html">
+<link title="JavaServlet" rel="Chapter" href="JavaServlet.html">
+<link title="JavaShortArray" rel="Chapter" href="JavaShortArray.html">
+<link title="JavaString" rel="Chapter" href="JavaString.html"><link title="Generic servlets" rel="Section" href="#6_Genericservlets">
+<link title="HTTP servlets" rel="Section" href="#6_HTTPservlets">
+<link title="Listeners" rel="Section" href="#6_Listeners">
+<title>JavaServlet</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="JavaReferenceArray.html" title="JavaReferenceArray">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="JavaShortArray.html" title="JavaShortArray">Next</a>
+</div>
+<h1>Module <a href="type_JavaServlet.html">JavaServlet</a></h1>
+
+<pre><span class="keyword">module</span> JavaServlet: <code class="code">sig</code> <a href="JavaServlet.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Support for Java servlets.
+<p>
+
+    In order to produce a class to be used as either a servlet or a
+    servlet listener, it is necessary to compile the module with one of
+    the following command-line switches:<ul>
+<li><i>-servlet generic</i>;</li>
+<li><i>-servlet http</i>;</li>
+<li><i>-servlet context-listener</i>;</li>
+<li><i>-servlet context-attribute-listener</i>;</li>
+<li><i>-servlet session-listener</i>;</li>
+<li><i>-servlet session-activation-listener</i>;</li>
+<li><i>-servlet session-attribute-listener</i>;</li>
+<li><i>-servlet session-binding-listener</i>;</li>
+<li><i>-servlet session-id-listener</i>.</li>
+</ul>
+
+    The compiled module has to abide (respectively) the following module
+    type:<ul>
+<li><code class="code">Generic</code>;</li>
+<li><code class="code">HTTP</code>;</li>
+<li><code class="code">ServletContextListener</code>;</li>
+<li><code class="code">ServletContextAttributeListener</code>;</li>
+<li><code class="code">HTTPSessionListener</code>;</li>
+<li><code class="code">HTTPSessionActivationListener</code>;</li>
+<li><code class="code">HTTPSessionAttributeListener</code>;</li>
+<li><code class="code">HTTPSessionBindingListener</code>;</li>
+<li><code class="code">HTTPSessionIdListener</code>.</li>
+</ul>
+
+    When a module <i>M</i> is compiled with a command-line switch
+    <i>-servlet x</i>, an additional class with name <i>MImpl</i> is produced.
+    The <i>MImpl</i> class implements (or extends) the interface (or class)
+    related to <i>x</i>. As an example, compiling with <i>-servlet http</i>
+    with result in a class extending <i>javax.servlet.http.HttpServlet</i>.<br>
+</div>
+<hr width="100%">
+<br>
+<h6 id="6_Genericservlets">Generic servlets</h6><br>
+
+<pre><span id="TYPEgeneric"><span class="keyword">type</span> <code class="type"></code>generic</span> = <code class="type">javax'servlet'GenericServlet java_instance</code> </pre>
+<div class="info ">
+Shorthand for the type of generic servlets.<br>
+</div>
+
+
+<pre><span id="TYPErequest"><span class="keyword">type</span> <code class="type"></code>request</span> = <code class="type">javax'servlet'ServletRequest java_instance</code> </pre>
+<div class="info ">
+Shorthand for the type of requests to generic servlets.<br>
+</div>
+
+
+<pre><span id="TYPEresponse"><span class="keyword">type</span> <code class="type"></code>response</span> = <code class="type">javax'servlet'ServletResponse java_instance</code> </pre>
+<div class="info ">
+Shorthand for the type of responses to generic servlets.<br>
+</div>
+
+
+<pre><span class="keyword">module type</span> <a href="JavaServlet.Generic.html">Generic</a> = <code class="code">sig</code> <a href="JavaServlet.Generic.html">..</a> <code class="code">end</code></pre><div class="info">
+The module type for servlets compiled with <i>-servlet generic</i>.
+</div>
+
+<pre><span class="keyword">module</span> <a href="JavaServlet.Default_Generic.html">Default_Generic</a>: <code class="code">sig</code> <a href="JavaServlet.Default_Generic.html">..</a> <code class="code">end</code></pre><div class="info">
+Default (<i>i.e.</i>
+</div>
+<br>
+<h6 id="6_HTTPservlets">HTTP servlets</h6><br>
+
+<pre><span id="TYPEhttp"><span class="keyword">type</span> <code class="type"></code>http</span> = <code class="type">javax'servlet'http'HttpServlet java_instance</code> </pre>
+<div class="info ">
+Shorthand for the type of HTTP servlets.<br>
+</div>
+
+
+<pre><span id="TYPEhttp_request"><span class="keyword">type</span> <code class="type"></code>http_request</span> = <code class="type">javax'servlet'http'HttpServletRequest java_instance</code> </pre>
+<div class="info ">
+Shorthand for the type of requests to HTTP servlets.<br>
+</div>
+
+
+<pre><span id="TYPEhttp_response"><span class="keyword">type</span> <code class="type"></code>http_response</span> = <code class="type">javax'servlet'http'HttpServletResponse java_instance</code> </pre>
+<div class="info ">
+Shorthand for the type of responses to HTTP servlets.<br>
+</div>
+
+
+<pre><span class="keyword">module type</span> <a href="JavaServlet.HTTP.html">HTTP</a> = <code class="code">sig</code> <a href="JavaServlet.HTTP.html">..</a> <code class="code">end</code></pre><div class="info">
+The module type for servlets compiled with <i>-servlet http</i>.
+</div>
+
+<pre><span id="VALoptions"><span class="keyword">val</span> options</span> : <code class="type"><a href="JavaServlet.html#TYPEhttp_response">http_response</a> -><br>       [ `DELETE | `GET | `HEAD | `OPTIONS | `POST | `PUT | `TRACE ] list -> unit</code></pre><div class="info ">
+<code class="code">options resp l</code> is an implementation of <code class="code">do_options _ _ _ resp</code>
+    where <code class="code">l</code> is the list of methods supported by the servlet.<br>
+</div>
+
+<pre><span class="keyword">module</span> <a href="JavaServlet.Default_HTTP.html">Default_HTTP</a>: <code class="code">sig</code> <a href="JavaServlet.Default_HTTP.html">..</a> <code class="code">end</code></pre><div class="info">
+Default (<i>i.e.</i>
+</div>
+<br>
+<h6 id="6_Listeners">Listeners</h6><br>
+
+<pre><span class="keyword">module type</span> <a href="JavaServlet.ServletContextListener.html">ServletContextListener</a> = <code class="code">sig</code> <a href="JavaServlet.ServletContextListener.html">..</a> <code class="code">end</code></pre><div class="info">
+The module type for listeners compiled with <i>-servlet context-listener</i>.
+</div>
+
+<pre><span class="keyword">module type</span> <a href="JavaServlet.ServletContextAttributeListener.html">ServletContextAttributeListener</a> = <code class="code">sig</code> <a href="JavaServlet.ServletContextAttributeListener.html">..</a> <code class="code">end</code></pre><div class="info">
+The module type for listeners compiled with <i>-servlet context-attribute-listener</i>.
+</div>
+
+<pre><span class="keyword">module type</span> <a href="JavaServlet.HTTPSessionListener.html">HTTPSessionListener</a> = <code class="code">sig</code> <a href="JavaServlet.HTTPSessionListener.html">..</a> <code class="code">end</code></pre><div class="info">
+The module type for listeners compiled with <i>-servlet session-listener</i>.
+</div>
+
+<pre><span class="keyword">module type</span> <a href="JavaServlet.HTTPSessionActivationListener.html">HTTPSessionActivationListener</a> = <code class="code">sig</code> <a href="JavaServlet.HTTPSessionActivationListener.html">..</a> <code class="code">end</code></pre><div class="info">
+The module type for listeners compiled with <i>-servlet session-activation-listener</i>.
+</div>
+
+<pre><span class="keyword">module type</span> <a href="JavaServlet.HTTPSessionAttributeListener.html">HTTPSessionAttributeListener</a> = <code class="code">sig</code> <a href="JavaServlet.HTTPSessionAttributeListener.html">..</a> <code class="code">end</code></pre><div class="info">
+The module type for listeners compiled with <i>-servlet session-attribute-listener</i>.
+</div>
+
+<pre><span class="keyword">module type</span> <a href="JavaServlet.HTTPSessionBindingListener.html">HTTPSessionBindingListener</a> = <code class="code">sig</code> <a href="JavaServlet.HTTPSessionBindingListener.html">..</a> <code class="code">end</code></pre><div class="info">
+The module type for listeners compiled with <i>-servlet session-binding-listener</i>.
+</div>
+
+<pre><span class="keyword">module type</span> <a href="JavaServlet.HTTPSessionIdListener.html">HTTPSessionIdListener</a> = <code class="code">sig</code> <a href="JavaServlet.HTTPSessionIdListener.html">..</a> <code class="code">end</code></pre><div class="info">
+The module type for listeners compiled with <i>-servlet session-id-listener</i>.
+</div>
+</body></html>
